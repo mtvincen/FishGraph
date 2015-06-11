@@ -35,7 +35,7 @@
 #' Index.plots(gag)
 #' }
 #' 
-Index.plots <-
+Index.plots.archive <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, connect.obsd = FALSE, from.zero = TRUE,
    two.panel = TRUE, log.resid = TRUE, draw.barplot = TRUE, draw.pairs = TRUE, plot.options = FGGetOptions())

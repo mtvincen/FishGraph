@@ -27,7 +27,7 @@
 #' Comp.plots(gag)
 #' }
 #'
-Comp.plots <-
+Comp.plots.archive <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
    plot.options = FGGetOptions())

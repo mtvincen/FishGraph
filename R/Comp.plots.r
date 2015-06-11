@@ -40,7 +40,7 @@
 #  Major revision by M. H. Prager, November 2006
 #  Revised by R. Cheshire, November 2012
 #######################################################################################
-Comp.plots.beta <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
+Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, units = x$info$units.length, 
    p.corr = TRUE,c.min=0.25, plot.options = FGGetOptions())
 #######################################################################################

@@ -43,7 +43,7 @@
 # Major revision by M. H. Prager, November, 2006
 # Fixed error: pairs plot now made only w/ > 1 series, MHP, 26 Aug 2009
 #######################################################################################
-Index.plots.beta <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
+Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, connect.obsd = FALSE, from.zero = TRUE,
    two.panel = TRUE, log.resid = FALSE)
 #######################################################################################
