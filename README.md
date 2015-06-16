@@ -17,5 +17,14 @@ library(devtools)
 install_github("rcheshire/FishGraph")
 ```
 
+Alternatively, the package can be installed locally from the repository source files.
+
+```
+install.packages("C://Location of files//FishGraph_2.0.tar.gz, 
+                 repos = NULL, type="source")
+```
+
+A full description of all included functions and examples of their graphical output is available in [**NOAA Technical Memorandum NMFS-SEFSC-XXXXX**](http://www.link2file.com).
+
 
 
