@@ -32,7 +32,7 @@ Once installed the package offers a series of functions for model diagnostics an
 library(FishGraph)
 ls(pos = "package:FishGraph")
 ```
-For previous users, `FishGraph 2.0` includes two updated functions: `Comp.plots()` and `Index.plots` legacy functions are available using the suffix `.archive()`.  Additionally, version 2.0 includes two new functions: `Comp.plots.color.choort` and `Parm.bounds.plots`.  All functions can be tested using the included data set `data(gag)` which is distributed with the package.  
+For previous users, `FishGraph 2.0` includes two updated functions: `Comp.plots()` and `Index.plots` legacy functions are available using the suffix `.archive()`.  Additionally, version 2.0 includes two new functions: `Comp.plots.color.cohort` and `Parm.bounds.plots`.  All functions can be tested using the included data set `data(gag)` which is distributed with the package.  
 
 A comprehensive description of all included functions and examples of their graphical output is available in [**NOAA Technical Memorandum NMFS-SEFSC-XXXXX**](http://www.link2file.com).
 
