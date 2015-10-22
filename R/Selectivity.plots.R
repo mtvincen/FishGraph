@@ -19,10 +19,11 @@
 #' 
 #' @return Graphics
 #' 
-#' @author M. Prager
-#' @author Erik H. Williams
-#' @author Andi Stephens
-#' @author Kyle W. Shertzer
+#' @author M Prager
+#' @author E Williams
+#' @author K Shertzer
+#' @author R Cheshire
+#' @author K Purcell
 #' 
 #' @examples \donttest{
 #' Selectivity.plots(gag)
