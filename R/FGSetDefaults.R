@@ -3,7 +3,7 @@ function()
 {
     fgopts <- list(
         graphics = list(
-            fglayout = c(7,3)),
+            fglayout = c(5,3)),
         color = list(
             clr.grid = "lightgray",         # for all grids
             lty.grid = "solid",             # ditto
@@ -27,7 +27,8 @@ function()
             clr.lightline = "gray60",
             clr.line2 = "black")
         )
-    options(FGoptions = fgopts)
+    #options(FGoptions = fgopts)
+    assign("FGoptions", fgopts, pos = 1)
     return(invisible(NULL))
 }   # end function FGSetDefaults
 
