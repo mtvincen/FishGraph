@@ -8,7 +8,7 @@ BSR.time.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   start.drop = 0, graphics.type = NULL, use.color = TRUE,
   units.b = x$info$units.biomass, units.ssb = x$info$units.ssb,
   units.r = x$info$units.rec, legend.pos = "topright", from.zero = TRUE,
-  BSR.references = list("Bmsy", "SSBmsy", "Rmsy"))
+  h.ref = TRUE, plot.options = FGGetOptions())
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
@@ -38,10 +38,6 @@ Defines the position of the legend (ex. "bottomright", "bottom", etc.)}
 \item{from.zero}{When \code{TRUE}, the Y-axis of each plot
 (except recruitment deviations) starts at zero.}
 
-\item{BSR.references}{A list of three character-string names to specify reference
-points to appear on BSR plots, in order of biomass, spawning biomass, and recruits.
-Input NULL for none, e.g., BSR.references=list(NULL,"SSBmsy", NULL).}
-
 \item{connect.obsd}{In plots of observed and predicted data, observed points
 are joined by a line when \code{TRUE}.}
 }
@@ -62,12 +58,10 @@ BSR.time.plots(gag)
 \author{
 M. Prager
 
-E. Williams
+Erik H. Williams
 
-K. Shertzer
+Andi Stephens
 
-R. Cheshire
-
-K. Purcell
+Kyle W. Shertzer
 }
 

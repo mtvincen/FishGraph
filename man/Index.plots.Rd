@@ -6,8 +6,7 @@
 \usage{
 Index.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   graphics.type = NULL, use.color = TRUE, connect.obsd = FALSE,
-  from.zero = TRUE, two.panel = TRUE, log.resid = FALSE, err.bar = TRUE,
-  resid.analysis = TRUE)
+  from.zero = TRUE, two.panel = TRUE, log.resid = FALSE)
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
@@ -30,9 +29,9 @@ When \code{NULL}, no plots are saved.}
 
 \item{log.resid}{When \code{TRUE} residuals are computed as \eqn{R = log(U \diagup\hat{U})}.}
 
-\item{err.bar}{When \code{TRUE}, error bars indicating plus/minus two standard errors of the observed index are plotted}
+\item{draw.barplot}{When \code{TRUE}, a stacked barplot of standardized residuals is drawn.}
 
-\item{resid.analysis}{When \code{TRUE}, additional diagnostic plots of residuals are created and tests performed}
+\item{draw.pairs}{When \code{TRUE}, a scatterplot matrix of observed abundance indicies is drawn.}
 }
 \value{
 Graphics
@@ -42,18 +41,18 @@ Plots observed and predicted and diagnostic plots for index development
 }
 \examples{
 \donttest{
-Index.plots(gag)
+Index.plots.beta(gag)
 }
 }
 \author{
-M Prager
+E.H. Williams
 
-E Williams
+M.H. Prager
 
-K Shertzer
+A. Stevens
 
-R Cheshire
+RT Cheshire
 
-K Purcell
+KM Purcell
 }
 

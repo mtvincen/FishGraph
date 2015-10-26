@@ -6,7 +6,8 @@
 \usage{
 F.time.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   start.drop = 0, graphics.type = NULL, use.color = TRUE,
-  legend.pos = "topleft", F.references = NULL, F.additional = NULL)
+  legend.pos = "topleft", F.references = NULL,
+  plot.options = FGGetOptions())
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
@@ -27,9 +28,6 @@ Defines the position of the legend (ex. "bottomright", "bottom", etc.)}
 
 \item{F.references}{A list of character-string vectors to specify reference
 points to appear on \emph{F} plots.}
-
-\item{F.additional}{A vector of character-string names specifying additional F metrics to be plotted.
-An extension of *.ratio indicates that the metric is a relative measure.}
 }
 \value{
 Graphics
@@ -46,14 +44,12 @@ F.time.plots(gag)
 }
 }
 \author{
-M Prager
+M. Prager
 
-E Williams
+Erik H. Williams
 
-K Shertzer
+Andi Stephens
 
-R Cheshire
-
-K Purcell
+Kyle W. Shertzer
 }
 

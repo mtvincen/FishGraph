@@ -16,8 +16,6 @@
 #' the plot of numbers at age.
 #' @param units.biomass A text string (e.g. \code{"t"}) used in labeling the plot
 #' of biomass at age.
-#' @param max.bub A numerical scalar for the maximum bubble size (e.g. \code{"4.0"}) 
-#' in bubble plots of numbers at age and biomass at age.
 #' @param user.plots A vector of text strings with the names of additional matrix 
 #' components of \code{x} to be plotted.
 #' @param plot.CLD When \code{TRUE}, each matrix in \code{x$CLD.est.mats} is plotted,
@@ -25,11 +23,10 @@
 #' 
 #' @return Graphics
 #' 
-#' @author M Prager
-#' @author E Williams
-#' @author K Shertzer
-#' @author R Cheshire
-#' @author K Purcell
+#' @author M. Prager
+#' @author Erik H. Williams
+#' @author Andi Stephens
+#' @author Kyle W. Shertzer
 #' 
 #' @examples \donttest{
 #' NFZ.age.plots(gag)
@@ -39,7 +36,7 @@ NFZ.age.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    start.drop = 0, graphics.type = NULL, use.color = TRUE,
    units.naa = x$info$units.naa, units.biomass = x$info$units.biomass,
-   max.bub=4.0,user.plots = NULL, plot.CLD = FALSE)
+   user.plots = NULL, plot.CLD = FALSE)
 ########################################################################################
 {   ### Set up plotting-related stuff:
     savepar <- FGSetPar(draft)
@@ -167,82 +164,8 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
         }
     }
 #---------------------------------------------------------------------------------------
-# BUBBLE PLOTS OF NUMBER AT AGE
-#---------------------------------------------------------------------------------------
-par(savepar)
-#par(mfrow=c(1,1))
-plot.options = FGGetOptions()
-par <- FGSetPar(draft)
-
-if ("N.age" %in% names(x))
-{   if (start.drop == 0 ) dataset <- x$N.age
-    else dataset <- x$N.age[-(1:start.drop),]
-    if (draft) PlotTitle <- FGMakeTitle("N at age", DataName)
-irn <- as.integer(rownames(dataset))                        # year names
-x1 <- as.integer(rep(irn, ncol(dataset)))                   # year names
-y1 <- sort(rep(as.numeric(colnames(dataset)), nrow(dataset)))    # age- or length-class names
-
-### Get size of the bubbles:
-wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")              
-m.age=rowSums(wt.m.age)/rowSums(dataset)
-bub.size <- max.bub*(sqrt(abs(dataset))/sqrt(max(abs(dataset))))  ###plots area of bubble
-# This prevents plotting fractional years (e.g. 1995.5)
-xmin = irn[1]-1
-xmax = max(max(irn), xmin + 4)
-ymin=min(y1)
-ymax=max(y1)
-#par(cex = 1, cex.main = 1, cex.axis = 0.85)
-
-#### Draw the main (bubble) plot:
-if (draft) PlotTitle <- FGMakeTitle("N at age", DataName)
-ifelse (use.color, bubble.col <- plot.options$color$clr.line, bubble.col <- plot.options$bw$clr.pred)
-lab.y = "Age"
-
-plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1, 
-     xlim = c(xmin, xmax),ylim=c(ymin,ymax))
-grid(col = "lightgray", lty = 1)
-points(x1, y1, cex = bub.size, col = bubble.col,  pch = 21)
-lines(as.numeric(rownames(dataset)),m.age,lwd=2,lty=1)
-if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
-                             GraphName = "N.age.bubble", graphics.type)
-}
-#---------------------------------------------------------------------------------------
-### BUBBLE PLOTS OF BIOMASS AT AGE
-#---------------------------------------------------------------------------------------
-
-if ("B.age" %in% names(x))
-{   if (start.drop == 0 ) dataset <- x$B.age
-else dataset <- x$B.age[-(1:start.drop),]
-if (draft) PlotTitle <- FGMakeTitle("B at age", DataName)
-irn <- as.integer(rownames(dataset))                        # year names
-x1 <- as.integer(rep(irn, ncol(dataset)))                   # year names repeated to fill matrix
-y1 <- sort(rep(as.numeric(colnames(dataset)), nrow(dataset)))    # age- or length-class names
-
-### Get size of the bubbles:
-wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")              
-m.age=rowSums(wt.m.age)/rowSums(dataset)
-bub.size <- max.bub*(sqrt(abs(dataset))/sqrt(max(abs(dataset))))  ###plots area of bubble
-# This prevents plotting fractional years (e.g. 1995.5)
-xmin = irn[1]-1
-xmax = max(max(irn), xmin + 4)
-#par(cex = 1, cex.main = 1, cex.axis = 0.85)
-
-#### Draw the main (bubble) plot:
-if (draft) PlotTitle <- FGMakeTitle("B at age", DataName)
-ifelse (use.color, bubble.col <- plot.options$color$clr.line, bubble.col <- plot.options$bw$clr.pred)
-lab.y = "Age"
-
-plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1, 
-     xlim = c(xmin, xmax))
-grid(col = "lightgray", lty = 1)
-points(x1, y1, cex = bub.size, col = bubble.col,  pch = 21)
-lines(as.numeric(rownames(dataset)),m.age,lwd=2,lty=1)
-if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
-                             GraphName = "B.age.bubble", graphics.type)
-}
-
 # Clean up and return
 #---------------------------------------------------------------------------------------
-par(savepar)    # reset graphics device
-return(invisible(par(savepar)))
-}   # end of function       
+    par(savepar)
+}   # end of function
+

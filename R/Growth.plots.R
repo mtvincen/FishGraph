@@ -21,12 +21,11 @@
 #' #' 
 #' @return Graphics
 #' 
-#' @author M Prager
-#' @author E Williams
-#' @author K Shertzer
-#' @author R Cheshire
-#' @author K Purcell
-#'  
+#' @author M. Prager
+#' @author Erik H. Williams
+#' @author Andi Stephens
+#' @author Kyle W. Shertzer
+#' 
 #' @examples \donttest{
 #' Growth.plots(gag)
 #' }
@@ -43,8 +42,8 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
         return(invisible(-1))
     }
     if (! ("age"  %in% names(x$a.series)))
-    {   Errmsg <- paste("Variable 'age' not found in ",
-            deparse(substitute(x)), "$a.series", sep = "")
+    {   Errmsg <- paste("Variable 'age' found in ",
+            deparse(substitute(x)), "$a.series.", sep = "")
         warning(Errmsg, immediate. = TRUE)
         return(invisible(-1))
     }
@@ -52,8 +51,9 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
     if (! is.null(graphics.type))
     {   write.graphs <- TRUE
         GraphicsDirName <- paste(DataName, "-figs/growth", sep="")
-    } else {   
-       write.graphs <- FALSE
+    }
+    else
+    {   write.graphs <- FALSE
     }
     ### Set graphics parameters, constants, data structures:
     savepar <- FGSetPar(draft)
@@ -161,10 +161,8 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
         allnames <- allnames[-which(allnames == "length")]
         allnames <- allnames[-which(allnames == "weight")]
         # Remove length0 - length9 and weight0 - weight9:
-        len09=grep("^length[[:digit:]]", allnames)
-          if (length(len09)>0){allnames <- allnames[-grep("^length[[:digit:]]", allnames)]}
-        wgt09=grep("^weight[[:digit:]]", allnames)
-          if (length(wgt09)>0) {allnames <- allnames[-grep("^weight[[:digit:]]", allnames)]}
+        allnames <- allnames[-grep("^length[[:digit:]]", allnames)]
+        allnames <- allnames[-grep("^weight[[:digit:]]", allnames)]
 
         # Make the plots:
         for (this.name in allnames)

@@ -8,7 +8,8 @@ Comp.yearly.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
   print.angle = !compact, print.n = !compact, print.neff = !compact,
   plot.neff = TRUE, compute.neff = FALSE, print.year = compact,
-  compact = FALSE, uniform = TRUE, connect.obsd = FALSE)
+  compact = FALSE, uniform = TRUE, connect.obsd = FALSE,
+  plot.options = FGGetOptions())
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
@@ -42,7 +43,7 @@ based on the sample sizes and observed and estimated proportions.}
 
 \item{print.year}{When \code{TRUE}, the year is printed in each plot.}
 
-\item{compact}{When \code{TRUE}, plots are arranged by default in 5x3 matrix on each page.}
+\item{compact}{When \code{TRUE}, plots are arranged in 7x3 matrix on each page.}
 
 \item{uniform}{When \code{TRUE}, all years of the same data series are scaled
 the same.}
@@ -59,18 +60,16 @@ plot per page, or a compact format with 21 plots per page.
 }
 \examples{
 \donttest{
-Comp.yearly.plots(gag)
+Comp_yearly_plots(gag)
 }
 }
 \author{
-M Prager
+M. Prager
 
-E Williams
+Erik H. Williams
 
-K Shertzer
+Andi Stephens
 
-R Cheshire
-
-K Purcell
+Kyle W. Shertzer
 }
 

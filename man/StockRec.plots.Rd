@@ -8,7 +8,7 @@ StockRec.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   graphics.type = NULL, use.color = TRUE, start.drop = 0,
   units.ssb = x$info$units.ssb, units.rec = x$info$units.rec,
   rec.model = x$info$rec.model, draw.model = TRUE, draw.lowess = FALSE,
-  draw.time = TRUE, year.pos = 1)
+  plot.options = FGGetOptions())
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
@@ -40,13 +40,6 @@ and recruitment.}
 
 \item{draw.lowess}{If \code{TRUE}, a lowess smooth is drawn on plots of stock
 and recruitment.}
-
-\item{draw.time}{If \code{TRUE}, stock-recruitment points are connected to indicate
-progression of time.}
-
-\item{year.pos}{An integer (= 1, 2, 3, or 4) defining the position of text relative to points.
-The text indicates first and last years in the time series, and applies only if draw.time=TRUE. A
-value of year.pos=0 turns off the text feature.}
 }
 \value{
 Graphics
@@ -61,14 +54,12 @@ StockRec.plots(gag)
 }
 }
 \author{
-M Prager
+M. Prager
 
-E Williams
+Erik H. Williams
 
-K Shertzer
+Andi Stephens
 
-R Cheshire
-
-K Purcell
+Kyle W. Shertzer
 }
 

@@ -2,11 +2,9 @@
 #' 
 #' The function \code{Comp.plots} generates bubble plots of residuals of age- 
 #' and length-composition fits for the entire time frame of the assessment. 
-#' Bubbles are scaled to the largest residual in each plot. Optionally,
-#' a small inset plot displays the correlation or angular 
-#' deviation between observed and predicted values each year. In addition,
-#' \code{Comp.plots} generates plots of predicted and observed mean compositions
-#' pooled across years.  
+#' Bubbles are scaled to the largest residual in each plot. So that the absolute
+#' scale of deviations can be judged, a small inset plot displays the angular 
+#' deviation between observed and predicted values each year.
 #' 
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
@@ -17,18 +15,15 @@
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param units a character string (e.g. \code{"cm"}) for labeling the X-axis of
 #' length-composition plots.  
-#' @param p.corr when \code{FALSE}, angular deviation is displayed in the inset plot; otherwise, 
-#' Pearson correlations.
-#' @param c.min lower bound on the y-axis range of the inset plot, applies only when p.corr is \code{TRUE}
-#' 
 #' 
 #' @return Graphics
 #' 
-#' @author M Prager
-#' @author E Williams
-#' @author K Shertzer
-#' @author R Cheshire
-#' @author K Purcell
+#' @author M. Prager
+#' @author Erik H. Williams
+#' @author Andi Stephens
+#' @author Kyle W. Shertzer
+#' @author R. Cheshire
+#' @author KM Purcell
 #' 
 #' @examples \donttest{
 #' Comp.plots(gag)
@@ -44,11 +39,10 @@
 #  Revised by A. Stephens, May, 2006
 #  Major revision by M. H. Prager, November 2006
 #  Revised by R. Cheshire, November 2012
-#  Revised by K. Shertzer, September 2015
 #######################################################################################
 Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, units = x$info$units.length, 
-   p.corr = TRUE, c.min=0.25)
+   p.corr = TRUE,c.min=0.25, plot.options = FGGetOptions())
 #######################################################################################
 #  ARGUMENTS:
 #  x - an R list with output from the assessment models
@@ -62,7 +56,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #  p.corr - TRUE plots pearson correlation coefficients in bottom pane,  FALSE plots
 #        angular deviation
 #  c.min - lower y axis value for correlation plots, default is 0.25.  All correlations
-#          below this value are plotted at the minimum as a different symbol and color.
+#          below this value are plotted at the minimun as a different symbol and color
 #######################################################################################
 {  Errstring = ("No composition data found.  Terminating Comp.plots");
    if (! ("comp.mats" %in% names(x))) stop(Errstring)
@@ -74,7 +68,6 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    if ( (length(cm) %% 2) != 0 ) stop("Odd number of matrices found in Comp.plots!\n")
 
    ### Set graphics parameters
-   plot.options = FGGetOptions()
    savepar <- FGSetPar(draft)
 
    ### If writing graphics files, make sure there is a directory for them:
@@ -97,16 +90,10 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    {  clr.pos <- plot.options$color$clr.pos    # color for positive residuals
       clr.neg <- plot.options$color$clr.neg    # color for negative residuals
       clr.ang <- plot.options$color$clr.ang    # color for angle plot
-      col.obsd <- plot.options$color$clr.obsd
-      col.pred <- plot.options$color$clr.pred
-      Y1Col  <- plot.options$color$clr.line
    }  else
    {  clr.pos <- plot.options$bw$clr.pos    # color for positive residuals
       clr.neg <- plot.options$bw$clr.neg    # color for negative residuals
       clr.ang <- plot.options$bw$clr.ang    # color for angle plot
-      col.obsd <- plot.options$bw$clr.obsd
-      col.pred <- plot.options$bw$clr.pred
-      Y1Col  <- plot.options$bw$clr.line
    }
 
    ##---Cumulative fit plots-------------------------------------------------------------------   
@@ -117,9 +104,8 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
      m2 <- cm[[iplot*2]]           # matrix of predicted
      
      ### Get various string representations of data series:
-     #  gfileroot is used in the name for the graphics file(s):
+     #  gfileroot is name for the graphics file(s):
      gfileroot <- FGTrimName(names(cm)[iplot * 2], removePrefix = 0, removeSuffix = 1)
-     gfilename <- paste("pooled.",gfileroot, sep="")
      # titleroot is used as part of the plot title:
      titleroot <- paste("Fishery: ", gfileroot)
      
@@ -127,22 +113,17 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
      if(substr(gfileroot, 1, 1)  == "l"){title.y <- FGMakeLabel("Length bin", units)
      }else{title.y <- "Age class"}
      
-    
-     
      ob.m=apply(m1,2,mean)
      pr.m=apply(m2,2,mean)
      ymax=max(c(ob.m,pr.m))
      x.vec=as.numeric(dimnames(m1)[[2]])
      #plot(x=x.vec,y=ob.m,type="b",col=1,lwd=2,cex=2,ylim=c(0,ymax),xlab=title.y,ylab="Mean Composition",main=titleroot)
-     par(las=FGSetLas(c(ob.m, pr.m)))
-     plot(x=x.vec,y=ob.m,col=NULL,ylim=c(0,ymax),xlab=title.y,ylab="Pooled composition",main=titleroot)
+     plot(x=x.vec,y=ob.m,col=NULL,ylim=c(0,ymax),xlab=title.y,ylab="Mean Composition",main=titleroot)
      #polygon(x=c(min(x.vec),x.vec,max(x.vec)),y=c(0,ob.m,0),border="lightgray",col="lightgray")
-     grid(col = "lightgray", lty = 1)     
-     points(x=x.vec,y=ob.m,col=col.obsd,pch=21, cex = 1.25, lwd=2)
-     lines(x=x.vec,y=pr.m,col=Y1Col,lwd=2,type="l"); points(x=x.vec,y=pr.m,col=Y1Col,lwd=2, pch=16)
-     #legend(x="topright",bg="white",legend=c("Observed","Predicted"),lwd=2,col=c(col.obsd, Y1Col),lty=c(-1,1),pch=c(1,16))
-     if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = gfilename,
-                                  graphics.type)
+     points(x=x.vec,y=ob.m,col=1,pch=1)
+     lines(x=x.vec,y=pr.m,col=2,lwd=2,type="l",pch=16)
+     grid(col = "lightgray", lty = 1)
+     legend(x="topleft",legend=c("Observed","Predicted"),lwd=c(2,2),col=c(1,2),pt.cex=c(2,1),pch=c(1,16))
    }
    #-------------------------------------------------------------------------------------------      
    

@@ -6,7 +6,7 @@
 \usage{
 Comp.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
-  p.corr = TRUE, c.min = 0.25)
+  p.corr = TRUE, c.min = 0.25, plot.options = FGGetOptions())
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
@@ -23,11 +23,6 @@ When \code{NULL}, no plots are saved.}
 
 \item{units}{a character string (e.g. \code{"cm"}) for labeling the X-axis of
 length-composition plots.}
-
-\item{p.corr}{when \code{FALSE}, angular deviation is displayed in the inset plot; otherwise,
-Pearson correlations.}
-
-\item{c.min}{lower bound on the y-axis range of the inset plot, applies only when p.corr is \code{TRUE}}
 }
 \value{
 Graphics
@@ -35,11 +30,9 @@ Graphics
 \description{
 The function \code{Comp.plots} generates bubble plots of residuals of age-
 and length-composition fits for the entire time frame of the assessment.
-Bubbles are scaled to the largest residual in each plot. Optionally,
-a small inset plot displays the correlation or angular
-deviation between observed and predicted values each year. In addition,
-\code{Comp.plots} generates plots of predicted and observed mean compositions
-pooled across years.
+Bubbles are scaled to the largest residual in each plot. So that the absolute
+scale of deviations can be judged, a small inset plot displays the angular
+deviation between observed and predicted values each year.
 }
 \examples{
 \donttest{
@@ -47,14 +40,16 @@ Comp.plots(gag)
 }
 }
 \author{
-M Prager
+M. Prager
 
-E Williams
+Erik H. Williams
 
-K Shertzer
+Andi Stephens
 
-R Cheshire
+Kyle W. Shertzer
 
-K Purcell
+R. Cheshire
+
+KM Purcell
 }
 

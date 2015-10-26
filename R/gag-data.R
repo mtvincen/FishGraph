@@ -1,8 +1,8 @@
 #' GAG data output from an assessment model
 #'
 #' Data from a recent stock assessment run of the Beaufort Assessment Model.
-#' Data have been read into an object named "gag" using the dget()
-#' function on the R-formatted output of the assessment model.
+#' Data has been pre-prcossessd into an object name "gag" using the dget()
+#' function on the .RData output of the assessment model.
 #'
 #' @docType data
 #'

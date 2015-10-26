@@ -1,6 +1,6 @@
 FGBarplot <-
 function(x, lab.y, use.color, PlotTitle, leg.title="",
-        proportion = FALSE, href = NULL, hrefname = NULL)
+        proportion = FALSE)
     {   # Reduce R margin to zero:
         oldmar <- par()$mar
         par(mar = c(oldmar[1:3], 0))
@@ -12,10 +12,6 @@ function(x, lab.y, use.color, PlotTitle, leg.title="",
         mp <- barplot(t(x), col = colvec, xlab = "Year", ylab = lab.y,
             axisnames = FALSE, space = 0, las = FGSetLas(rowSums(x)),
             main = "")
-        if (length(href>0))
-            {lines(0:length(lab.tick),rep(href, length=length(lab.tick)+1), lty=2, lwd=2)
-             text(0.05*length(lab.tick), href, labels=hrefname, pos=3, cex=0.85, offset=0.35)}
-        
         title(main = PlotTitle, cex = 0.9)
         # Get major and minor multiples for choosing labels:
         ntick <- length(mp)

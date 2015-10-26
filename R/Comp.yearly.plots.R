@@ -25,29 +25,26 @@
 #' internally, rather than using values stored by the user.  The computations are
 #' based on the sample sizes and observed and estimated proportions.
 #' @param print.year When \code{TRUE}, the year is printed in each plot.
-#' @param compact When \code{TRUE}, plots are arranged by default in 5x3 matrix on each page.
+#' @param compact When \code{TRUE}, plots are arranged in 7x3 matrix on each page.
 #' @param uniform When \code{TRUE}, all years of the same data series are scaled
 #' the same.   
 #' 
 #' @return Graphics
 #' 
-#' @author M Prager
-#' @author E Williams
-#' @author K Shertzer
-#' @author R Cheshire
-#' @author K Purcell
-#' 
+#' @author M. Prager
+#' @author Erik H. Williams
+#' @author Andi Stephens
+#' @author Kyle W. Shertzer
 #' 
 #' @examples \donttest{
-#' Comp.yearly.plots(gag)
+#' Comp_yearly_plots(gag)
 #' }
-#' 
 Comp.yearly.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
    print.angle = !compact, print.n = !compact, print.neff = !compact,
    plot.neff = TRUE, compute.neff = FALSE, print.year = compact, compact = FALSE,
-   uniform = TRUE, connect.obsd = FALSE)
+   uniform = TRUE, connect.obsd = FALSE, plot.options = FGGetOptions())
 #-------------------------------------------------------------------------------
 #  ARGUMENTS:
 #  x - an R list with output from the assessment models
@@ -63,7 +60,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #        also be a variable x$t.series.year with years.  These may be a superset
 #        of the years in each matrix.
 #  DataName - a string representation an identifier for the data (run) in use.
-#  draft - if TRUE the figure has a main title
+#  draft - TRUE if the figure has a main title
 #  graphics.type - a character vector with graphics-file types
 #  use.color - TRUE of graphs are in color
 #  units - a character string for labeling the units of length bins.
@@ -87,7 +84,6 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
    compnames <- names(cm)
 
    ### Set graphics parameters for compact or non-compact mode:
-   plot.options = FGGetOptions()
    savepar <- FGSetPar(draft)
    if (compact)
    {  par(mar = c(3.5, 4, 0.85, 0.7), cex = 0.9, cex.main = 0.9, cex.lab = 0.85,

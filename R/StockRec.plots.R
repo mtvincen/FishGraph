@@ -22,21 +22,14 @@
 #' and recruitment.
 #' @param draw.lowess If \code{TRUE}, a lowess smooth is drawn on plots of stock
 #' and recruitment.
-#' @param draw.time If \code{TRUE}, stock-recruitment points are connected to indicate
-#' progression of time.
-#' @param year.pos An integer (= 1, 2, 3, or 4) defining the position of text relative to points. 
-#' The text indicates first and last years in the time series, and applies only if draw.time=TRUE. A
-#' value of year.pos=0 turns off the text feature.
 #' 
 #' @return Graphics
 #' 
-#' @author M Prager
-#' @author E Williams
-#' @author K Shertzer
-#' @author R Cheshire
-#' @author K Purcell
+#' @author M. Prager
+#' @author Erik H. Williams
+#' @author Andi Stephens
+#' @author Kyle W. Shertzer
 #' 
-#'  
 #' @examples \donttest{
 #' StockRec.plots(gag)
 #' }
@@ -45,7 +38,7 @@ StockRec.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
     graphics.type = NULL, use.color = TRUE, start.drop = 0,
     units.ssb = x$info$units.ssb, units.rec = x$info$units.rec,
     rec.model = x$info$rec.model, draw.model = TRUE, draw.lowess = FALSE,
-    draw.time = TRUE, year.pos=1)
+    plot.options = FGGetOptions())
 #=================================================================================
 {   ### Check for required data:
     if (! ("t.series" %in% names(x)))
@@ -86,7 +79,6 @@ StockRec.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
     rndx <- sndx + x$parms$rec.lag
 
     ### Set up plotting-related stuff:
-    plot.options = FGGetOptions()
     PlotTitle <- ""
     savepar <- FGSetPar(draft)
     if (! is.null(graphics.type))
@@ -176,20 +168,11 @@ StockRec.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
     ### Now make the plots:
 #=================================================================================
     ### Plot of stock vs. recruitment -- arithmetic scale
-    if(draft) PlotTitle <- FGMakeTitle("Stock-recruitment", DataName)
+    if(draft) PlotTitle <- FGMakeTitle("Stock-recruitment (linear R)", DataName)
     FGTimePlot(x = ts$SSB[sndx], y = ts$recruits[rndx], y2 = NULL,
         lab.x = lab.x, lab.y = lab.y, FGtype = "circles", main = PlotTitle,
         use.color = use.color, xlim = lim.x, ylim = lim.y)
-if (draw.time){
-    lines(ts$SSB[sndx], ts$recruits[rndx], col = clr.points, lty=3)
-    if (year.pos>0){
-        text (x=ts$SSB[sndx[1]], y=ts$recruits[rndx[1]],
-              labels=ts$year[sndx[1]], pos=year.pos, cex=0.85, offset=0.35)
-        text (x=ts$SSB[sndx[length(sndx)]], y=ts$recruits[rndx[length(rndx)]],
-              labels=ts$year[sndx[length(sndx)]], pos=year.pos, cex=0.85, offset=0.35)
-    }
-}    
-redraw <- FALSE
+    redraw <- FALSE
     if(draw.lowess)
     {   lines(lowess(ts$SSB[sndx], ts$recruits[rndx],f = 0.55),
             col = clr.lowess, lwd = 2)
@@ -199,97 +182,47 @@ redraw <- FALSE
     {   lines(stock.sim, rec.sim, lwd = 2)
         if (draw.bias)
         {   lines(stock.sim, bias.corr * rec.sim, lwd = 2, lty = "dashed")
-            leg.text <- c(rec.model, "Expected")
+            leg.text <- c(rec.model, "Bias corrected")
             legend("topright", legend = leg.text, lty = c("solid", "dashed"),
                 lwd = 2, inset = 0.01, bg = "white")
             redraw <- TRUE
         }
     }
     # Replot to reveal any points under legend:
-    if (redraw) {points(ts$SSB[sndx], ts$recruits[rndx], col = clr.points)}
-    
+    if (redraw) points(ts$SSB[sndx], ts$recruits[rndx], col = clr.points)
     # Save plots to file:
     if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
-        GraphName = paste("SR.",rec.model, sep = ""), graphics.type)
+        GraphName = paste("SR.",rec.model, ".lin", sep = ""), graphics.type)
     #==================================================================
-#     ##### Plot of stock & recruitment with function -- log scale
-#     if(draft) PlotTitle <- FGMakeTitle("Stock-recruitment (log R)", DataName)
-#     {   if (draw.bias)
-#             lim.y <- range(ts$recruits[rndx], bias.corr * rec.sim, na.rm = TRUE)
-#         else
-#             lim.y <- range(ts$recruits[rndx], rec.sim, na.rm = TRUE)
-#     }
-#     lim.y[1] = max(lim.y[1], min(ts$recruits[rndx], na.rm = TRUE) / 5.0)
-#     FGTimePlot(x = ts$SSB[sndx], y = ts$recruits[rndx],
-#         y2 = NULL, lab.x = lab.x, lab.y = lab.y, FGtype = "circles",
-#         main = PlotTitle, use.color = use.color, xlim = lim.x,  ylim = lim.y,
-#         log = "y")
-#     if(draw.lowess)
-#     {   lines(lowess(ts$SSB[sndx], ts$recruits[rndx],f = 0.60),
-#             col = clr.lowess, lwd = 2)
-#     }
-#     if (draw.model && curve.OK)
-#     {   lines(stock.sim, rec.sim, lwd = 2)
-#         if (draw.bias)
-#         {   lines(stock.sim, bias.corr * rec.sim, lwd = 2, lty = "dashed")
-#             legend("bottomright", legend = leg.text, lty = c("solid", "dashed"),
-#                 lwd = 2, inset = 0.01, bg = "white")
-#         }
-#     }
-#     # Replot to reveal any points under legend:
-#     if (redraw) points(ts$SSB[sndx], ts$recruits[rndx], col = clr.points)
-#     # Save plots to file:
-#     if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
-#         GraphName = paste("SR.", rec.model, ".log", sep = ""), graphics.type)
-#=================================================================================
-### Plot of stock vs. log(recruitment/spawners) 
-if(draft) PlotTitle <- FGMakeTitle("Stock v log(R/S)", DataName)
-logRS=log(ts$recruits[rndx]/ts$SSB[sndx])
-lab.y2   <- "log(recruits/spawner)"
-
-if (draw.model && curve.OK) {
-    logRS.sim=log(rec.sim/stock.sim);
-    lim.y <- range(logRS, logRS.sim, na.rm = TRUE)
-} else {lim.y <- range(logRS, na.rm = TRUE)}
-
-if (any(logRS <= 0))
-{   Errmsg <- "Warning: attempted to take log of a non-positive R/S"
-    warning(Errmsg, immediate. = TRUE)
-    return(invisible(-1))
-}
-
-
-lim.y[1] = 0.9*lim.y[1]; lim.y[2] = 1*lim.y[2]
-
-FGTimePlot(x = ts$SSB[sndx], y = logRS, y2 = NULL,
-           lab.x = lab.x, lab.y = lab.y2, FGtype = "circles", main = PlotTitle,
-           use.color = use.color, xlim = lim.x, ylim = lim.y)
-if (draw.time){
-  lines(ts$SSB[sndx], logRS, col = clr.points, lty=3)
-  if (year.pos>0){
-    text (x=ts$SSB[sndx[1]], y=logRS[1],
-          labels=ts$year[sndx[1]], pos=year.pos, cex=0.85, offset=0.35)
-    text (x=ts$SSB[sndx[length(sndx)]], y=logRS[length(logRS)],
-          labels=ts$year[sndx[length(sndx)]], pos=year.pos, cex=0.85, offset=0.35)
-  }
-}
-
-redraw <- FALSE
-if(draw.lowess)
-{   lines(lowess(ts$SSB[sndx], logRS,f = 0.55),
-          col = clr.lowess, lwd = 2)
-    redraw = TRUE
-}
-
-if (draw.model && curve.OK)
-  {lines(stock.sim, logRS.sim, lwd = 2)}
-# Replot to reveal any points under legend:
-if (redraw) {points(ts$SSB[sndx], logRS, col = clr.points)}    
-# Save plots to file:
-if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
-                             GraphName = paste("SlogRS.",rec.model, sep = ""), graphics.type)
-
-
+    ##### Plot of stock & recruitment with function -- log scale
+    if(draft) PlotTitle <- FGMakeTitle("Stock-recruitment (log R)", DataName)
+    {   if (draw.bias)
+            lim.y <- range(ts$recruits[rndx], bias.corr * rec.sim, na.rm = TRUE)
+        else
+            lim.y <- range(ts$recruits[rndx], rec.sim, na.rm = TRUE)
+    }
+    lim.y[1] = max(lim.y[1], min(ts$recruits[rndx], na.rm = TRUE) / 5.0)
+    FGTimePlot(x = ts$SSB[sndx], y = ts$recruits[rndx],
+        y2 = NULL, lab.x = lab.x, lab.y = lab.y, FGtype = "circles",
+        main = PlotTitle, use.color = use.color, xlim = lim.x,  ylim = lim.y,
+        log = "y")
+    if(draw.lowess)
+    {   lines(lowess(ts$SSB[sndx], ts$recruits[rndx],f = 0.60),
+            col = clr.lowess, lwd = 2)
+    }
+    if (draw.model && curve.OK)
+    {   lines(stock.sim, rec.sim, lwd = 2)
+        if (draw.bias)
+        {   lines(stock.sim, bias.corr * rec.sim, lwd = 2, lty = "dashed")
+            legend("bottomright", legend = leg.text, lty = c("solid", "dashed"),
+                lwd = 2, inset = 0.01, bg = "white")
+        }
+    }
+    # Replot to reveal any points under legend:
+    if (redraw) points(ts$SSB[sndx], ts$recruits[rndx], col = clr.points)
+    # Save plots to file:
+    if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+        GraphName = paste("SR.", rec.model, ".log", sep = ""), graphics.type)
 #==================================================================================
    par(savepar)    # reset graphics device
    return(invisible(0))
