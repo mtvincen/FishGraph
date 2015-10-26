@@ -47,12 +47,14 @@ Growth.plots(gag)
 }
 }
 \author{
-M. Prager
+M Prager
 
-Erik H. Williams
+E Williams
 
-Andi Stephens
+K Shertzer
 
-Kyle W. Shertzer
+R Cheshire
+
+K Purcell
 }
 

@@ -18,13 +18,16 @@
 #' Defines the position of the legend (ex. "bottomright", "bottom", etc.)
 #' @param F.references A list of character-string vectors to specify reference
 #' points to appear on \emph{F} plots.
+#' @param F.additional A vector of character-string names specifying additional F metrics to be plotted.
+#' An extension of *.ratio indicates that the metric is a relative measure.
 #' 
 #' @return Graphics
 #' 
-#' @author M. Prager
-#' @author Erik H. Williams
-#' @author Andi Stephens
-#' @author Kyle W. Shertzer
+#' @author M Prager
+#' @author E Williams
+#' @author K Shertzer
+#' @author R Cheshire
+#' @author K Purcell
 #' 
 #' @examples \donttest{
 #' F.time.plots(gag)
@@ -33,7 +36,7 @@
 F.time.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    start.drop = 0, graphics.type = NULL, use.color = TRUE, legend.pos = "topleft",
-   F.references = NULL, plot.options = FGGetOptions())
+   F.references = NULL, F.additional=NULL)
 ###########################################################################################
 #  ARGUMENTS:
 #  x - an R list with output from the assessment models
@@ -89,6 +92,26 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
       Fdata <- Fdata[,-FFmsycol, drop = FALSE]
       FFmsy.found = TRUE
    }
+
+   # Extract F.additional if present:
+   if (length(F.additional>0))     
+   {
+     Fadd=matrix(0, nrow=length(yrndx), ncol=length(F.additional))
+     for (i in 1:length(F.additional)) {
+       Faddname <- F.additional[i]
+       Faddcol <- grep(Faddname, names(Fdata))
+       if (length(Faddcol) > 0)
+       {  Fadd[,i] <- Fdata[,Faddcol]
+          Fdata <- Fdata[,-Faddcol, drop = FALSE]
+       } else {Errmsg = (paste("User-defined component ", Faddname, " not found in $t.series.",
+                               sep = ""))
+               warning(Errmsg, immediate. = TRUE)
+               return(invisible(-1))
+         
+       }
+      }
+    }
+   
    nplots <- ncol(Fdata)             # number of individual series to plot
 
    ### If writing graphics files, make sure there is a directory for them:
@@ -99,6 +122,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
    { write.graphs <- FALSE
    }
    ### Set graphics parameters, constants, data structures:
+   plot.options = FGGetOptions()
    savepar <- FGSetPar(draft)
    PlotTitle <- ""
    colvec <- FGGetPal(nplots, use.color)
@@ -173,12 +197,73 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                hrefnames = hrefnames, href = href, legend.pos = legend.pos)
 
             if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
-               GraphName = paste("F.ref", sprintf("%03i",iplot), sep=""),
+               GraphName = paste("F.full.ref", sprintf("%03i",iplot), sep=""),
                graphics.type)
          }
       }
    }
 
+   ### Make plots of user-specified F metrics:
+   if (length(F.additional>0))
+   {  lab.x <- "Year"
+ 
+      for (i.Fadd in 1:length(F.additional)) {
+          Faddname <- F.additional[i.Fadd]
+          
+          addname.dum=unlist(strsplit(F.additional[i.Fadd],".", fixed=TRUE))
+          if (tail(addname.dum,1)=="ratio") {ratio=TRUE} else {ratio=FALSE}
+          addname=paste(addname.dum[-1],collapse=".")
+          
+          if (ratio) {
+            lab.y <- paste("Relative Fishing mortality rate (",addname,")",sep="")
+            if (draft) PlotTitle <- FGMakeTitle(Faddname, DataName)
+            ymax <- max(Fadd[,i.Fadd], 0.01, na.rm = TRUE)
+            FGTimePlot(year, Fadd[,i.Fadd], lab.x = lab.x, lab.y = lab.y, use.color = use.color,
+                       ylim = c(0, ymax), main = PlotTitle, FGtype = "1line", Y1Col = Y1Col,
+                       href=1.0, hrefnames=NULL, legend.pos = legend.pos)          
+            if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+                                         GraphName = Faddname, graphics.type)
+            
+            
+          } else {
+          
+            lab.y <- paste("Fishing mortality rate (",addname,")",sep="")
+            if (draft) PlotTitle <- FGMakeTitle(Faddname, DataName)
+            ymax <- max(Fadd[,i.Fadd], 0.01, na.rm = TRUE)
+            FGTimePlot(year, Fadd[,i.Fadd], lab.x = lab.x, lab.y = lab.y, use.color = use.color,
+                       ylim = c(0, ymax), main = PlotTitle, FGtype = "1line", Y1Col = Y1Col,
+                       legend.pos = legend.pos)          
+            if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+                                         GraphName = Faddname, graphics.type)
+            
+            
+            if (is.list(F.references))
+            {  nrefs = length(F.references)
+               for (iplot in 1:nrefs)
+               {  hrefnames <- F.references[[iplot]]
+                  # Get a vector of the indices of the references in x$parms:
+                  hrefindex <- NULL
+                  for (k in (F.references[[iplot]]))
+                    {hrefindex <- c(hrefindex, which(names(x$parms) == k))}
+                  href <- unlist(x$parms[hrefindex])
+                  ymax <- max(Fadd[,i.Fadd], 0.01, href, na.rm = TRUE)
+                  
+                  FGTimePlot(year, Fadd[,i.Fadd], lab.x = lab.x, lab.y = lab.y, use.color = use.color,
+                             ylim = c(0, ymax), main = PlotTitle, FGtype = "1line", Y1Col = Y1Col,
+                             hrefnames = hrefnames, href = href, legend.pos = legend.pos)
+                  
+                  if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+                                               GraphName = paste(Faddname,".ref", sprintf("%03i",iplot), sep=""),
+                                               graphics.type)
+               }
+            }
+          } 
+                      
+      } #end for i.Fadd
+   } #end if F.additional
+   
+      
+   
    ### Make stacked barplot of F's:
    if (nplots > 1)
    {  Fmat <- t(as.matrix(Fdata))

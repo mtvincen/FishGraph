@@ -1,4 +1,4 @@
-Package: FishGraph
+Package: FishGraphBeta
 Type: Package
 Title: Visualizations for fishery  stock-assessment.
 Version: 2.0
@@ -8,3 +8,8 @@ Maintainer: RT Cheshire <rob.cheshire@noaa.gov>
 Description: This package is a set of functions that produce graphical representations of stock-assessment output.
 License: GPL-2
 LazyData:true
+Imports:
+	lmtest,
+	nortest,
+	tseries
+

@@ -7,7 +7,7 @@
 NFZ.age.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   start.drop = 0, graphics.type = NULL, use.color = TRUE,
   units.naa = x$info$units.naa, units.biomass = x$info$units.biomass,
-  user.plots = NULL, plot.CLD = FALSE)
+  max.bub = 4, user.plots = NULL, plot.CLD = FALSE)
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
@@ -31,6 +31,9 @@ the plot of numbers at age.}
 \item{units.biomass}{A text string (e.g. \code{"t"}) used in labeling the plot
 of biomass at age.}
 
+\item{max.bub}{A numerical scalar for the maximum bubble size (e.g. \code{"4.0"})
+in bubble plots of numbers at age and biomass at age.}
+
 \item{user.plots}{A vector of text strings with the names of additional matrix
 components of \code{x} to be plotted.}
 
@@ -50,12 +53,14 @@ NFZ.age.plots(gag)
 }
 }
 \author{
-M. Prager
+M Prager
 
-Erik H. Williams
+E Williams
 
-Andi Stephens
+K Shertzer
 
-Kyle W. Shertzer
+R Cheshire
+
+K Purcell
 }
 

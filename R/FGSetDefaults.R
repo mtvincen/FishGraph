@@ -27,8 +27,8 @@ function()
             clr.lightline = "gray60",
             clr.line2 = "black")
         )
-    #options(FGoptions = fgopts)
-    assign("FGoptions", fgopts, pos = 1)
+    options(FGoptions = fgopts)
+    #assign("FGoptions", fgopts, pos = 1)
     return(invisible(NULL))
 }   # end function FGSetDefaults
 
