@@ -1,54 +1,59 @@
 #' Plots of age-composition data observed and model predicted with color coding by cohort
 #' 
-#' The function \code{Comp.plots.color.cohort} generates bar plot of observed age composition data
+#' The function \code{Cohort.plots} generates bar plot of observed age composition data
 #' with bars colored to track cohorts through time
 #' and model predicted values indicated by black dots and connected lines.
-#' Skipped years are accounted for and color coding stays with cohort, then recycled based on number of ages.
+#' Color coding tracks cohorts, accounting for skipped years;
+#' colors may be recycled depending on the number of ages.
 #' 
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' are omitted.
 #' @param graphics.type a vector of graphics file types to which graphics are saved.  
 #' When \code{NULL}, no plots are saved.  
 #' 
 #' @return Graphics
 #' 
-#' @author Erik H. Williams
+#' @author M Prager
+#' @author E Williams
+#' @author K Shertzer
+#' @author R Cheshire
+#' @author K Purcell
 #' 
 #' @examples \donttest{
-#' Comp.plots.color.cohort(gag)
+#' Cohort.plots(gag)
 #' }
 #'
-Comp.plots.color.cohort <-
-function(x, DataName = deparse(substitute(x)), graphics.type = NULL)
+Cohort.plots <-
+function(x, DataName = deparse(substitute(x)), draft = TRUE, graphics.type = NULL)
 #######################################################################################
 #  ARGUMENTS:
 #  x - an R list with output from the assessment models
 #     The list x must have a component x$comp.mats that is a list of matrices
 #     These matrices must be found in pairs.  First, xxxx.ob, then xxxx.pr.
 #  DataName - a string representation an identifier for the data (run) in use.
+#  draft - if TRUE the figure has a main title
 #  graphics.type - a character vector with graphics-file types
 #  
 #######################################################################################
-{  Errstring = ("No composition data found.  Terminating Comp.plots");
+{  Errstring = ("No composition data found.  Terminating Cohort.plots");
    if (! ("comp.mats" %in% names(x))) stop(Errstring)
 
    ### Make local copy of needed data components
    cm <- x$comp.mats
 
    # Is number of columns odd?  This is a problem -- they should be in pairs!
-   if ( (length(cm) %% 2) != 0 ) stop("Odd number of matrices found in Comp.plots!\n")
+   if ( (length(cm) %% 2) != 0 ) stop("Odd number of matrices found in Cohort.plots!\n")
 
    ### Set graphics parameters
-   #savepar <- FGSetPar(draft)
+   savepar <- FGSetPar(draft)
 
    ### If writing graphics files, make sure there is a directory for them:
    if (! is.null(graphics.type))
-   {  write.graphs <- TRUE
-      GraphicsDirName <- paste(DataName, "-figs/comp", sep="")
-   }
-   else
-   {  write.graphs <- FALSE
-   }
+   {write.graphs <- TRUE
+      GraphicsDirName <- paste(DataName, "-figs/compyr", sep="")
+   } else {write.graphs <- FALSE}
 
    nplots <- length(cm) %/% 2               # integer division operator
    
@@ -62,7 +67,8 @@ function(x, DataName = deparse(substitute(x)), graphics.type = NULL)
       #  gfileroot is name for the graphics file(s):
       gfileroot <- FGTrimName(names(cm)[iplot * 2], removePrefix = 0, removeSuffix = 1)
       # titleroot is used as part of the plot title:
-      titleroot <- paste("Fishery: ", gfileroot)
+      gfileroot2 <- FGTrimName(names(cm)[iplot * 2], removePrefix = 1, removeSuffix = 1)
+      titleroot <- paste("Fishery:", gfileroot2)
 
       # select only age comp matrices
       if(substr(gfileroot, 1, 1)  == "a") 
@@ -95,9 +101,14 @@ function(x, DataName = deparse(substitute(x)), graphics.type = NULL)
           text(x=a.max,y=p.max*0.85,labels=dimnames(ob)[[1]][i], cex=1.5)
           lines(x=x.bar,y=pr[i,],type="b",pch=16,lwd=1,cex=1.5)
         }
-        mtext(text="Proportion",side=2,cex=1.5,outer=T,line=2.5)
-        mtext(text="Age",side=1,cex=1.5,outer=T,line=2.5)
-        mtext(text=paste(titleroot,", Observed (color bars), Predicted (black dots)",sep=""),side=3,cex=1.25,outer=T,line=2.5)
+        mtext(text="Proportion",side=2,cex=1.,outer=T,line=2.5,las=0)
+        mtext(text="Age",side=1,cex=1.,outer=T,line=2.5)
+        if (draft) 
+           {mtext(text=paste(titleroot,", Observed (color bars), Predicted (black dots)",sep=""),side=3,cex=1.2,outer=T,line=2.5)}
+        
+        if (write.graphs) FGSavePlot(GraphicsDirName, DataName, 
+                                     GraphName = paste("cohort.",gfileroot2,sep=""),
+                                     graphics.type)
       }  # end age comp subset
 
    }     # end (for ....)

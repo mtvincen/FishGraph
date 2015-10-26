@@ -1,65 +1,80 @@
-#' Parameter and bounds plots for stock-assessment models
 #' 
 #' Graphically displays parameter and bound values for a stock-assessment model runs.
 #' 
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
-#' are omitted.
 #' @param graphics.type a vector of graphics file types to which graphics are saved.  
 #' When \code{NULL}, no plots are saved.
-#' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param bound.tol the tolerance, as percentage of bound range, for flagging estimates close to bounds.
 
 #' 
 #' @return Graphics
 #' 
-#' @author Erik H. Williams
-#' @author KM Purcell
-
+#' @author M Prager
+#' @author E Williams
+#' @author K Shertzer
+#' @author R Cheshire
+#' @author K Purcell
 #' 
 #' @examples \donttest{
-#' Param.bounds.plots(gag)
+#' Parm.plots(gag)
 #' }
 #' 
-Parm.bounds.plots <- function(x, DataName = deparse(substitute(x)),
-                              draft = TRUE, graphics.type = NULL, use.color = TRUE,
-                              bound.tol=0.01)
+Parm.plots <- function(x, DataName = deparse(substitute(x)),
+                              graphics.type = NULL, bound.tol=0.01)
 #=================================================================================
 {
+
+  ### Check for data presence:
+  Errstring = ("No parameter data found.  Terminating Parm.plots");
+  if (! ("parm.cons" %in% names(x))) stop(Errstring)
+  
+  ### Check dimensionality of data:
+  Errstring = ("Component parm.cons does not have the required dimensions (8 entries for each parameter).
+               Terminating Parm.plots");
+  if (nrow(x$parm.cons)!=8) {stop(Errstring)}
+  
   ### Set up plotting-related stuff:
-  savepar <- FGSetPar(draft)
+  savepar <- FGSetPar(draft=TRUE)
   PlotTitle <- ""
   if (! is.null(graphics.type))
   {   write.graphs <- TRUE
-      GraphicsDirName <- paste(DataName, "-figs/sel", sep="")
+      GraphicsDirName <- paste(DataName, "-figs/parms", sep="")
       FGCheckGraphDir(GraphicsDirName)
-  }
-  else
-  {   write.graphs <- FALSE }
+  } else {write.graphs <- FALSE}
   
   
+  #=================================================================================
+  ##### plot condensed bounds, estimate, and initial guess #########################
   
-dimnames(x$parm.cons)=list(c("Guess","Lower Bound","Upper Bound","Phase","Prior Mean","Prior Var/-CV","Prior PDF","Estimate"),names(x$parm.cons))
+  dimnames(x$parm.cons)=list(c("Guess","Lower Bound","Upper Bound","Phase","Prior Mean","Prior Var/-CV","Prior PDF","Estimate"),names(x$parm.cons))
   
-
-  ###### get number of parameters to plot ################################################
-  namevec=names(x$parm.cons)
-  numpars=ncol(x$parm.cons)
+  namevec=names(x$parm.cons) #get names of parameters
+  numpars=ncol(x$parm.cons)  #get number of parameters to plot
   
-  ##### plot condensed bounds, estimate, and initial guess #######################################
+  numpages=ceiling(numpars/25) #params per page
+  pagebreaks=25*(1:numpages)
+  pagebreaksplus=pagebreaks+1
+  pagecounter=1
   par(mai=c(0.25,0.25,0.25,0.25))
   plot(1,1,ylim=c(-25,0),xlim=c(0,3),xlab="",ylab="",bty="n",col.axis="transparent",xaxt="n",yaxt="n")
   for(p in 1:numpars){
     
     pp=p
-    if(p==26||p==51||p==76)
+    if (p %in% pagebreaksplus)
     {
       plot(1,1,ylim=c(-25,0),xlim=c(0,3),xlab="",ylab="",bty="n",col.axis="transparent",xaxt="n",yaxt="n")
     }
-    if(p>25){pp=p-25}
-    if(p>50){pp=p-50} 
-    if(p>75){pp=p-75}
+    
+    if (numpages>1){
+       for (ipage in 2:numpages) {
+          if ((p>pagebreaks[ipage-1]) && (p<=pagebreaks[ipage])) {
+            pp=p-pagebreaks[ipage-1]
+            pagecounter=ipage
+          }
+       }      
+    }
+    
     
     #--get the parameter constraints and estimates---------------------
     pname=namevec[p]
@@ -80,16 +95,18 @@ dimnames(x$parm.cons)=list(c("Guess","Lower Bound","Upper Bound","Phase","Prior 
     
     b.range=xmax-xmin
     b.tol=bound.tol  #tolerance, as percentage of bound range, for flagging estimates close to bounds
-    
-    
-    # The order was restructured to allow for "fixed, Outside Bounds"
+       
     text(x=0.9,y=-pp,labels=pname,adj=c(1,0.5),cex=txt,font=2)
-    if(phase<0&&est<lo.b||est>hi.b){text(x=2.1,y=-pp,labels="Fixed Parameter, Outside Bounds!",adj=c(0,0.5),cex=txt,font=2,col="red")}
-    else if(phase<0){text(x=2.1,y=-pp,labels="Fixed Parameter",adj=c(0,0.5),cex=txt,font=2,col="purple")}
-    else if(est<lo.b||est>hi.b){text(x=2.1,y=-pp,labels="Estimate Outside Bounds!",adj=c(0,0.5),cex=txt,font=2,col="red")}
-    else if(est<(lo.b+(b.range*b.tol))){text(x=2.1,y=-pp,labels="w/in tolerance of Lower Bound",adj=c(0,0.5),cex=txt,font=2,col="orange")}
-    else if(est>(hi.b-(b.range*b.tol))){text(x=2.1,y=-pp,labels="w/in tolerance of Upper Bound",adj=c(0,0.5),cex=txt,font=2,col="orange")}
-    else{text(x=2.1,y=-pp,labels="No Bounding Issues",adj=c(0,0.5),cex=txt,font=2,col="green")}
+    if (phase<=0) {
+      if (est>lo.b&&est<hi.b) {text(x=2.1,y=-pp,labels="Fixed Parameter",adj=c(0,0.5),cex=txt,font=2,col="purple")
+      } else {text(x=2.1,y=-pp,labels="Fixed, Outside Bounds!",adj=c(0,0.5),cex=txt,font=2,col="red")}
+    }   
+    if (phase>0) {
+      if (est<lo.b||est>hi.b){text(x=2.1,y=-pp,labels="Estimate Outside Bounds!",adj=c(0,0.5),cex=txt,font=2,col="red")}
+      else if (est<(lo.b+(b.range*b.tol))){text(x=2.1,y=-pp,labels="Estimate Near Lower Bound",adj=c(0,0.5),cex=txt,font=2,col="orange")}
+      else if (est>(hi.b-(b.range*b.tol))){text(x=2.1,y=-pp,labels="Estimate Near Upper Bound",adj=c(0,0.5),cex=txt,font=2,col="orange")}
+      else {text(x=2.1,y=-pp,labels="No Bounding Issues",adj=c(0,0.5),cex=txt,font=2,col="green")}
+    }
     
     lhgt=0.25  # height of vertical lines
     lines(x=c(1,2),y=c(-pp,-pp),lwd=2)
@@ -98,18 +115,35 @@ dimnames(x$parm.cons)=list(c("Guess","Lower Bound","Upper Bound","Phase","Prior 
     lines(x=c((init-xmin)/b.range+1,(init-xmin)/b.range+1),y=c(-pp+lhgt,-pp-lhgt),lwd=4,col="orange")
     lines(x=c((est-xmin)/b.range+1,(est-xmin)/b.range+1),y=c(-pp+lhgt,-pp-lhgt),lwd=4,col="blue")
     
-    legend(x="top",legend=c("Bounds","Guess","Estimate")
+    legend(x="top",legend=c("Bounds","Initial Guess","Estimate")
            ,col=c("red","orange","blue"),lwd=c(4,4,4),cex=0.9
            ,ncol=3,seg.len=0.9,bg="white")
+    
+    if(write.graphs) {
+      if ((p == pagebreaks[pagecounter]) || (p == numpars)) {
+        gname=paste("parms.bounds.page", sprintf("%02.0f", pagecounter), sep = "")
+        FGSavePlot(GraphicsDirName, DataName,                      
+                 GraphName = gname, graphics.type)
+      }
+    }
     
   } #end p numpars loop
   
   
-  
-  
-  ##### plot prior, bounds, estimate, and initial guess ###################################
-  par(mfrow=c(2,2),mai=c(0.7,0.7,0.2,0.2))
+  #=================================================================================
+  ##### plot prior, bounds, estimate, and initial guess ############################
+  par(mfrow=c(2,2),mai=c(0.8,0.8,0.2,0.2))
+  numpages=ceiling(numpars/4) #four panels per page
+  pagebreaks=4*(1:numpages)
+  pagecounter=1
+
   for(p in 1:numpars){
+
+    if (numpages>1){
+      for (ipage in 2:numpages) {
+        if ((p>pagebreaks[ipage-1]) && (p<=pagebreaks[ipage])) {pagecounter=ipage}
+      }      
+    }
     
     #--get the parameter constraints and estimates---------------------
     pname=namevec[p]
@@ -139,8 +173,8 @@ dimnames(x$parm.cons)=list(c("Guess","Lower Bound","Upper Bound","Phase","Prior 
       }else if(varx<0.0 && pmean==0.0){varx=-varcv}
       yvec=0.5*(xvec-pmean)^2/varx+log(varx)
     }else if(p.pdf==4){
-      if(varcv<0.0){varx=(varcv*pmean)^2}
       varx=varcv
+      if(varcv<0.0){varx=(varcv*pmean)^2}      
       ab_iq=pmean*(1-pmean)/varx-1
       alpha=pmean*ab_iq
       beta=(1-pmean)*ab_iq
@@ -157,54 +191,38 @@ dimnames(x$parm.cons)=list(c("Guess","Lower Bound","Upper Bound","Phase","Prior 
     xmin=min(c(xvec,init,lo.b,hi.b,est))
     ymax=ymax+ymax*0.2
     bckg="transparent"
-    par(bg=bckg,new=FALSE)
+    par(bg=bckg, new=FALSE, las=FGSetLas(yvec))    
     plot(xvec,yvec,xlim=c(xmin,xmax),ylim=c(ymin,ymax),xlab=pname,ylab="Likelihood",type="l"
          ,lwd=3,cex.lab=1.5,font.lab=2,bg=bckg)
-    grid()
-    abline(v=lo.b,lwd=2,col="black")
-    abline(v=hi.b,lwd=2,col="black")
+    lines(xvec, yvec,lwd=3)
+    abline(v=lo.b,lwd=2,col="red")
+    abline(v=hi.b,lwd=2,col="red")
     abline(v=init,lwd=2,col="orange")
     abline(v=est,lwd=2,col="blue")
     #legend(x=xmin,y=ymax+(ymax*0.22),legend=c("Prior","Bound","Guess","Estim")
     if(phase<0){
       legend(x="topleft",legend=c("Prior","Bound","Guess","Fixed")
              ,col=c("black","red","orange","blue"),lwd=c(3,2,2,2),cex=0.7
-             ,ncol=4,seg.len=0.7,bg="gray")
-      text(grconvertX(0.70,"npc"),grconvertY(0.95,"npc"), "Fixed Param", cex=1.5)
+             ,ncol=2,seg.len=1,bg="gray90")
+      text(grconvertX(0.50,"npc"),grconvertY(0.1,"npc"), "Fixed Parameter", cex=1.)
     }
     else{
-      legend(x="topleft",legend=c("Prior","Bound","Guess","Fixed")
+      legend(x="topleft",legend=c("Prior","Bound","Guess","Estimate")
              ,col=c("black","red","orange","blue"),lwd=c(3,2,2,2),cex=0.7
-             ,ncol=4,seg.len=0.7,bg="white")
+             ,ncol=2,seg.len=1,bg="white")
+    }
+    
+    if(write.graphs) {
+      if ((p == pagebreaks[pagecounter]) || (p == numpars)) {
+        gname=paste("parms.lkhd.page", sprintf("%02.0f", pagecounter), sep = "")
+        FGSavePlot(GraphicsDirName, DataName,                      
+                   GraphName = gname, graphics.type)
+      }
     }
     
   } #end p numpars loop
   
-  
-  
-  ##### plot bounds, estimate, and initial guess of dev vectors ###################################
-  ###### get number of vectors to plot ################################################
-  par(mfrow=c(1,1),mai=c(1.5,1,1.5,0.5))
-  
-  namevec=names(x$parm.vec)[-1]
-  numvecs=ncol(x$parm.vec)-1
-  nameveccons=names(x$parm.vec.cons)
-  numveccons=ncol(x$parm.vec.cons)
-  
-  for(p in 1:numvecs)
-  {
-    name=namevec[p]
-    colnum=sum(as.numeric(name==nameveccons)*c(1:numveccons))
-    xdat=x$parm.vec[,1]
-    ydat=x$parm.vec[,1+p]
-    ymin=min(na.omit(c(x$parm.vec.cons[,colnum][1],ydat)))
-    ymax=max(na.omit(c(x$parm.vec.cons[,colnum][2],ydat)))
-    plot(xdat,ydat,ylim=c(ymin,ymax),xlab="Year",ylab="Dev",main=paste("Vector:",name),cex=1,lwd=2,pch=16)
-    grid()
-    abline(h=ymin,col=2,lwd=2)
-    abline(h=ymax,col=2,lwd=2)  
-  } # end numvecs loop
-  
+    
   par(savepar)
   return(invisible(0))
   
