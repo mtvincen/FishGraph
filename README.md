@@ -20,7 +20,7 @@ devtools::install_github("rcheshire/FishGraph")
 Alternatively, the package can be installed locally from the repository source files.
 
 ```
-install.packages("C://Location of files//FishGraph_2.0.tar.gz, 
+install.packages("C://Location of files//FishGraphBeta_2.0.tar.gz, 
                  repos = NULL, type="source")
 ```
 
@@ -29,10 +29,10 @@ install.packages("C://Location of files//FishGraph_2.0.tar.gz,
 Once installed the package offers a series of functions for model diagnostics and evaluations.  A full list of available functions can be obtained using:
 
 ```
-library(FishGraph)
-ls(pos = "package:FishGraph")
+library(FishGraphBeta)
+ls(pos = "package:FishGraphBeta")
 ```
-For previous users, `FishGraph 2.0` includes two updated functions: `Comp.plots()` and `Index.plots` legacy functions are available using the suffix `.archive()`.  Additionally, version 2.0 includes two new functions: `Comp.plots.color.cohort` and `Parm.bounds.plots`.  All functions can be tested using the included data set `data(gag)` which is distributed with the package.  
+`FishGraphBeta 2.0` includes several updated functions.  Additionally, version 2.0 includes four new functions: `Cohort.plots`, `Phase.plots`, `Parm.plots`, and `Bound.vec.plots`.  All functions can be tested using the included data set `data(gag)` which is distributed with the package.  
 
 A comprehensive description of all included functions and examples of their graphical output is available in [**NOAA Technical Memorandum NMFS-SEFSC-XXXXX**](http://www.link2file.com).
 
