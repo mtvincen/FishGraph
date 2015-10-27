@@ -99,7 +99,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
      Fadd=matrix(0, nrow=length(yrndx), ncol=length(F.additional))
      for (i in 1:length(F.additional)) {
        Faddname <- F.additional[i]
-       Faddcol <- grep(Faddname, names(Fdata))
+       Faddcol <- which(names(Fdata)==Faddname)
        if (length(Faddcol) > 0)
        {  Fadd[,i] <- Fdata[,Faddcol]
           Fdata <- Fdata[,-Faddcol, drop = FALSE]

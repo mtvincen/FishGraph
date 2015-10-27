@@ -12,8 +12,6 @@
 #' @param graphics.type a vector of graphics file types to which graphics are saved.  
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
-#' @param connect.obsd In plots of observed and predicted data, observed points 
-#' are joined by a line when \code{TRUE}.
 #' @param start.drop Number of years at the start of the data to be omitted from
 #' plots, as when a model includes an initialization period.
 #' @param units.b A text string (e.g. \code{"tons"} for labeling plots of stock biomass.

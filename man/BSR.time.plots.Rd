@@ -41,9 +41,6 @@ Defines the position of the legend (ex. "bottomright", "bottom", etc.)}
 \item{BSR.references}{A list of three character-string names to specify reference
 points to appear on BSR plots, in order of biomass, spawning biomass, and recruits.
 Input NULL for none, e.g., BSR.references=list(NULL,"SSBmsy", NULL).}
-
-\item{connect.obsd}{In plots of observed and predicted data, observed points
-are joined by a line when \code{TRUE}.}
 }
 \value{
 Graphics
