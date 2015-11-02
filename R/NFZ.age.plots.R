@@ -1,7 +1,8 @@
 #' At-age matrix plots
 #' 
 #' The function \code{NFZ.age.plots} generates barplots of estimated abundance and 
-#' mortality at age over time.
+#' mortality at age over time and bubble plots of number and biomass at age.  Bubble 
+#' areas are scaled to the largest value within each plot.
 #' 
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.

@@ -46,6 +46,8 @@ based on the sample sizes and observed and estimated proportions.}
 
 \item{uniform}{When \code{TRUE}, all years of the same data series are scaled
 the same.}
+
+\item{connect.obsd}{When \code{TRUE}, observed points are connected by lines.}
 }
 \value{
 Graphics

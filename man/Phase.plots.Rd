@@ -6,7 +6,7 @@
 \usage{
 Phase.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   graphics.type = NULL, use.color = TRUE, start.drop = 0, end.drop = 0,
-  year.pos = 1, from.zero = TRUE, legend.pos = NULL,
+  year.pos = 1, from.zero = TRUE, legend.pos = NULL, Xaxis.F = TRUE,
   F.series = "F.full", B.series = "SSB", F.B.references = list("Fmsy",
   "msst"))
 }
@@ -39,6 +39,8 @@ starts at zero.}
 \item{legend.pos}{A text string compatible with the \code{legend} function of \code{R}.
 Defines the position of the legend (ex. "bottomright", "bottom", etc.). The default
 NULL places text on the plot itself.}
+
+\item{Xaxis.F}{When \code{TRUE}, F is plotted as the X axis, otherwise, B.}
 
 \item{F.series}{Character string specifying the name of the F metric to be plotted}
 

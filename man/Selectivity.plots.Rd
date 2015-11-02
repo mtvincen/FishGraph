@@ -6,7 +6,8 @@
 \usage{
 Selectivity.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   graphics.type = NULL, use.color = TRUE, plot.points = TRUE,
-  units.length = x$info$units.length, units.age = x$info$units.age)
+  units.length = x$info$units.length, units.age = x$info$units.age,
+  compact = FALSE, legend.pos = "right")
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
@@ -28,6 +29,12 @@ of selectivity at length.}
 
 \item{units.age}{A text string (e.g. \code{"years"}) used in labeling plots
 of selectivity at age.}
+
+\item{compact}{When \code{TRUE}, time-varying selectivity curves are placed on a single plot per fishery.}
+
+\item{legend.pos}{A text string compatible with the \code{legend} function of \code{R}.
+Defines the position of the legend (ex. "bottomright", "bottom", etc.). Applies only if
+\code{compact = TRUE}.}
 }
 \value{
 Graphics

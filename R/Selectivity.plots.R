@@ -15,7 +15,10 @@
 #' of selectivity at length.
 #' @param units.age A text string (e.g. \code{"years"}) used in labeling plots 
 #' of selectivity at age.
-#' 
+#' @param compact When \code{TRUE}, time-varying selectivity curves are placed on a single plot per fishery.
+#' @param legend.pos A text string compatible with the \code{legend} function of \code{R}.
+#' Defines the position of the legend (ex. "bottomright", "bottom", etc.). Applies only if 
+#' \code{compact = TRUE}.
 #' 
 #' @return Graphics
 #' 
@@ -31,7 +34,8 @@
 #' 
 Selectivity.plots <- function(x, DataName = deparse(substitute(x)),
    draft = TRUE, graphics.type = NULL, use.color = TRUE, plot.points = TRUE,
-   units.length = x$info$units.length, units.age = x$info$units.age)
+   units.length = x$info$units.length, units.age = x$info$units.age,
+   compact=FALSE, legend.pos = "right")
 #=================================================================================
 {
     ### Set up plotting-related stuff:
@@ -87,6 +91,7 @@ Selectivity.plots <- function(x, DataName = deparse(substitute(x)),
             ### Make plots of selectivity MATRICES (changing selectivity over time):
             Mndx <- grep("^sel.m", names(sel.list))  # indices of matrices in list
             n.matrices <- length(Mndx)
+            #ifelse(plot.points, leg.pch<-16, leg.pch<-1) #used in legend if compact = TRUE
             for (imat in Mndx)
             {   smat     <- sel.list[[imat]]   # matrix being plotted
                 gearname = sub("sel\\.m\\.", "", selnames[imat])
@@ -95,23 +100,71 @@ Selectivity.plots <- function(x, DataName = deparse(substitute(x)),
                 # Go through matrix by row (year). Plot each row if it differs
                 # from the preceding row (which is always true for first row).
                 oldvec <- rep(-1.0, ncol(smat))   # Initialze for comparison
-                for (yrlab in yrlabvec)
-                {   # See if row is unequal to row before:
+                if (!compact) {
+                    for (yrlab in yrlabvec)
+                    {   # See if row is unequal to row before:
+                        if (any(smat[yrlab,] != oldvec)) plot.it <- TRUE else plot.it <- FALSE
+                        oldvec <- smat[yrlab,]          # save for next comparison
+                        if (! plot.it) next             # Go to top of "for" loop
+                        # Construct plot title:
+                        if(draft) PlotTitle <- paste("Selectivity in: ", gearname,
+                            "      Data: ", DataName, "      Year: ", yrlab)
+                        # Make plot:
+                        FGTimePlot(x = xvec, y = smat[yrlab,], lab.x = lab.x,
+                            lab.y = lab.y, FGtype = GType, main = PlotTitle,
+                            use.color = use.color,  ylim = c(0,1))
+                        # Save plot to file:
+                        if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+                            GraphName = paste("sel", measure, gearname, yrlab, sep = "."),
+                            graphics.type)
+                    }   # End for (yrlab in yrlabvec)
+                } # End !compact
+                if (compact) {
+                  block.counter = 1 #Used if compact = TRUE
+                  leg.lty=1
+                  ifelse (use.color, leg.col<-"royalblue4", leg.col<-"black")
+                  leg.lab=NULL
+                  
+                  for (yrlab in yrlabvec)
+                  {   # See if row is unequal to row before:
                     if (any(smat[yrlab,] != oldvec)) plot.it <- TRUE else plot.it <- FALSE
                     oldvec <- smat[yrlab,]          # save for next comparison
+                    
                     if (! plot.it) next             # Go to top of "for" loop
-                    # Construct plot title:
-                    if(draft) PlotTitle <- paste("Selectivity in: ", gearname,
-                        "      Data: ", DataName, "      Year: ", yrlab)
+                    # Construct plot legend
+                    leg.lab=c(leg.lab, as.character(yrlab))
                     # Make plot:
-                    FGTimePlot(x = xvec, y = smat[yrlab,], lab.x = lab.x,
-                        lab.y = lab.y, FGtype = GType, main = PlotTitle,
-                        use.color = use.color,  ylim = c(0,1))
-                    # Save plot to file:
-                    if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
-                        GraphName = paste("sel", measure, gearname, yrlab, sep = "."),
-                        graphics.type)
-                }   # End for (yrlab in yrlabvec)
+                    if (block.counter==1) {
+                      if(draft) PlotTitle <- paste("Selectivity in: ", gearname,
+                                                   "      Data: ", DataName)
+                      FGTimePlot(x = xvec, y = smat[yrlab,], lab.x = lab.x,
+                                 lab.y = lab.y, FGtype = GType, main = PlotTitle,
+                                 use.color = use.color,  ylim = c(0,1))
+                      block.counter=block.counter+1
+                      
+                    } else {
+                      
+                      if (use.color){
+                        lines(xvec,smat[yrlab,], col=block.counter, lty=1, lwd=2)
+                        if (plot.points){points(xvec,smat[yrlab,], col=block.counter, pch=16)}
+                        leg.lty=c(leg.lty,1); leg.col=c(leg.col, block.counter); 
+                      } else {
+                        lines(xvec,smat[yrlab,], col="black", lty=block.counter, lwd=2)
+                        if (plot.points){points(xvec,smat[yrlab,], col="black", pch=16)}          
+                        leg.lty=c(leg.lty, block.counter); leg.col="black"; 
+                      }
+                      block.counter=block.counter+1
+                    }
+                  }   # End for (yrlab in yrlabvec)
+                  # Save plot to file:
+                  legend(legend.pos, legend=leg.lab, lwd=2, lty=leg.lty, col=leg.col, bg="white") 
+                  if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+                                               GraphName = paste("sel", measure, gearname, sep = "."),
+                                               graphics.type)
+                  
+                } # End compact
+                
+                
             }   # End for (imat in Mndx)
             if(n.matrices + n.vectors == 0) {message(paste("Warning:", Umeasure, "selectivity data not found but containing object present. Naming error?"))}
         }   # End else ....

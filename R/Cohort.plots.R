@@ -86,7 +86,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE, graphics.type = NUL
         if(n.rows<3){n.rows=3}
       
         layout(cbind(1:n.rows,(n.rows+1):(n.rows*2),(n.rows*2+1):(n.rows*3)))
-        par(mai=c(0,0,0,0),oma=c(4,4,4,0))
+        par(mai=c(0,0,0.02,0.02), oma=c(4,4,4,0.2), las=1)
         #vector for rotating colors to follow cohorts
         col.vec.diff=c(0,diff(as.numeric(dimnames(ob)[[1]]))-1)
         col.vec=rep(c(ncol(ob):1),10)[1:(nrow(ob)+sum(col.vec.diff))]
@@ -104,7 +104,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE, graphics.type = NUL
         mtext(text="Proportion",side=2,cex=1.,outer=T,line=2.5,las=0)
         mtext(text="Age",side=1,cex=1.,outer=T,line=2.5)
         if (draft) 
-           {mtext(text=paste(titleroot,", Observed (color bars), Predicted (black dots)",sep=""),side=3,cex=1.2,outer=T,line=2.5)}
+           {mtext(text=paste(titleroot,", Observed (bars), Predicted (dots)",sep=""),side=3,cex=1.2,outer=T,line=2.5)}
         
         if (write.graphs) FGSavePlot(GraphicsDirName, DataName, 
                                      GraphName = paste("cohort.",gfileroot2,sep=""),

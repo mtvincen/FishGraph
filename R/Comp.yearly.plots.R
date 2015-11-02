@@ -28,6 +28,7 @@
 #' @param compact When \code{TRUE}, plots are arranged by default in 5x3 matrix on each page.
 #' @param uniform When \code{TRUE}, all years of the same data series are scaled
 #' the same.   
+#' @param connect.obsd When \code{TRUE}, observed points are connected by lines.   
 #' 
 #' @return Graphics
 #' 
@@ -243,10 +244,10 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                {  anntext <- bquote(Effective ~~ italic(N) == .(Neff[iyear]))
                   text(xloc, yloc, anntext, adj = c(1, 1), cex = 0.9)
                   yloc <- yloc - vspace
-                  anntext <- bquote(italic(N)[eff] / italic(N) ==
-                     .(round(Neff[iyear]/Nobs[iyear], digits=2)))
-                  text(xloc, yloc, anntext, adj = c(1, 1), cex = 0.9)
-                  yloc <- yloc - vspace
+                  #anntext <- bquote(italic(N)[eff] / italic(N) ==
+                  #   .(round(Neff[iyear]/Nobs[iyear], digits=2)))
+                  #text(xloc, yloc, anntext, adj = c(1, 1), cex = 0.9)
+                  #yloc <- yloc - vspace
                }
             }
          if (print.year)

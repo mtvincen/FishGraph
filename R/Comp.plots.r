@@ -2,7 +2,7 @@
 #' 
 #' The function \code{Comp.plots} generates bubble plots of residuals of age- 
 #' and length-composition fits for the entire time frame of the assessment. 
-#' Bubbles are scaled to the largest residual in each plot. Optionally,
+#' Bubble areas are scaled to the largest residual within each plot. Optionally,
 #' a small inset plot displays the correlation or angular 
 #' deviation between observed and predicted values each year. In addition,
 #' \code{Comp.plots} generates plots of predicted and observed mean compositions
@@ -16,12 +16,15 @@
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param units a character string (e.g. \code{"cm"}) for labeling the X-axis of
-#' length-composition plots.  
-#' @param p.corr when \code{FALSE}, angular deviation is displayed in the inset plot; otherwise, 
-#' Pearson correlations.
-#' @param c.min lower bound on the y-axis range of the inset plot, applies only when p.corr is \code{TRUE}
-#' 
-#' 
+#' length-composition plots. 
+#' @param p.resid when FALSE, scaled to area of residuals, otherwise scaled to area of the 
+#'          Pearson residuals (multinomial).  
+#' @param corr when \code{FALSE}, angular deviation is displayed in the inset plot; otherwise, 
+#' correlations.
+#' @param c.min lower bound on the y-axis range of the inset plot, applies only when corr is \code{TRUE}
+#' @param max.bub cex value for maximum bubble size, default is 8.0.
+#'
+#'
 #' @return Graphics
 #' 
 #' @author M Prager
@@ -48,7 +51,7 @@
 #######################################################################################
 Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, units = x$info$units.length, 
-   p.corr = TRUE, c.min=0.25)
+   p.resid = FALSE, corr = TRUE, c.min = 0.25, max.bub = 8.0)
 #######################################################################################
 #  ARGUMENTS:
 #  x - an R list with output from the assessment models
@@ -59,17 +62,24 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #  graphics.type - a character vector with graphics-file types
 #  use.color - TRUE of graphs are in color
 #  units - character string with length units for Y-axis of length-comp plots
-#  p.corr - TRUE plots pearson correlation coefficients in bottom pane,  FALSE plots
+#  p.resid - when FALSE, bubbles areas scaled to the largest residuals, otherwise scaled to the 
+#          Pearson residuals.
+#  corr - TRUE plots correlation coefficients in bottom pane,  FALSE plots
 #        angular deviation
 #  c.min - lower y axis value for correlation plots, default is 0.25.  All correlations
 #          below this value are plotted at the minimum as a different symbol and color.
+#  max.bub - cex value for maximum bubble size, default is 8.0
 #######################################################################################
 {  Errstring = ("No composition data found.  Terminating Comp.plots");
    if (! ("comp.mats" %in% names(x))) stop(Errstring)
 
    ### Make local copy of needed data components
    cm <- x$comp.mats
-
+   ts=x$t.series
+   # Is effective sample size present if p.resid=TRUE
+   if(p.resid==TRUE){
+   if(length(grep('neff',names(ts)))==0) stop("p.resid = TRUE requires effective sample size 'neff' components in x$t.series.")
+   }
    # Is number of columns odd?  This is a problem -- they should be in pairs!
    if ( (length(cm) %% 2) != 0 ) stop("Odd number of matrices found in Comp.plots!\n")
 
@@ -156,7 +166,8 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
       gfileroot <- FGTrimName(names(cm)[iplot * 2], removePrefix = 0, removeSuffix = 1)
       # titleroot is used as part of the plot title:
       titleroot <- paste("Fishery: ", gfileroot)
-
+      #get effective sample size for calculating pearson residuals
+      
       ### Set Y-axis title according to data type:
       if(substr(gfileroot, 1, 1)  == "l") title.y <- FGMakeLabel("Length bin", units)
       else title.y <- "Age class"
@@ -167,8 +178,13 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
       y1 <- sort(rep(as.numeric(colnames(m1)), nrow(m1)))    # age- or length-class names
 
       ### Get size and color of the bubbles:
-      z1 <- c(m1 - m2)             # Residuals
-      z2 <- 8.0*(sqrt(abs(z1))/sqrt(max(abs(z1))))  ###plots area of bubble
+      if(p.resid){
+        wt=ts[names(ts)==paste(gfileroot,"neff",sep=".")] #get sample sized associated with each year
+        wt=wt[wt>0&is.na(wt)==FALSE] 
+        z1=(m1-m2)/sqrt(m2*(1-m2)/wt)   #pearson residuals
+      }
+      else {z1 <- c(m1 - m2)} # Residuals 
+      z2 <- max.bub*(sqrt(abs(z1))/sqrt(max(abs(z1))))  ###plots area of bubble
       colvec <- ifelse(z1 < 0.0, clr.neg, clr.pos)
 
       ### Compute angular deviation for each year using the formula:
@@ -190,15 +206,15 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
       {  if (draft) par(mar = c(0, 4, 3, 1 ))
          else par(mar = c(0, 4, 1, 1))
       }
-      bub.scale=c(8,6,4,2,1,0.1)
-      legx=c(1,2,3,4,5,6)
+      bub.scale=c(max.bub,max.bub*0.75,max.bub*0.5,max.bub*0.25,max.bub*0.1)
+      legx=c(1,2,3,4,5)
       legy=rep(1,length(bub.scale))
-      find.bub.label=function(x){x*max(abs(z1))/8}
+      find.bub.label=function(x){x*max(abs(z1))/max.bub}
       bub.label=round(find.bub.label(bub.scale),2)
 
       plot(legx,legy,pch=21,cex=bub.scale,ylim=c(0.8,1.2),xlim=c(0,7),xaxt="n",
       yaxt="n",xlab="",ylab="",bty="n")
-      text(1:6,rep(0.85,6),bub.label)
+      text(1:5,rep(0.85,6),bub.label)
       if (draft)
       {  if (use.color)
            title(main = FGMakeTitle(paste(titleroot, "    Orange: underestimate"),
@@ -216,8 +232,8 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
       grid(col = "lightgray", lty = 1)
       points(x1, y1, cex = z2, col = 1, bg = colvec, pch = 21)
       par(mar=c(3,4, 0 , 1 ))
-      if(p.corr==FALSE){
-      plot(irn, angdev, xlab = "Year", xaxt = "n", ylab = "Error, deg.",
+      if(corr==FALSE){
+      plot(irn, angdev, xlab = "Year", xaxt = "n", ylab = "Ang.dev.",
          ylim = c(0, 90), axes = FALSE, frame.plot = TRUE, type = "n",
          xlim = c(xmin,xmax))
       axis(side = 2, at = seq(from = 0, to = 90, by = 10), las = 1,
@@ -228,7 +244,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
       points(irn, angdev, pch = 18, col = clr.ang, cex = 1.3)
       }else
       {
-      plot(rownames(m1),fit.metric,ylim=c(c.min,1.1),type="n",pch=16,ylab="Correlation",las=1, cex.lab=0.9)
+      plot(rownames(m1),fit.metric,ylim=c(c.min,1.1),type="n",pch=16,ylab="Corr.",las=1, cex.lab=0.9)
       grid(col = "lightgray", lty = 1)
       fit.col=rep(0,length(fit.metric))
       fit.pch=rep(0,length(fit.metric))
@@ -243,6 +259,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
   }     # end (for ....)
    par(savepar)
    return(invisible(NULL))
-}     # End function definition
+} 
+# End function definition
 ###########################################################################################
 
