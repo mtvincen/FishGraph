@@ -1,3 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 inst/doc/FG-realease-notes.docx
+^README\.Rmd$
+^README-.*\.png$

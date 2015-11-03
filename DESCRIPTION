@@ -6,7 +6,7 @@ Date: 2015-10-28
 Author: M Prager, E Williams, K Shertzer, R Cheshire, K Purcell
 Maintainer: Kyle Shertzer <kyle.shertzer@noaa.gov>, Rob Cheshire <rob.cheshire@noaa.gov>
 Description: This package is a set of functions that produce graphical representations of stock-assessment output.
-License: GPL-2
+License: not subject to copyright
 LazyData:true
 Depends:
 	lmtest,
