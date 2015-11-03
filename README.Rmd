@@ -49,9 +49,7 @@ ls(pos = "package:FishGraph")
 ```
 `FishGraph 2.0` includes several updated functions.  Additionally, version 2.0 includes four new functions: `Cohort.plots`, `Phase.plots`, `Parm.plots`, and `Bound.vec.plots`.  All functions can be tested using the included data set `data(gag)` which is distributed with the package.
 
-A comprehensive description of all included functions and examples of their graphical output is available in [**NOAA Technical Memorandum NMFS-SEFSC-XXXXX**](
-`r noquote(system.file("doc/fishgraph-guide-DRAFT.pdf",package="FishGraph"))`
-)
+A comprehensive description of all included functions and examples of their graphical output is available in [**NOAA Technical Memorandum NMFS-SEFSC-XXXXX**](`r noquote(system.file("doc/fishgraph-guide-DRAFT.pdf",package="FishGraph"))`)
 
 ## Notice of nonendorsement
 
