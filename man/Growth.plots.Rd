@@ -29,8 +29,7 @@ with the lengths at age found in \code{x$a.series$length}.}
 with weights at age found in \code{x$a.series$weight}.}
 
 \item{plot.all}{When \code{TRUE}, all columns in \code{x$a.series} are plotted
-against \code{x$a.series$age}.
-#'}
+against \code{x$a.series$age}.}
 }
 \value{
 Graphics

@@ -25,8 +25,6 @@ windows(width = 8, height = 8, record = TRUE)
 
 Parm.plots(gag, graphics.type=ptype)
 
-gag$parm.tvec=gag$parm.vec            #Rename for FishGraph compatibility
-gag$parm.tvec.cons=gag$parm.vec.cons  #Rename for FishGraph compatibility
 Bound.vec.plots(gag, draft=dtype, graphics.type=ptype)
 
 Landings.plots(gag, draft=dtype, use.color=ctype, graphics.type=ptype, 
@@ -71,8 +69,6 @@ BSR.time.plots(gag, start.drop = 10, draft=dtype, use.color=ctype, graphics.type
 PerRec.plots(gag, draft=dtype, use.color=ctype, graphics.type=ptype, 
              user.PR = list("SPR", "ypr.lb.gutted"), F.references=list("Fmsy","F40"))
 
-gag$eq.series$L.eq=gag$eq.series$L.eq.gutklb  #Rename for FishGraph compatibility
-gag$eq.series$D.eq=gag$eq.series$D.eq.knum    #Rename for FishGraph compatibility
 Eq.plots(gag, draft=dtype, use.color=ctype, graphics.type=ptype, 
          F.references=list("Fmsy", "F40"))    
 

@@ -6,9 +6,9 @@
 \usage{
 Comp.yearly.plots(x, DataName = deparse(substitute(x)), draft = TRUE,
   graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
-  print.angle = !compact, print.n = !compact, print.neff = !compact,
-  plot.neff = TRUE, compute.neff = FALSE, print.year = compact,
-  compact = FALSE, uniform = TRUE, connect.obsd = FALSE)
+  print.n = !compact, print.neff = !compact, plot.neff = FALSE,
+  compute.neff = FALSE, print.year = compact, compact = TRUE,
+  uniform = TRUE, connect.obsd = FALSE)
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
@@ -25,9 +25,6 @@ When \code{NULL}, no plots are saved.}
 
 \item{units}{a character string (e.g. \code{"cm"}) for labeling the X-axis of
 length-composition plots.}
-
-\item{print.angle}{When \code{TRUE}, angular deviation between predicted and
-observed composition is printed in the plot.}
 
 \item{print.n}{When \code{TRUE}, \emph{N} is printed in each plot.}
 

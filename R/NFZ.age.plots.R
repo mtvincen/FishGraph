@@ -40,7 +40,7 @@ NFZ.age.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    start.drop = 0, graphics.type = NULL, use.color = TRUE,
    units.naa = x$info$units.naa, units.biomass = x$info$units.biomass,
-   max.bub=4.0,user.plots = NULL, plot.CLD = FALSE)
+   max.bub = 4.0,user.plots = NULL, plot.CLD = FALSE)
 ########################################################################################
 {   ### Set up plotting-related stuff:
     savepar <- FGSetPar(draft)
@@ -242,6 +242,47 @@ if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
                              GraphName = "B.age.bubble", graphics.type)
 }
 
+#---------------------------------------------------------------------------------------
+### CLD BUBBLE PLOTS 
+#---------------------------------------------------------------------------------------
+
+if (plot.CLD)
+{ # Get total landings and discards at age:
+  total.cld.index <-grep("total", names(x$CLD.est.mats))
+  for (cldi in 1:length(total.cld.index))
+{   datname=names(x$CLD.est.mats)[total.cld.index[cldi]]
+    dataset <- x$CLD.est.mats[[datname]]
+if (start.drop > 0 && start.drop < nrow(dataset))
+  dataset <- dataset[-(1:start.drop),]
+if (draft) PlotTitle <- FGMakeTitle(datname, DataName)
+    irn <- as.integer(rownames(dataset))                        # year names
+    x1 <- as.integer(rep(irn, ncol(dataset)))                   # year names repeated to fill matrix
+    y1 <- sort(rep(as.numeric(colnames(dataset)), nrow(dataset)))    # age- or length-class names
+    
+    ### Get size of the bubbles:
+    wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")              
+    m.age=rowSums(wt.m.age)/rowSums(dataset)
+    bub.size <- max.bub*(sqrt(abs(dataset))/sqrt(max(abs(dataset))))  ###plots area of bubble
+    # This prevents plotting fractional years (e.g. 1995.5)
+    xmin = irn[1]-1
+    xmax = max(max(irn), xmin + 4)
+    #par(cex = 1, cex.main = 1, cex.axis = 0.85)
+    
+    #### Draw the main (bubble) plot:
+    if (draft) PlotTitle <- FGMakeTitle(datname, DataName)
+    ifelse (use.color, bubble.col <- plot.options$color$clr.line, bubble.col <- plot.options$bw$clr.pred)
+    lab.y = "Age"
+    
+    plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1, 
+         xlim = c(xmin, xmax))
+    grid(col = "lightgray", lty = 1)
+    points(x1, y1, cex = bub.size, col = bubble.col,  pch = 21)
+    lines(as.numeric(rownames(dataset)),m.age,lwd=2,lty=1)
+  }
+    if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+                                 GraphName = paste("byage.CLD", datname,"bub", sep = "."), graphics.type='png')
+      
+  }
 # Clean up and return
 #---------------------------------------------------------------------------------------
 par(savepar)    # reset graphics device

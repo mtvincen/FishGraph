@@ -18,7 +18,7 @@
 #' with weights at age found in \code{x$a.series$weight}.
 #' @param plot.all When \code{TRUE}, all columns in \code{x$a.series} are plotted
 #' against \code{x$a.series$age}.
-#' #' 
+#' 
 #' @return Graphics
 #' 
 #' @author M Prager

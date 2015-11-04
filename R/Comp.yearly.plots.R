@@ -15,8 +15,6 @@
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param units a character string (e.g. \code{"cm"}) for labeling the X-axis of
 #' length-composition plots.  
-#' @param print.angle When \code{TRUE}, angular deviation between predicted and 
-#' observed composition is printed in the plot.
 #' @param print.n When \code{TRUE}, \emph{N} is printed in each plot.
 #' @param print.neff When \code{TRUE}, \emph{N_eff} is printed in each plot.
 #' @param plot.neff When \code{TRUE}, a timeplot of \emph{N_eff} is made for each data
@@ -46,8 +44,8 @@
 Comp.yearly.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
-   print.angle = !compact, print.n = !compact, print.neff = !compact,
-   plot.neff = TRUE, compute.neff = FALSE, print.year = compact, compact = FALSE,
+   print.n = !compact, print.neff = !compact,
+   plot.neff = FALSE, compute.neff = FALSE, print.year = compact, compact = TRUE,
    uniform = TRUE, connect.obsd = FALSE)
 #-------------------------------------------------------------------------------
 #  ARGUMENTS:
@@ -68,7 +66,6 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #  graphics.type - a character vector with graphics-file types
 #  use.color - TRUE of graphs are in color
 #  units - a character string for labeling the units of length bins.
-#  print.angle - TRUE to print angular deviation on each plot.
 #  print.n - TRUE to print actual sample size on each plot.
 #  print.neff - TRUE to print effective sample size on each plot.
 #  plot.neff - TRUE to plot effective sample size by year for each series.
@@ -158,7 +155,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 }
          }
       ### Set up an empty vector for angular deviation:
-      if (print.angle) angle <- rep(NA, nyears)
+      #if (print.angle) angle <- rep(NA, nyears)
 
       ### Make a label plot for the fishery (index)
       if(compact)
@@ -219,13 +216,13 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
          yloc <- 0.980 * mypar$fin[2]
          # Set linespacing to 170% of typical text size in inches:
          vspace <- strheight("M/gh3", units="inches") * 1.7
-         if (print.angle)
-            {  ### Add notation of angular deviation
-               angle[iyear] <- (vecAngle(prop.obsd[iyear,],prop.pred[iyear,], degrees = TRUE))
-               anntext <- bquote(Deviation == .(round(angle[iyear], digits = 1)) *degree)
-               text(xloc, yloc, anntext, adj = c(1, 1), cex = 0.9)
-               yloc <- yloc - vspace
-            }
+#          if (print.angle)
+#             {  ### Add notation of angular deviation
+#                angle[iyear] <- (vecAngle(prop.obsd[iyear,],prop.pred[iyear,], degrees = TRUE))
+#                anntext <- bquote(Deviation == .(round(angle[iyear], digits = 1)) *degree)
+#                text(xloc, yloc, anntext, adj = c(1, 1), cex = 0.9)
+#                yloc <- yloc - vspace
+#             }
          if (print.n)
             {  ### Add notation of number observed
                anntext <- bquote( italic(N) == .(Nobs[iyear]))

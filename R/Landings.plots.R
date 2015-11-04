@@ -17,6 +17,8 @@
 #' @param L.units Character vector containing units of measure associate with 
 #' each landings series found in \code{x$t.series}.  
 #' @param D.units Same as the preceding, but for discards.
+#' @param start.drop Number of years at the start of the data to be omitted from
+#' plots, as when a model includes an initialization period.
 #' @param L.obs.pre When \code{TRUE}, landings data are interpreted as pairs of 
 #' columns (observed and predicted). When \code{FALSE}, each column represents 
 #' observed landings.

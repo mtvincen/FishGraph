@@ -30,6 +30,9 @@ each landings series found in \code{x$t.series}.}
 
 \item{D.units}{Same as the preceding, but for discards.}
 
+\item{start.drop}{Number of years at the start of the data to be omitted from
+plots, as when a model includes an initialization period.}
+
 \item{L.obs.pre}{When \code{TRUE}, landings data are interpreted as pairs of
 columns (observed and predicted). When \code{FALSE}, each column represents
 observed landings.}
