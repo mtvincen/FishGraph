@@ -10,7 +10,7 @@
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param connect.obsd When \code{TRUE} a line connecting observed points is plotted
-#' @param from.zero When \code{TRUE}, the Y-axis of each plot (except recruitment deviations) starts at zero.
+#' @param from.zero When \code{TRUE}, the Y-axis of each plot starts at zero.
 #' @param two.panel when \code{TRUE}, the observed-predicted plot and residual time plot are drawn as two-panels.  When \code{FALSE} they are drawn independently.
 #' @param log.resid When \code{TRUE} residuals are computed as \eqn{R = log(U \diagup\hat{U})}.
 #' @param err.bar When \code{TRUE}, error bars indicating plus/minus two standard errors of the observed index are plotted 

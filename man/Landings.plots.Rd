@@ -22,8 +22,7 @@ When \code{NULL}, no plots are saved.}
 
 \item{use.color}{plots are made in grayscale when \code{FALSE}.}
 
-\item{from.zero}{When \code{TRUE}, the Y-axis of each plot
-(except recruitment deviations) starts at zero.}
+\item{from.zero}{When \code{TRUE}, the Y-axis of each plot starts at zero.}
 
 \item{L.units}{Character vector containing units of measure associate with
 each landings series found in \code{x$t.series}.}

@@ -12,8 +12,7 @@
 #' @param graphics.type a vector of graphics file types to which graphics are saved.  
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}.
-#' @param from.zero When \code{TRUE}, the Y-axis of each plot 
-#' (except recruitment deviations) starts at zero.
+#' @param from.zero When \code{TRUE}, the Y-axis of each plot starts at zero.
 #' @param L.units Character vector containing units of measure associate with 
 #' each landings series found in \code{x$t.series}.  
 #' @param D.units Same as the preceding, but for discards.

@@ -16,8 +16,8 @@ library(FishGraph)
 
 ##### Common arguments in FishGraph functions. Convenient to define them once.
 ptype=NULL #NULL (no quotes) for no plots saved; other options: "pdf", "wmf", "eps"
-dtype="TRUE"  #draft type
-ctype="TRUE"  #color type 
+dtype=TRUE  #draft type
+ctype=TRUE  #color type 
 ########## Open a graphics device ###########
 windows(width = 8, height = 8, record = TRUE)
 
@@ -34,11 +34,11 @@ Index.plots(gag, draft=dtype, use.color=ctype, graphics.type=ptype)
 
 
 #windows(width = 10, height = 8, record = TRUE)
-Comp.plots(gag, draft=dtype, use.color=ctype, graphics.type=ptype, p.corr=T, c.min=0.2)
+Comp.plots(gag, draft=dtype, use.color=ctype, graphics.type=ptype, corr=T, c.min=0.2)
 
 #windows(width = 8, height = 10, record = TRUE)
 Comp.yearly.plots(gag, draft=dtype, use.color=ctype, graphics.type=ptype, plot.neff=FALSE, print.neff=FALSE,
-                  compact = TRUE, print.n=TRUE, print.angle=FALSE)
+                  compact = TRUE, print.n=TRUE)
 
 Cohort.plots(gag,draft=dtype, graphics.type=ptype)
 
