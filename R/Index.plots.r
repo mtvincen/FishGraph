@@ -10,7 +10,7 @@
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param connect.obsd When \code{TRUE} a line connecting observed points is plotted
-#' @param from.zero When \code{TRUE}, the Y-axis of each plot starts at zero.
+#' @param from.zero When \code{TRUE}, the Y-axis of each plot (except recruitment deviations) starts at zero.
 #' @param two.panel when \code{TRUE}, the observed-predicted plot and residual time plot are drawn as two-panels.  When \code{FALSE} they are drawn independently.
 #' @param log.resid When \code{TRUE} residuals are computed as \eqn{R = log(U \diagup\hat{U})}.
 #' @param err.bar When \code{TRUE}, error bars indicating plus/minus two standard errors of the observed index are plotted 
@@ -362,6 +362,8 @@ if (resid.analysis) {
     res.vals=(!is.na(res))
     res=res[res.vals]
     yr=ts$year[res.vals]
+    n.res=length(res)
+    
     if (draft) PlotTitle <- FGMakeTitle(paste("Residual Analysis (1 of 2), Index:", IndexName), DataName) else PlotTitle <- ""
       
     GraphName=paste("U.",IndexName,".resid1", sep="")
@@ -416,7 +418,10 @@ if (resid.analysis) {
     #Lilliefors (Kolmogorov-Smirnov) test for normality
     lillie.test.out=lillie.test(res)
     #Anderson-Darling test for normality
-    ad.test.out=ad.test(res)
+    if (n.res>7) {ad.test.out<-ad.test(res)} 
+    if (n.res<=7) 
+      {print(paste("Index.plots: Anderson-Darling test not performed on index ", IndexName,
+      " because N < 8.", sep=""))}
     #Pearson chi-square test for normality
     pearson.test.out=pearson.test(res)
     
@@ -502,14 +507,15 @@ if (resid.analysis) {
                                        sign.pos=1.65}
     points(x=sign.pos,y=-5,pch=16,col=sign.col,cex=2.25)
     
-    if(ad.test.out$p.value<0.05){sign.col="red"
-                                 sign.pos=1.85}
-    if(ad.test.out$p.value>0.0499&bptest.out$p.value<0.1){sign.col="yellow"
-                                                          sign.pos=1.75}
-    if(ad.test.out$p.value>0.0999){sign.col="green3" 
-                                   sign.pos=1.65}
-    points(x=sign.pos,y=-6,pch=16,col=sign.col,cex=2.25)
-    
+    if (n.res > 7) {
+      if(ad.test.out$p.value<0.05){sign.col="red"
+                                   sign.pos=1.85}
+      if(ad.test.out$p.value>0.0499&bptest.out$p.value<0.1){sign.col="yellow"
+                                                            sign.pos=1.75}
+      if(ad.test.out$p.value>0.0999){sign.col="green3" 
+                                     sign.pos=1.65}
+      points(x=sign.pos,y=-6,pch=16,col=sign.col,cex=2.25)
+    }
     if(pearson.test.out$p.value<0.05){sign.col="red"
                                       sign.pos=1.85}
     if(pearson.test.out$p.value>0.0499&bptest.out$p.value<0.1){sign.col="yellow"
@@ -553,16 +559,17 @@ if (resid.analysis) {
     points(x=c(1.65,1.75,1.85),y=c(-9,-9,-9),cex=2.25,col=1)
     points(x=c(1.65,1.75,1.85),y=c(-10,-10,-10),cex=2.25,col=1)
     
-    text(x=2.25,y=-1,labels=round(bptest.out$p.value,5),cex=1,font=1)
-    text(x=2.25,y=-2,labels=round(hmctest.out$p.value,5),cex=1,font=1)
-    text(x=2.25,y=-3,labels=round(bgtest.out$p.value,5),cex=1,font=1)
-    text(x=2.25,y=-4,labels=round(dwtest.out$p.value,5),cex=1,font=1)
-    text(x=2.25,y=-5,labels=round(lillie.test.out$p.value,5),cex=1,font=1)
-    text(x=2.25,y=-6,labels=round(ad.test.out$p.value,5),cex=1,font=1)
-    text(x=2.25,y=-7,labels=round(pearson.test.out$p.value,5),cex=1,font=1)
-    text(x=2.25,y=-8,labels=round(shapiro.test.out$p.value,5),cex=1,font=1)
-    text(x=2.25,y=-9,labels=round(pp.test.out$p.value,5),cex=1,font=1)
-    text(x=2.25,y=-10,labels=round(runs.test.v2.out$p.value,5),cex=1,font=1)
+    text(x=2.25,y=-1,labels=round(bptest.out$p.value,4),cex=1,font=1)
+    text(x=2.25,y=-2,labels=round(hmctest.out$p.value,4),cex=1,font=1)
+    text(x=2.25,y=-3,labels=round(bgtest.out$p.value,4),cex=1,font=1)
+    text(x=2.25,y=-4,labels=round(dwtest.out$p.value,4),cex=1,font=1)
+    text(x=2.25,y=-5,labels=round(lillie.test.out$p.value,4),cex=1,font=1)
+    if (n.res > 7) {text(x=2.25,y=-6,labels=round(ad.test.out$p.value,4),cex=1,font=1)
+    } else {text(x=2.25,y=-6,labels="NA",cex=1,font=1)}
+    text(x=2.25,y=-7,labels=round(pearson.test.out$p.value,4),cex=1,font=1)
+    text(x=2.25,y=-8,labels=round(shapiro.test.out$p.value,4),cex=1,font=1)
+    text(x=2.25,y=-9,labels=round(pp.test.out$p.value,4),cex=1,font=1)
+    text(x=2.25,y=-10,labels=round(runs.test.v2.out$p.value,4),cex=1,font=1)
     
     ### Write plot to file(s)
     if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName, graphics.type)

@@ -24,7 +24,7 @@ When \code{NULL}, no plots are saved.}
 
 \item{connect.obsd}{When \code{TRUE} a line connecting observed points is plotted}
 
-\item{from.zero}{When \code{TRUE}, the Y-axis of each plot starts at zero.}
+\item{from.zero}{When \code{TRUE}, the Y-axis of each plot (except recruitment deviations) starts at zero.}
 
 \item{two.panel}{when \code{TRUE}, the observed-predicted plot and residual time plot are drawn as two-panels.  When \code{FALSE} they are drawn independently.}
 

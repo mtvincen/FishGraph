@@ -244,22 +244,23 @@ redraw <- FALSE
 #=================================================================================
 ### Plot of stock vs. log(recruitment/spawners) 
 if(draft) PlotTitle <- FGMakeTitle("Stock v log(R/S)", DataName)
-logRS=log(ts$recruits[rndx]/ts$SSB[sndx])
+RdS=ts$recruits[rndx]/ts$SSB[sndx]
+logRS=log(RdS)
 lab.y2   <- "log(recruits/spawner)"
+
+if (any(RdS <= 0))
+{   Errmsg <- "Warning: attempted to take log of a non-positive R/S"
+    warning(Errmsg, immediate. = TRUE)
+    return(invisible(-1))
+}
 
 if (draw.model && curve.OK) {
     logRS.sim=log(rec.sim/stock.sim);
     lim.y <- range(logRS, logRS.sim, na.rm = TRUE)
 } else {lim.y <- range(logRS, na.rm = TRUE)}
 
-if (any(logRS <= 0))
-{   Errmsg <- "Warning: attempted to take log of a non-positive R/S"
-    warning(Errmsg, immediate. = TRUE)
-    return(invisible(-1))
-}
-
-
-lim.y[1] = 0.9*lim.y[1]; lim.y[2] = 1*lim.y[2]
+ifelse (lim.y[1]>0, lim.y[1] <- 0.9*lim.y[1], lim.y[1] <- lim.y[1]/0.9) 
+lim.y[2] = 1*lim.y[2]
 
 FGTimePlot(x = ts$SSB[sndx], y = logRS, y2 = NULL,
            lab.x = lab.x, lab.y = lab.y2, FGtype = "circles", main = PlotTitle,
