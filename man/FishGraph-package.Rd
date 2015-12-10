@@ -65,7 +65,7 @@ Kyle Shertzer <kyle.shertzer@noaa.gov>
 Rob Cheshire <rob.cheshire@noaa.gov>
 }
 \references{
-Prager et al. (XXXX) User's guide to \code{FishGraph}: A set of R graphics functions for fishery stock assessment.  US. Department of Commerce, NOAA Technical Memorandum NMFS-SEFSC-xxx.
+Prager et al. (2015) User's guide to \code{FishGraph}: R graphics functions for fishery stock assessment.  US. Department of Commerce, NOAA Technical Memorandum NMFS-SEFSC-684.
 }
 
 \keyword{ package }

@@ -31,7 +31,7 @@ Once installed the package offers a series of functions for model diagnostics an
 
 `FishGraph 2.0` includes several updated functions. Additionally, version 2.0 includes four new functions: `Cohort.plots`, `Phase.plots`, `Parm.plots`, and `Bound.vec.plots`. All functions can be tested using the included data set `data(gag)` which is distributed with the package.
 
-A comprehensive description of all included functions and examples of their graphical output is available in the **NOAA Technical Memorandum NMFS-SEFSC-XXXXX** installed in the "doc" folder of the package.
+A comprehensive description of all included functions and examples of their graphical output is available in the **NOAA Technical Memorandum NMFS-SEFSC-684** installed in the "doc" folder of the package.
 
 Notice of nonendorsement
 ------------------------

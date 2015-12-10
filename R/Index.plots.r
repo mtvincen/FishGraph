@@ -416,12 +416,16 @@ if (resid.analysis) {
     #from package nortest
     require(nortest)
     #Lilliefors (Kolmogorov-Smirnov) test for normality
-    lillie.test.out=lillie.test(res)
+   if (n.res>4) {lillie.test.out=lillie.test(res)} 
+   if (n.res<=4) 
+   {print(paste("Index.plots: Lilliefors (Kolmogorov-Smirnov) test not performed on index ", IndexName,
+                "; test requires N > 4.", sep=""))}
+   
     #Anderson-Darling test for normality
     if (n.res>7) {ad.test.out<-ad.test(res)} 
     if (n.res<=7) 
       {print(paste("Index.plots: Anderson-Darling test not performed on index ", IndexName,
-      " because N < 8.", sep=""))}
+      "; test requires N > 7.", sep=""))}
     #Pearson chi-square test for normality
     pearson.test.out=pearson.test(res)
     
@@ -499,14 +503,15 @@ if (resid.analysis) {
                                   sign.pos=1.85}
     points(x=sign.pos,y=-4,pch=16,col=sign.col,cex=2.25)
     
-    if(lillie.test.out$p.value<0.05){sign.col="red"
-                                     sign.pos=1.85}
-    if(lillie.test.out$p.value>0.0499&bptest.out$p.value<0.1){sign.col="yellow"
-                                                              sign.pos=1.75}
-    if(lillie.test.out$p.value>0.0999){sign.col="green3" 
-                                       sign.pos=1.65}
-    points(x=sign.pos,y=-5,pch=16,col=sign.col,cex=2.25)
-    
+   if (n.res > 4) {    
+      if(lillie.test.out$p.value<0.05){sign.col="red"
+                                       sign.pos=1.85}
+      if(lillie.test.out$p.value>0.0499&bptest.out$p.value<0.1){sign.col="yellow"
+                                                                sign.pos=1.75}
+      if(lillie.test.out$p.value>0.0999){sign.col="green3" 
+                                         sign.pos=1.65}
+      points(x=sign.pos,y=-5,pch=16,col=sign.col,cex=2.25)
+   }
     if (n.res > 7) {
       if(ad.test.out$p.value<0.05){sign.col="red"
                                    sign.pos=1.85}
@@ -563,7 +568,8 @@ if (resid.analysis) {
     text(x=2.25,y=-2,labels=round(hmctest.out$p.value,4),cex=1,font=1)
     text(x=2.25,y=-3,labels=round(bgtest.out$p.value,4),cex=1,font=1)
     text(x=2.25,y=-4,labels=round(dwtest.out$p.value,4),cex=1,font=1)
-    text(x=2.25,y=-5,labels=round(lillie.test.out$p.value,4),cex=1,font=1)
+    if (n.res > 4) {text(x=2.25,y=-5,labels=round(lillie.test.out$p.value,4),cex=1,font=1)
+    } else {text(x=2.25,y=-5,labels="NA",cex=1,font=1)}
     if (n.res > 7) {text(x=2.25,y=-6,labels=round(ad.test.out$p.value,4),cex=1,font=1)
     } else {text(x=2.25,y=-6,labels="NA",cex=1,font=1)}
     text(x=2.25,y=-7,labels=round(pearson.test.out$p.value,4),cex=1,font=1)
