@@ -215,7 +215,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
           addname=paste(addname.dum[-1],collapse=".")
           
           if (ratio) {
-            lab.y <- paste("Relative Fishing mortality rate (",addname,")",sep="")
+            lab.y <- paste("Relative fishing mortality rate (",addname,")",sep="")
             if (draft) PlotTitle <- FGMakeTitle(Faddname, DataName)
             ymax <- max(Fadd[,i.Fadd], 0.01, na.rm = TRUE)
             FGTimePlot(year, Fadd[,i.Fadd], lab.x = lab.x, lab.y = lab.y, use.color = use.color,

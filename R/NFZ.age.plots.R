@@ -96,12 +96,12 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
     if ("F.age" %in% names(x))
     {   if (start.drop == 0 ) dataset <- x$F.age
         else dataset <- x$F.age[-(1:start.drop),]
-        # Plot of F (unnormalized)
-        if (draft) PlotTitle <- FGMakeTitle("Cumulative F", DataName)
-        FGBarplot(dataset, lab.y = "Cumulative F at age", use.color, PlotTitle,
-            leg.title = "Age")
-        if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
-            GraphName = "F.age", graphics.type)
+#         # Plot of F (unnormalized)
+#         if (draft) PlotTitle <- FGMakeTitle("Cumulative F", DataName)
+#         FGBarplot(dataset, lab.y = "Cumulative F at age", use.color, PlotTitle,
+#             leg.title = "Age")
+#         if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+#             GraphName = "F.age", graphics.type)
         # Plot of F (normalized)
         if (draft) PlotTitle <- FGMakeTitle("Proportion F at age", DataName)
         FGBarplot(dataset, lab.y = "Proportion of F", use.color, PlotTitle,
@@ -114,12 +114,12 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
     if ("Z.age" %in% names(x))
     {   if (start.drop == 0 ) dataset <- x$Z.age
         else dataset <- x$Z.age[-(1:start.drop),]
-        # Plot of Z (unnormalized)
-        if (draft) PlotTitle <- FGMakeTitle("Cumulative Z", DataName)
-        FGBarplot(dataset, lab.y = "Cumulative Z at age", use.color, PlotTitle,
-            leg.title = "Age")
-        if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
-            GraphName = "Z.age", graphics.type)
+#         # Plot of Z (unnormalized)
+#         if (draft) PlotTitle <- FGMakeTitle("Cumulative Z", DataName)
+#         FGBarplot(dataset, lab.y = "Cumulative Z at age", use.color, PlotTitle,
+#             leg.title = "Age")
+#         if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+#             GraphName = "Z.age", graphics.type)
         # Plot of Z (normalized)
         if (draft) PlotTitle <- FGMakeTitle("Proportion Z at age", DataName)
         FGBarplot(dataset, lab.y = "Proportion of Z", use.color, PlotTitle,

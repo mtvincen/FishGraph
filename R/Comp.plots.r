@@ -78,7 +78,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    ts=x$t.series
    # Is effective sample size present if p.resid=TRUE
    if(p.resid==TRUE){
-   if(length(grep('neff',names(ts)))==0) stop("p.resid = TRUE requires effective sample size 'neff' components in x$t.series.")
+    if(length(grep('neff',names(ts)))==0) stop("p.resid = TRUE requires effective sample size 'neff' components in x$t.series.")
    }
    # Is number of columns odd?  This is a problem -- they should be in pairs!
    if ( (length(cm) %% 2) != 0 ) stop("Odd number of matrices found in Comp.plots!\n")
@@ -123,8 +123,8 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    
    for (iplot in 1:nplots)
    {  
-     m1 <- cm[[iplot*2-1]]         # Matrix of observed
-     m2 <- cm[[iplot*2]]           # matrix of predicted
+     m1.all <- cm[[iplot*2-1]]         # Matrix of observed
+     m2.all <- cm[[iplot*2]]           # matrix of predicted
      
      ### Get various string representations of data series:
      #  gfileroot is used in the name for the graphics file(s):
@@ -132,13 +132,23 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
      gfilename <- paste("pooled.",gfileroot, sep="")
      # titleroot is used as part of the plot title:
      titleroot <- paste("Fishery: ", gfileroot)
+
+     #Exclude those yrs that don't make the min sample size requirement, designated by n<0
+     nname<-paste(gfileroot,".n", sep="")
+     if (nname%in%names(x$t.series)) {
+       nseries<-x$t.series[,names(x$t.series)==nname]
+       yrs.include<-spp$t.series$year[nseries>0]
+       m1<-m1.all[rownames(m1.all)%in%yrs.include,]
+       m2<-m2.all[rownames(m2.all)%in%yrs.include,]
+     } else {
+       m1<-m1.all 
+       m2<-m2.all
+     }
      
      ### Set Y-axis title according to data type:
      if(substr(gfileroot, 1, 1)  == "l"){title.y <- FGMakeLabel("Length bin", units)
      }else{title.y <- "Age class"}
-     
-    
-     
+          
      ob.m=apply(m1,2,mean)
      pr.m=apply(m2,2,mean)
      ymax=max(c(ob.m,pr.m))
@@ -158,8 +168,8 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    
    for (iplot in 1:nplots)
    {  #split.screen(smatrix)
-      m1 <- cm[[iplot*2-1]]         # Matrix of observed
-      m2 <- cm[[iplot*2]]           # matrix of predicted
+      m1.all <- cm[[iplot*2-1]]         # Matrix of observed
+      m2.all <- cm[[iplot*2]]           # matrix of predicted
 
       ### Get various string representations of data series:
       #  gfileroot is name for the graphics file(s):
@@ -167,6 +177,17 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
       # titleroot is used as part of the plot title:
       titleroot <- paste("Fishery: ", gfileroot)
       #get effective sample size for calculating pearson residuals
+      
+      nname<-paste(gfileroot,".n", sep="")
+      if (nname%in%names(x$t.series)) {
+        nseries<-x$t.series[,names(x$t.series)==nname]
+        yrs.include<-spp$t.series$year[nseries>0]
+        m1<-m1.all[rownames(m1.all)%in%yrs.include,]
+        m2<-m2.all[rownames(m2.all)%in%yrs.include,]
+      } else {
+        m1<-m1.all 
+        m2<-m2.all
+      }
       
       ### Set Y-axis title according to data type:
       if(substr(gfileroot, 1, 1)  == "l") title.y <- FGMakeLabel("Length bin", units)

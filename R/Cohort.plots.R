@@ -70,6 +70,18 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE, graphics.type = NUL
       gfileroot2 <- FGTrimName(names(cm)[iplot * 2], removePrefix = 1, removeSuffix = 1)
       titleroot <- paste("Fishery:", gfileroot2)
 
+      #Exclude those yrs that don't make the min sample size requirement, designated by n<0
+      nname<-paste(gfileroot,".n", sep="")
+      if (nname%in%names(x$t.series)) {
+        nseries<-x$t.series[,names(x$t.series)==nname]
+        yrs.include<-spp$t.series$year[nseries>0]
+        m1<-m1.all[rownames(m1.all)%in%yrs.include,]
+        m2<-m2.all[rownames(m2.all)%in%yrs.include,]
+      } else {
+        m1<-m1.all 
+        m2<-m2.all
+      }
+      
       # select only age comp matrices
       if(substr(gfileroot, 1, 1)  == "a") 
       {
