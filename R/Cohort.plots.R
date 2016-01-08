@@ -60,8 +60,8 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE, graphics.type = NUL
 
    for (iplot in 1:nplots)
    {  
-      m1 <- cm[[iplot*2-1]]         # Matrix of observed
-      m2 <- cm[[iplot*2]]           # matrix of predicted
+      m1.all <- cm[[iplot*2-1]]         # Matrix of observed
+      m2.all <- cm[[iplot*2]]           # matrix of predicted
 
       ### Get various string representations of data series:
       #  gfileroot is name for the graphics file(s):
@@ -74,7 +74,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE, graphics.type = NUL
       nname<-paste(gfileroot,".n", sep="")
       if (nname%in%names(x$t.series)) {
         nseries<-x$t.series[,names(x$t.series)==nname]
-        yrs.include<-spp$t.series$year[nseries>0]
+        yrs.include<-x$t.series$year[nseries>0]
         m1<-m1.all[rownames(m1.all)%in%yrs.include,]
         m2<-m2.all[rownames(m2.all)%in%yrs.include,]
       } else {

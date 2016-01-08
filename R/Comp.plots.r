@@ -137,7 +137,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
      nname<-paste(gfileroot,".n", sep="")
      if (nname%in%names(x$t.series)) {
        nseries<-x$t.series[,names(x$t.series)==nname]
-       yrs.include<-spp$t.series$year[nseries>0]
+       yrs.include<-x$t.series$year[nseries>0]
        m1<-m1.all[rownames(m1.all)%in%yrs.include,]
        m2<-m2.all[rownames(m2.all)%in%yrs.include,]
      } else {
@@ -181,7 +181,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
       nname<-paste(gfileroot,".n", sep="")
       if (nname%in%names(x$t.series)) {
         nseries<-x$t.series[,names(x$t.series)==nname]
-        yrs.include<-spp$t.series$year[nseries>0]
+        yrs.include<-x$t.series$year[nseries>0]
         m1<-m1.all[rownames(m1.all)%in%yrs.include,]
         m2<-m2.all[rownames(m2.all)%in%yrs.include,]
       } else {
