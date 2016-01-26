@@ -2,7 +2,7 @@
 FishGraph 2.0
 =============
 
-FishGraph is a set of `R` functions that generates diagnostics and data visualizations from stock assessment model output. These functions are designed to process model output from the **Beaufort Assessment Model (BAM)**. Further information on the details of the *BAM* can be found in ([Williams and Shertzer 2015](http://docs.lib.noaa.gov/noaa_documents/NMFS/SEFSC/TM_NMFS_SEFSC/NMFS_SEFSC_TM_671.pdf))
+FishGraph is a set of `R` functions that generates diagnostics and data visualizations from stock assessment model output. These functions are designed to process model output from the **Beaufort Assessment Model (BAM)**. Further information on the details of the *BAM* can be found in ([Williams and Shertzer, 2015](http://docs.lib.noaa.gov/noaa_documents/NMFS/SEFSC/TM_NMFS_SEFSC/NMFS_SEFSC_TM_671.pdf))
 
 Installation
 ------------
@@ -31,7 +31,7 @@ Once installed the package offers a series of functions for model diagnostics an
 
 `FishGraph 2.0` includes several updated functions. Additionally, version 2.0 includes four new functions: `Cohort.plots`, `Phase.plots`, `Parm.plots`, and `Bound.vec.plots`. All functions can be tested using the included data set `data(gag)` which is distributed with the package.
 
-A comprehensive description of all included functions and examples of their graphical output is available in the **NOAA Technical Memorandum NMFS-SEFSC-684** installed in the "doc" folder of the package.
+A comprehensive description of all included functions and examples of their graphical output is available in the **NOAA Technical Memorandum NMFS-SEFSC-684** installed in the "doc" folder of the package or online ([Prager et al., 2016](http://docs.lib.noaa.gov/noaa_documents/NMFS/SEFSC/TM_NMFS_SEFSC/NMFS_SEFSC_TM_684.pdf)).
 
 Notice of nonendorsement
 ------------------------
