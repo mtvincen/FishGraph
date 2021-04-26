@@ -58,7 +58,7 @@ the included data set `data(gag)` which is distributed with the package.
 
 A comprehensive description of all included functions and examples of
 their graphical output is available in [**NOAA Technical Memorandum
-NMFS-SEFSC-XXXXX**]()
+NMFS-SEFSC-684**](https://repository.library.noaa.gov/view/noaa/5248)
 
 Notice of nonendorsement
 ------------------------
