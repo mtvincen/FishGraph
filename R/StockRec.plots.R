@@ -17,7 +17,7 @@
 #' @param units.rec A text string (e.g. \code{"million fish"}) for labeling plots 
 #' of recruitment
 #' @param rec.model Specifies the type of recruitment function to draw.  Valid 
-#' values are: \code{"BH", "BH-steep", "Ricker", "Ricker-steep"}.
+#' values are: \code{"BH", "BH-steep", "Ricker", "Ricker-steep", "Mean"}.
 #' @param draw.model If \code{TRUE}, a function curve is drawn on plots of stock
 #' and recruitment.
 #' @param draw.lowess If \code{TRUE}, a lowess smooth is drawn on plots of stock
@@ -157,6 +157,13 @@ StockRec.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             rec.sim <-  stock.sim / phi0 * exp(h * (1.0 - stock.sim / (phi0 * R0)))
             curve.OK <- TRUE
         }
+        # Average recruitment model
+        if (rec.model == "Mean")
+        {   R0 <- x$parms$Mean.R0
+        bias.corr <- x$parms$Mean.biascorr
+        rec.sim <-  rep(R0, length=length(stock.sim))
+        curve.OK <- TRUE
+        }        								   		 
         if (! curve.OK)
         {   warning("Bad value of argument rec.model\n")
             draw.model <- FALSE
