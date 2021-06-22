@@ -14,7 +14,8 @@
 #' @param two.panel when \code{TRUE}, the observed-predicted plot and residual time plot are drawn as two-panels.  When \code{FALSE} they are drawn independently.
 #' @param log.resid When \code{TRUE} residuals are computed as \eqn{R = log(U \diagup\hat{U})}.
 #' @param err.bar When \code{TRUE}, error bars indicating plus/minus two standard errors of the observed index are plotted 
-#' @param resid.analysis When \code{TRUE}, additional diagnostic plots of residuals are created and tests performed
+#' @param resid.analysis When \code{TRUE}, additional diagnostic plots of residuals are created
+#' @param resid.tests Runs statistical tests on residuals. Set to "runs" for runs test only or "multiple" for additional tests. Defaults to argument \code{NULL} for none. 
 #' 
 #' @return Graphics
 #' 
@@ -46,7 +47,7 @@
 #######################################################################################
 Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, connect.obsd = FALSE, from.zero = TRUE,
-   two.panel = TRUE, log.resid = FALSE, err.bar = TRUE, resid.analysis = TRUE)
+   two.panel = TRUE, log.resid = FALSE, err.bar = TRUE, resid.analysis = TRUE, resid.tests=NULL)
 #######################################################################################
 #  ARGUMENTS:
 #  x - an R list with output from the assessment models
@@ -69,6 +70,8 @@ Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #             component x$t.series$U.*.cv in the data frame
 #  resid.analysis - TRUE for additional diagnostic plots and tests on residuals, plots use color regardless
 #                   of use.color setting
+#  resid.tests - tests on residuals. "runs" for runs test only, "multiple" for multiple tests including runs test,
+#                default is none.
 
 #######################################################################################
 {
@@ -453,23 +456,49 @@ if (resid.analysis) {
     multiplier=res.hist$counts/res.hist$density
     plot(res.hist,xlab="Residual (ob-pr)",main="Histogram of residuals w/ normal curve")
     curve(dnorm(x,mean=0,sd=sd(res))* multiplier[1],col="blue",lwd=2, add=TRUE, yaxt="n")
-      
+    
+    if (!is.null(resid.tests)) {  
     par(mai=c(0.25,0.25,0.25,0.25))
     plot(1,1,ylim=c(-15,0),xlim=c(0,3),xlab="",ylab="",bty="n",col.axis="transparent",xaxt="n",yaxt="n",col=0)
     
-    text(x=2.25,y=0,labels="P-values",cex=1,font=2)
+    text(x=1.75,y=0,labels="Traffic light",cex=1,font=2)
+    text(x=2.25,y=0,labels="P-value",cex=1,font=2)
     
-    text(x=1.5,y=-1,labels="Breusch-Pagan test for heteroskedasticity:",adj=c(1,0.5),cex=1,font=2)
-    text(x=1.5,y=-2,labels="Harrison-McCabe test for heteroskedasticity:",adj=c(1,0.5),cex=1,font=2)
-    text(x=1.5,y=-3,labels="Breusch-Godfrey test for higher-order serial correlation:",adj=c(1,0.5),cex=1,font=2)
-    text(x=1.5,y=-4,labels="Durbin-Watson test for autocorrelation of disturbances:",adj=c(1,0.5),cex=1,font=2)
-    text(x=1.5,y=-5,labels="Lilliefors (Kolmogorov-Smirnov) test for normality:",adj=c(1,0.5),cex=1,font=2)
-    text(x=1.5,y=-6,labels="Anderson-Darling test for normality:",adj=c(1,0.5),cex=1,font=2)
-    text(x=1.5,y=-7,labels="Pearson chi-square test for normality:",adj=c(1,0.5),cex=1,font=2)
-    text(x=1.5,y=-8,labels="Shapiro-Wilk test for normality:",adj=c(1,0.5),cex=1,font=2)
-    text(x=1.5,y=-9,labels="Phillips-Perron test for null hypothesis x has a unit root:",adj=c(1,0.5),cex=1,font=2)
-    text(x=1.5,y=-10,labels="Runs test:",adj=c(1,0.5),cex=1,font=2)
+    if (resid.tests=="runs") {
+      text(x=1.5,y=-1,labels="Runs test:",adj=c(1,0.5),cex=1,font=2)
+      
+      if(runs.test.v2.out$p.value<0.05){sign.col="red"
+        sign.pos=1.85}
+      if(runs.test.v2.out$p.value>0.0499&bptest.out$p.value<0.1){sign.col="yellow"
+       sign.pos=1.75}
+      if(runs.test.v2.out$p.value>0.0999){sign.col="green3" 
+        sign.pos=1.65}
+      points(x=sign.pos,y=-1,pch=16,col=sign.col,cex=2.25)
+      
+      points(x=c(1.65,1.75,1.85),y=c(-1,-1,-1),cex=2.25,col=1)
+      
+      text(x=2.25,y=-1,labels=round(runs.test.v2.out$p.value,4),cex=1,font=1)
+      
+    } else if (resid.tests=="multiple"){  
+      text(x=1.5,y=-1,labels="Runs test:",adj=c(1,0.5),cex=1,font=2)  
+      text(x=1.5,y=-2,labels="Breusch-Pagan test for heteroskedasticity:",adj=c(1,0.5),cex=1,font=2)
+      text(x=1.5,y=-3,labels="Harrison-McCabe test for heteroskedasticity:",adj=c(1,0.5),cex=1,font=2)
+      text(x=1.5,y=-4,labels="Breusch-Godfrey test for higher-order serial correlation:",adj=c(1,0.5),cex=1,font=2)
+      text(x=1.5,y=-5,labels="Durbin-Watson test for autocorrelation of disturbances:",adj=c(1,0.5),cex=1,font=2)
+      text(x=1.5,y=-6,labels="Lilliefors (Kolmogorov-Smirnov) test for normality:",adj=c(1,0.5),cex=1,font=2)
+      text(x=1.5,y=-7,labels="Anderson-Darling test for normality:",adj=c(1,0.5),cex=1,font=2)
+      text(x=1.5,y=-8,labels="Pearson chi-square test for normality:",adj=c(1,0.5),cex=1,font=2)
+      text(x=1.5,y=-9,labels="Shapiro-Wilk test for normality:",adj=c(1,0.5),cex=1,font=2)
+      text(x=1.5,y=-10,labels="Phillips-Perron test for null hypothesis x has a unit root:",adj=c(1,0.5),cex=1,font=2)
+
     
+    if(runs.test.v2.out$p.value<0.05){sign.col="red"
+                                      sign.pos=1.85}
+    if(runs.test.v2.out$p.value>0.0499&bptest.out$p.value<0.1){sign.col="yellow"
+                                                                sign.pos=1.75}
+    if(runs.test.v2.out$p.value>0.0999){sign.col="green3" 
+                                        sign.pos=1.65}
+    points(x=sign.pos,y=-1,pch=16,col=sign.col,cex=2.25)
     
     if(bptest.out$p.value<0.05){sign.col="red"
                                 sign.pos=1.85}
@@ -477,7 +506,7 @@ if (resid.analysis) {
                                                          sign.pos=1.75}
     if(bptest.out$p.value>0.0999){sign.col="green3" 
                                   sign.pos=1.65}
-    points(x=sign.pos,y=-1,pch=16,col=sign.col,cex=2.25)
+    points(x=sign.pos,y=-2,pch=16,col=sign.col,cex=2.25)
     
     if(hmctest.out$p.value<0.05){sign.col="red"
                                  sign.pos=1.85}
@@ -485,7 +514,7 @@ if (resid.analysis) {
                                                           sign.pos=1.75}
     if(hmctest.out$p.value>0.0999){sign.col="green3" 
                                    sign.pos=1.65}
-    points(x=sign.pos,y=-2,pch=16,col=sign.col,cex=2.25)
+    points(x=sign.pos,y=-3,pch=16,col=sign.col,cex=2.25)
     
     if(bgtest.out$p.value<0.05){sign.col="green3"
                                 sign.pos=1.65}
@@ -493,7 +522,7 @@ if (resid.analysis) {
                                                          sign.pos=1.75}
     if(bgtest.out$p.value>0.0999){sign.col="red" 
                                   sign.pos=1.85}
-    points(x=sign.pos,y=-3,pch=16,col=sign.col,cex=2.25)
+    points(x=sign.pos,y=-4,pch=16,col=sign.col,cex=2.25)
     
     if(dwtest.out$p.value<0.05){sign.col="green3"
                                 sign.pos=1.65}
@@ -501,7 +530,7 @@ if (resid.analysis) {
                                                          sign.pos=1.75}
     if(dwtest.out$p.value>0.0999){sign.col="red" 
                                   sign.pos=1.85}
-    points(x=sign.pos,y=-4,pch=16,col=sign.col,cex=2.25)
+    points(x=sign.pos,y=-5,pch=16,col=sign.col,cex=2.25)
     
    if (n.res > 4) {    
       if(lillie.test.out$p.value<0.05){sign.col="red"
@@ -510,7 +539,7 @@ if (resid.analysis) {
                                                                 sign.pos=1.75}
       if(lillie.test.out$p.value>0.0999){sign.col="green3" 
                                          sign.pos=1.65}
-      points(x=sign.pos,y=-5,pch=16,col=sign.col,cex=2.25)
+      points(x=sign.pos,y=-6,pch=16,col=sign.col,cex=2.25)
    }
     if (n.res > 7) {
       if(ad.test.out$p.value<0.05){sign.col="red"
@@ -519,7 +548,7 @@ if (resid.analysis) {
                                                             sign.pos=1.75}
       if(ad.test.out$p.value>0.0999){sign.col="green3" 
                                      sign.pos=1.65}
-      points(x=sign.pos,y=-6,pch=16,col=sign.col,cex=2.25)
+      points(x=sign.pos,y=-7,pch=16,col=sign.col,cex=2.25)
     }
     if(pearson.test.out$p.value<0.05){sign.col="red"
                                       sign.pos=1.85}
@@ -527,7 +556,7 @@ if (resid.analysis) {
                                                                sign.pos=1.75}
     if(pearson.test.out$p.value>0.0999){sign.col="green3" 
                                         sign.pos=1.65}
-    points(x=sign.pos,y=-7,pch=16,col=sign.col,cex=2.25)
+    points(x=sign.pos,y=-8,pch=16,col=sign.col,cex=2.25)
     
     if(shapiro.test.out$p.value<0.05){sign.col="red"
                                       sign.pos=1.85}
@@ -535,7 +564,7 @@ if (resid.analysis) {
                                                                sign.pos=1.75}
     if(shapiro.test.out$p.value>0.0999){sign.col="green3" 
                                         sign.pos=1.65}
-    points(x=sign.pos,y=-8,pch=16,col=sign.col,cex=2.25)
+    points(x=sign.pos,y=-9,pch=16,col=sign.col,cex=2.25)
     
     if(pp.test.out$p.value<0.05){sign.col="green3"
                                  sign.pos=1.65}
@@ -543,39 +572,36 @@ if (resid.analysis) {
                                                           sign.pos=1.75}
     if(pp.test.out$p.value>0.0999){sign.col="red" 
                                    sign.pos=1.85}
-    points(x=sign.pos,y=-9,pch=16,col=sign.col,cex=2.25)
-    
-    if(runs.test.v2.out$p.value<0.05){sign.col="red"
-                                      sign.pos=1.85}
-    if(runs.test.v2.out$p.value>0.0499&bptest.out$p.value<0.1){sign.col="yellow"
-                                                               sign.pos=1.75}
-    if(runs.test.v2.out$p.value>0.0999){sign.col="green3" 
-                                        sign.pos=1.65}
     points(x=sign.pos,y=-10,pch=16,col=sign.col,cex=2.25)
     
-    points(x=c(1.65,1.75,1.85),y=c(-1,-1,-1),cex=2.25,col=1)
-    points(x=c(1.65,1.75,1.85),y=c(-2,-2,-2),cex=2.25,col=1)
-    points(x=c(1.65,1.75,1.85),y=c(-3,-3,-3),cex=2.25,col=1)
-    points(x=c(1.65,1.75,1.85),y=c(-4,-4,-4),cex=2.25,col=1)
-    points(x=c(1.65,1.75,1.85),y=c(-5,-5,-5),cex=2.25,col=1)
-    points(x=c(1.65,1.75,1.85),y=c(-6,-6,-6),cex=2.25,col=1)
-    points(x=c(1.65,1.75,1.85),y=c(-7,-7,-7),cex=2.25,col=1)
-    points(x=c(1.65,1.75,1.85),y=c(-8,-8,-8),cex=2.25,col=1)
-    points(x=c(1.65,1.75,1.85),y=c(-9,-9,-9),cex=2.25,col=1)
-    points(x=c(1.65,1.75,1.85),y=c(-10,-10,-10),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-1,-1,-1),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-2,-2,-2),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-3,-3,-3),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-4,-4,-4),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-5,-5,-5),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-6,-6,-6),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-7,-7,-7),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-8,-8,-8),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-9,-9,-9),cex=2.25,col=1)
+      points(x=c(1.65,1.75,1.85),y=c(-10,-10,-10),cex=2.25,col=1)
     
-    text(x=2.25,y=-1,labels=round(bptest.out$p.value,4),cex=1,font=1)
-    text(x=2.25,y=-2,labels=round(hmctest.out$p.value,4),cex=1,font=1)
-    text(x=2.25,y=-3,labels=round(bgtest.out$p.value,4),cex=1,font=1)
-    text(x=2.25,y=-4,labels=round(dwtest.out$p.value,4),cex=1,font=1)
-    if (n.res > 4) {text(x=2.25,y=-5,labels=round(lillie.test.out$p.value,4),cex=1,font=1)
-    } else {text(x=2.25,y=-5,labels="NA",cex=1,font=1)}
-    if (n.res > 7) {text(x=2.25,y=-6,labels=round(ad.test.out$p.value,4),cex=1,font=1)
-    } else {text(x=2.25,y=-6,labels="NA",cex=1,font=1)}
-    text(x=2.25,y=-7,labels=round(pearson.test.out$p.value,4),cex=1,font=1)
-    text(x=2.25,y=-8,labels=round(shapiro.test.out$p.value,4),cex=1,font=1)
-    text(x=2.25,y=-9,labels=round(pp.test.out$p.value,4),cex=1,font=1)
-    text(x=2.25,y=-10,labels=round(runs.test.v2.out$p.value,4),cex=1,font=1)
+    
+      text(x=2.25,y=-1,labels=round(runs.test.v2.out$p.value,4),cex=1,font=1)  
+      text(x=2.25,y=-2,labels=round(bptest.out$p.value,4),cex=1,font=1)
+      text(x=2.25,y=-3,labels=round(hmctest.out$p.value,4),cex=1,font=1)
+      text(x=2.25,y=-4,labels=round(bgtest.out$p.value,4),cex=1,font=1)
+      text(x=2.25,y=-5,labels=round(dwtest.out$p.value,4),cex=1,font=1)
+      if (n.res > 4) {text(x=2.25,y=-5,labels=round(lillie.test.out$p.value,4),cex=1,font=1)
+      } else {text(x=2.25,y=-6,labels="NA",cex=1,font=1)}
+      if (n.res > 7) {text(x=2.25,y=-6,labels=round(ad.test.out$p.value,4),cex=1,font=1)
+      } else {text(x=2.25,y=-7,labels="NA",cex=1,font=1)}
+      text(x=2.25,y=-8,labels=round(pearson.test.out$p.value,4),cex=1,font=1)
+      text(x=2.25,y=-9,labels=round(shapiro.test.out$p.value,4),cex=1,font=1)
+      text(x=2.25,y=-10,labels=round(pp.test.out$p.value,4),cex=1,font=1)
+    } else {(print("Warning: Index.plots argument resid.tests not specified correctly. See help (?Index.plots)."))
+    }# end resid.tests=runs or multiple
+    
+    } #end resids.test
     
     ### Write plot to file(s)
     if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName, graphics.type)
