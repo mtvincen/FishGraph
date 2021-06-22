@@ -2,7 +2,8 @@
 #' 
 #' The routine \code{Comp.yearly.plots} generates plots of age- and length-composition 
 #' fits by year and data series. Optionally, the sample size N, effective sample
-#' size Neff, angular deviation can be printed on the plot surface. Plots of the
+#' size Neff, angular deviation can be printed on the plot surface. The background is 
+#' shaded if the model does not fit to the composition (Neff < 0).  Plots of the					
 #' ratio Neff/N over time may be made. Plots are available in two formats: one 
 #' plot per page, or a compact format with 21 plots per page.
 #' 
@@ -16,7 +17,7 @@
 #' @param units a character string (e.g. \code{"cm"}) for labeling the X-axis of
 #' length-composition plots.  
 #' @param print.n When \code{TRUE}, \emph{N} is printed in each plot.
-#' @param print.neff When \code{TRUE}, \emph{N_eff} is printed in each plot.
+#' @param print.neff When \code{TRUE}, \emph{N_eff} (rounded) is printed in each plot.
 #' @param plot.neff When \code{TRUE}, a timeplot of \emph{N_eff} is made for each data
 #' series
 #' @param compute.neff When \code{TRUE}, \strong{FishGraph} computes \emph{N_eff}
@@ -72,7 +73,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #  compute.neff - TRUE to compute eff. sample size internally.
 #  print.year - TRUE to print year on each plot.
 #  compact - TRUE to arrange many plots on a page.
-#  uniform - TRUE to use same scale for all plots for the same index.
+#  uniform - TRUE to use same scale for all plots for the same fleet.
 #  connect.obsd - TRUE to connect observed points with a line.
 #-------------------------------------------------------------------------------
 {
@@ -151,7 +152,8 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                     {   warning("Comp.yearly.plots: comp.neff=FALSE but no data or NA in\n",
                             paste("   x$t.series$", fileroot, ".neff", sep = ""), call. = FALSE)
                         Neff <- rep(NA_integer_, nyears)
-                    }
+					 } else (Neff<-round(Neff,digits=1))
+                  
                 }
          }
       ### Set up an empty vector for angular deviation:
@@ -235,7 +237,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                {    num <- den <- 0.0
                     den <- sum( (prop.obsd[iyear,] - prop.pred[iyear,])^2)
                     num <- sum ( prop.pred[iyear,] * (1 - prop.pred[iyear,]))
-                    Neff[iyear] <- round(num/den, digits=0)
+                    Neff[iyear] <- round(num/den, digits=1)
                 }
                if (print.neff)
                {  anntext <- bquote(Effective ~~ italic(N) == .(Neff[iyear]))
@@ -245,6 +247,11 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                   #   .(round(Neff[iyear]/Nobs[iyear], digits=2)))
                   #text(xloc, yloc, anntext, adj = c(1, 1), cex = 0.9)
                   #yloc <- yloc - vspace
+				# background shading for years not fitted
+                  if (Neff[iyear]<=0|is.na(Neff[iyear])==TRUE)
+                  {
+                    polygon(c(0,0,mypar$fin[1],mypar$fin[1]),c(0,mypar$fin[2],mypar$fin[2],0),col=rgb(.211, .211, .211, .2))
+                  }										 
                }
             }
          if (print.year)
