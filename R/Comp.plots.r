@@ -1,5 +1,5 @@
 #' Plots of age- and length-composition fits
-#' 
+#' test this
 #' The function \code{Comp.plots} generates bubble plots of residuals of age- 
 #' and length-composition fits for the entire time frame of the assessment. 
 #' Bubble areas are scaled to the largest residual within each plot. Optionally,
