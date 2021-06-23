@@ -46,8 +46,8 @@ samples size (n) is used for weighting annual compositions. + a new
 option was added to create boxplots of residualsby length/age and year,
 the default is b.plot = FALSE + added residual type to y-axis label \*
 Comp.plots.yearly() + background shading for years where effective
-sample size negative (turned off) \* Stock.rec.plots() + option added
-for no spawner-recruit relationship, rec.model=“mean” \* Index.plots() +
+sample size negative (turned off) \* StockRec.plots() + option added for
+no spawner-recruit relationship, rec.model=“mean” \* Index.plots() +
 diagnostic plots now default to subset of previous diagnostics, default
 is resid.tests=“runs”, “multiple” gives all diagnostics
 
@@ -63,11 +63,16 @@ NMFS-SEFSC-684**](https://repository.library.noaa.gov/view/noaa/5248)
 Notice of nonendorsement
 ------------------------
 
-The National Marine Fisheries Service (NMFS) does not approve, recommend
-or endorse any proprietary product or material mentioned in this product
-or related publications. No reference shall be made to NMFS, or to this
-publication furnished by NMFS, in any advertising or sales promotion
-which would imply that NMFS approves, recommends, or endorses any
-proprietary product or proprietary material mentioned herein which has
-as its purpose any intent to cause directly or indirectly the advertised
-product to be used or purchased because of this NMFS product.
+This repository is a scientific product and is not official
+communication of the National Oceanic and Atmospheric Administration, or
+the United States Department of Commerce. All NOAA GitHub project code
+is provided on an ‘as is’ basis and the user assumes responsibility for
+its use. Any claims against the Department of Commerce or Department of
+Commerce bureaus stemming from the use of this GitHub project will be
+governed by all applicable Federal law. Any reference to specific
+commercial products, processes, or services by service mark, trademark,
+manufacturer, or otherwise, does not constitute or imply their
+endorsement, recommendation or favoring by the Department of Commerce.
+The Department of Commerce seal and logo, or the seal and logo of a DOC
+bureau, shall not be used in any manner to imply endorsement of any
+commercial product or activity by DOC or the United States Government.
