@@ -48,10 +48,11 @@
 #  Major revision by M. H. Prager, November 2006
 #  Revised by R. Cheshire, November 2012
 #  Revised by K. Shertzer, September 2015
+#  Revised by R. Cheshire, June, 2021																			
 #######################################################################################
 Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                        graphics.type = NULL, use.color = TRUE, units = x$info$units.length, 
-                       p.resid = FALSE, corr = TRUE, c.min = 0.25, max.bub = 8.0)
+                       p.resid = FALSE, corr = TRUE, c.min = 0.25, max.bub = 8.0, b.plot = FALSE)
   #######################################################################################
 #  ARGUMENTS:
 #  x - an R list with output from the assessment models
@@ -69,6 +70,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #  c.min - lower y axis value for correlation plots, default is 0.25.  All correlations
 #          below this value are plotted at the minimum as a different symbol and color.
 #  max.bub - cex value for maximum bubble size, default is 8.0
+#  b.plot - create boxplot of composition residuals, default is FALSE
 #######################################################################################
 {  Errstring = ("No composition data found.  Terminating Comp.plots");
 if (! ("comp.mats" %in% names(x))) stop(Errstring)
@@ -278,6 +280,64 @@ for (iplot in 1:nplots)
   if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = gfileroot,
                                graphics.type)
 }     # end (for ....)
+# #--------------boxplots--------------------------------------------------------------      
+   par(savepar)
+   par(mar=c(4,4,2,2))
+   par(las=0)
+   par(oma=c(2,2,0,0))
+   if(b.plot == TRUE){
+    for (iplot in 1:nplots)
+    {  
+      m1.all <- cm[[iplot*2-1]]         # Matrix of observed
+      m2.all <- cm[[iplot*2]]           # matrix of predicted
+
+     ### Get various string representations of data series:
+     #  gfileroot is name for the graphics file(s):
+     gfileroot <- FGTrimName(names(cm)[iplot * 2], removePrefix = 0, removeSuffix = 1)
+     gfilename <- paste("boxplot.",gfileroot,sep="")
+     # titleroot is used as part of the plot title:
+     titleroot <- paste("Fishery: ", gfileroot)
+     #get effective sample size for calculating pearson residuals
+   #   
+     nname<-paste(gfileroot,".n", sep="")
+     if (nname%in%names(ts)) {
+       nseries<-ts[,names(ts)==nname]
+       yrs.include<-ts$year[nseries>0]
+       m1<-m1.all[rownames(m1.all)%in%yrs.include,]
+       m2<-m2.all[rownames(m2.all)%in%yrs.include,]
+     } else {
+       m1<-m1.all
+       m2<-m2.all
+     }
+   #   
+     ### calc resids
+     if(p.resid){
+       wt=ts[names(ts)==paste(gfileroot,"neff",sep=".")]
+       wt=wt[wt>0&is.na(wt)==FALSE]
+       z1=(m1-m2)/sqrt(m2*(1-m2)/wt)
+       ylabresidtxt="Pearson Residuals"   #pearson residuals
+     } else {z1 <- m1 - m2
+     ylabresidtxt="Deviance Residuals"} # Residuals
+
+     ### Set Y-axis title according to data type:
+     if(substr(gfileroot, 1, 1)  == "l") {title.x <- FGMakeLabel("Length bin", units)
+      } else {title.x <- "Age class"}
+
+     par(cex = 1, cex.main = 1, cex.axis = 0.85)
+     {  if (draft) par(mar = c(2, 4, 3, 1 ))
+       else par(mar = c(2, 4, 1, 1))
+     }
+
+     # if (draft)
+     # { title(main = FGMakeTitle(titleroot,DataName))
+     # }   #end if draft
+    par(mfrow=c(2,1))
+      boxplot(z1,xlab=title.x,main=titleroot,ylab="")
+      boxplot(t(z1),xlab='Year',main="",ylab="")
+      mtext(ylabresidtxt,side=2,outer=TRUE,line=0)
+      if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = gfilename,
+                                   graphics.type)
+    } }     # end (for ....)			
 par(savepar)
 return(invisible(NULL))
 } 
