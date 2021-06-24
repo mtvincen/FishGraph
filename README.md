@@ -39,17 +39,23 @@ obtained using:
     library(FishGraph)
     ls(pos = "package:FishGraph")
 
-`FishGraph 2.1` includes updates to several `FishGraph 2.0` functions.  
-\* Comp.plots() + combined annual compositions now weighted by effective
-sample size (neff). If effective sample size object is not present then
-samples size (n) is used for weighting annual compositions. + a new
-option was added to create boxplots of residualsby length/age and year,
-the default is b.plot = FALSE + added residual type to y-axis label \*
-Comp.plots.yearly() + background shading for years where effective
-sample size negative (turned off) \* StockRec.plots() + option added for
-no spawner-recruit relationship, rec.model=“mean” \* Index.plots() +
-diagnostic plots now default to subset of previous diagnostics, default
-is resid.tests=“runs”, “multiple” gives all diagnostics
+Update notes
+------------
+
+Recent updates to `FishGraph 2.0` functions:
+
+-   Comp.plots()
+    -   a new option was added to create boxplots of residuals by
+        length/age and year, the default is b.plot = FALSE
+-   Comp.plots.yearly()
+    -   background shading for years where effective sample size
+        negative (turned off)
+-   StockRec.plots()
+    -   option added for no spawner-recruit relationship,
+        rec.model=“mean”
+-   Index.plots()
+    -   diagnostic plots now default to subset of previous diagnostics,
+        default is resid.tests=“runs”, “multiple” gives all diagnostics
 
 `FishGraph 2.0` includes several updated functions. Additionally,
 version 2.0 includes four new functions: `Cohort.plots`, `Phase.plots`,
