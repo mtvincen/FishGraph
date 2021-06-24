@@ -1,6 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-FishGraph 2.1
+FishGraph 2.0
 =============
 
 FishGraph is a set of `R` functions that generates diagnostics and data
@@ -21,7 +21,7 @@ the `devtools` library.
 
     # Load library and install directly from the repo.
     library(devtools)
-    devtools::install_github("rcheshire/FishGraph")
+    devtools::install_github("RobCheshire-NOAA/FishGraph")
 
 Alternatively, the package can be installed locally from the repository
 source files.
