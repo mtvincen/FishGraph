@@ -170,8 +170,7 @@ Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
           {warning(paste("Error bars desired (err.bar=TRUE), but no CV found for index series ", IndexName, sep=""), immediate. = TRUE)
            return(invisible(-1))
           }
-          CVcol <- replace(ts[, CVcol],ts[, CVcol]==-99999.00, NA)          
-		  cpue.sd <- ts[, CVcol] * cpue.obs
+          cpue.sd <- ts[, CVcol] * cpue.obs
           cpue.obs.upper <- cpue.obs + 2*cpue.sd
           cpue.obs.lower <- cpue.obs - 2*cpue.sd
           cpue.obs.maxrange <- cpue.obs.upper
