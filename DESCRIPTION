@@ -7,9 +7,10 @@ Author: M Prager, E Williams, K Shertzer, R Cheshire, K Purcell
 Maintainer: Kyle Shertzer <kyle.shertzer@noaa.gov>, Rob Cheshire <rob.cheshire@noaa.gov>
 Description: This package is a set of functions that produce graphical representations of stock-assessment output.
 License: not subject to copyright
-LazyData:true
+LazyData: true
 Depends:
 	lmtest,
 	nortest,
 	tseries
-
+RoxygenNote: 7.1.1
+Encoding: UTF-8
