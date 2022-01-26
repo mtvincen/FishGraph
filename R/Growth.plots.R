@@ -1,15 +1,15 @@
 #' Plots of fish size (and other quantities) at age
-#' 
-#' The function Growth.plots provides plots of length, weight, and other 
-#' quantities at age. Length is also plotted with confidence intervals if the 
-#' CV of length at age is found. There is support for models with more than one 
+#'
+#' The function Growth.plots provides plots of length, weight, and other
+#' quantities at age. Length is also plotted with confidence intervals if the
+#' CV of length at age is found. There is support for models with more than one
 #' growth curve, such as models that describe growth as varying by sex.
-#' 
+#'
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
-#' @param graphics.type a vector of graphics file types to which graphics are saved.  
+#' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}.
 #' @param units.length Character string giving the units of measure associated
@@ -18,19 +18,19 @@
 #' with weights at age found in \code{x$a.series$weight}.
 #' @param plot.all When \code{TRUE}, all columns in \code{x$a.series} are plotted
 #' against \code{x$a.series$age}.
-#' 
+#'
 #' @return Graphics
-#' 
+#'
 #' @author M Prager
 #' @author E Williams
 #' @author K Shertzer
 #' @author R Cheshire
 #' @author K Purcell
-#'  
+#'
 #' @examples \donttest{
 #' Growth.plots(gag)
 #' }
-#' 
+#' @export
 Growth.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
     graphics.type = NULL, use.color = TRUE, units.length = x$info$units.length,
@@ -52,7 +52,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
     if (! is.null(graphics.type))
     {   write.graphs <- TRUE
         GraphicsDirName <- paste(DataName, "-figs/growth", sep="")
-    } else {   
+    } else {
        write.graphs <- FALSE
     }
     ### Set graphics parameters, constants, data structures:

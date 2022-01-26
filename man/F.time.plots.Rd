@@ -21,7 +21,7 @@ F.time.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{start.drop}{Number of years at the start of the data to be omitted from
@@ -43,8 +43,8 @@ An extension of *.ratio indicates that the metric is a relative measure.}
 Graphics
 }
 \description{
-The routine \code{F.time.plots} provides time plots of fishing mortality rate 
-\emph{F} over time. Plots are of absolute estimated \emph{F} and \emph{F} 
+The routine \code{F.time.plots} provides time plots of fishing mortality rate
+\emph{F} over time. Plots are of absolute estimated \emph{F} and \emph{F}
 relative to various reference points. Through the argument \code{F.references},
 arbitrary reference points can be included in plots, one by one or together.
 }
@@ -52,7 +52,6 @@ arbitrary reference points can be included in plots, one by one or together.
 \donttest{
 F.time.plots(gag)
 }
-
 }
 \author{
 M Prager

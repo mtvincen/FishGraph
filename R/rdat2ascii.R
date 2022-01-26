@@ -1,22 +1,23 @@
 #' Rdat conversion program
-#' 
+#'
 #' The function \code{rdat2ascii} converts an \code{.Rdat} object into an ASCII
-#' file for alternative uses.  
-#' 
+#' file for alternative uses.
+#'
 #' @param x an R list with output from the assessment models.
-#' 
-#' 
+#'
+#'
 #' @return ASCII file
-#' 
+#'
 #' @author M Prager
 #' @author E Williams
 #' @author K Shertzer
 #' @author R Cheshire
 #' @author K Purcell
-#'  
+#'
 #' @examples \donttest{
 #' rdat2ascii(gag)
 #' }
+#' @export
 rdat2ascii <-
 function(x, file = paste(deparse(substitute(x)), ".txt", sep = "")) {
    #

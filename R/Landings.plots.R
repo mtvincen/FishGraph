@@ -1,40 +1,40 @@
 #' Landings and discards trajectories
-#' 
-#' The function \code{Landings.plots} provides time trajectories of landings and 
-#' discards by fishery. Optional arguments specify whether data represent 
-#' observed and predicted landings or simply independent series of landings. 
+#'
+#' The function \code{Landings.plots} provides time trajectories of landings and
+#' discards by fishery. Optional arguments specify whether data represent
+#' observed and predicted landings or simply independent series of landings.
 #' The same holds for discards.
-#' 
+#'
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
-#' @param graphics.type a vector of graphics file types to which graphics are saved.  
+#' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}.
 #' @param from.zero When \code{TRUE}, the Y-axis of each plot starts at zero.
-#' @param L.units Character vector containing units of measure associate with 
-#' each landings series found in \code{x$t.series}.  
+#' @param L.units Character vector containing units of measure associate with
+#' each landings series found in \code{x$t.series}.
 #' @param D.units Same as the preceding, but for discards.
 #' @param start.drop Number of years at the start of the data to be omitted from
 #' plots, as when a model includes an initialization period.
-#' @param L.obs.pre When \code{TRUE}, landings data are interpreted as pairs of 
-#' columns (observed and predicted). When \code{FALSE}, each column represents 
+#' @param L.obs.pre When \code{TRUE}, landings data are interpreted as pairs of
+#' columns (observed and predicted). When \code{FALSE}, each column represents
 #' observed landings.
 #' @param D.obs.pre Same as the preceding, but for discards.
-#' 
+#'
 #' @return Graphics
-#' 
+#'
 #' @author M Prager
 #' @author E Williams
 #' @author K Shertzer
 #' @author R Cheshire
 #' @author K Purcell
-#' 
+#'
 #' @examples \donttest{
 #' Landings.plots(gag)
 #' }
-#' 
+#' @export
 Landings.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
     graphics.type = NULL, use.color = TRUE, from.zero = TRUE,

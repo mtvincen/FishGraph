@@ -23,7 +23,7 @@ CLD.total.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -41,11 +41,11 @@ Y-axis of plots of numbers caught, landed, or discarded.}
 of plots of biomass caught, landed, or discarded.}
 
 \item{CLD.n.references}{A list of three character-string names that specify reference
-points in numbers, in order of catch, landings, and discards, to be included on numbers plots. 
+points in numbers, in order of catch, landings, and discards, to be included on numbers plots.
 Input NULL for none, e.g., CLD.w.references=list(NULL,"msy.num","Dmsy.num").}
 
 \item{CLD.w.references}{A list of three character-string names that specify reference
-points in biomass, in order of catch, landings, and discards, to be included on biomass plots. 
+points in biomass, in order of catch, landings, and discards, to be included on biomass plots.
 Input NULL for none, e.g., CLD.w.references=list(NULL,"msy", NULL).}
 
 \item{plot.proportion}{When \code{TRUE}, additional plots are made, scaled as
@@ -62,7 +62,6 @@ and discards (in numbers and weight) over time. Each bar is subdivided by fisher
 \donttest{
 CLD.total.plots(gag)
 }
-
 
 }
 \author{

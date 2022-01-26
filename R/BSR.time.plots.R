@@ -1,15 +1,15 @@
 #' Biomass, spawner, and recruitmenet trajectories
-#' 
-#' The function \code{BSR.time.plots} generates time-series plots of stock biomass, 
-#' spawning stock (as biomass or egg production), and recruitment. Plots are made 
-#' on absolute scales and also scaled to reference points. Plots may include 
+#'
+#' The function \code{BSR.time.plots} generates time-series plots of stock biomass,
+#' spawning stock (as biomass or egg production), and recruitment. Plots are made
+#' on absolute scales and also scaled to reference points. Plots may include
 #' reference lines at user-specified reference points.
-#' 
+#'
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
-#' @param graphics.type a vector of graphics file types to which graphics are saved.  
+#' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param start.drop Number of years at the start of the data to be omitted from
@@ -19,27 +19,26 @@
 #' @param units.r a text string (e.g. \code{"million fish"}) for labeling plots of recruitment
 #' @param legend.pos A text string compatible with the \code{legend} function of \code{R}.
 #' Defines the position of the legend (ex. "bottomright", "bottom", etc.)
-#' @param from.zero When \code{TRUE}, the Y-axis of each plot 
+#' @param from.zero When \code{TRUE}, the Y-axis of each plot
 #' (except recruitment deviations) starts at zero.
 #' @param BSR.references A list of three character-string names to specify reference
-#' points to appear on BSR plots, in order of biomass, spawning biomass, and recruits. 
+#' points to appear on BSR plots, in order of biomass, spawning biomass, and recruits.
 #' Input NULL for none, e.g., BSR.references=list(NULL,"SSBmsy", NULL).
-
-#' 
-#' 
+#'
+#'
 #' @return Graphics
-#' 
+#'
 #' @author M. Prager
 #' @author E. Williams
 #' @author K. Shertzer
 #' @author R. Cheshire
 #' @author K. Purcell
-#' 
+#'
 #' @examples \donttest{
 #' BSR.time.plots(gag)
 #' }
-#' 
-#' 
+#'
+#' @export
 BSR.time.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    start.drop = 0, graphics.type = NULL, use.color = TRUE,
@@ -61,9 +60,9 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #  graphics.type - a character vector with graphics-file types
 #  start.drop - integer, number of years to drop from start of file
 #  use.color - TRUE of graphs are in color
-#' BSR.references - A list of three character-string names to specify reference
-#' points to appear on BSR plots, in order of Biomass, Spawning biomass, and Recruits. 
-#' Input NULL for none, e.g., BSR.references=list("Bmsy","SSBmsy",NULL).
+# BSR.references - A list of three character-string names to specify reference
+# points to appear on BSR plots, in order of Biomass, Spawning biomass, and Recruits.
+# Input NULL for none, e.g., BSR.references=list("Bmsy","SSBmsy",NULL).
 ########################################################################################
 ###  PLOTS MADE BY THIS FUNCTION
 ###  1. SSB vs. year with reference line at BSR.references[[2]]
@@ -91,7 +90,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
         warning(Errstring, immediate. = TRUE)
         return(invisible(-1))
     }
-    
+
     h.ref=ifelse (is.list(BSR.references), TRUE, FALSE)
     ref.parms=rep(FALSE, length=3)
     if (h.ref){
@@ -101,10 +100,10 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
           Errstring = (paste("BSR.reference element ", BSR.references[[i]], " not found.", sep = ""))
           warning(Errstring, immediate. = TRUE)
           return(invisible(-1))
-        }  
+        }
       }
-    } 
-    
+    }
+
     plot.options = FGGetOptions()
     ### Make local copies of data components:
     ts    <- x$t.series[(start.drop + 1):nrow(x$t.series),]
@@ -135,7 +134,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
         if ((!is.null(BSR.references[[1]])) && h.ref)
         {  hrefstring <- BSR.references[[1]]
            hrefindex <- which(names(x$parms) == BSR.references[[1]])
-           href <- unlist(x$parms[hrefindex])  
+           href <- unlist(x$parms[hrefindex])
            hrefnames <- BSR.references[[1]]
            ylim <- range(ylim, href)
         }
@@ -149,10 +148,10 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
     }
 ###############  Plot B/Bmsy with reference line at 1.0 ###############
     if ("B" %in% names(ts) && ref.parms[1])
-    {   
+    {
         hrefstring <- BSR.references[[1]]
         hrefindex <- which(names(x$parms) == BSR.references[[1]])
-        Bref <- unlist(x$parms[hrefindex])        
+        Bref <- unlist(x$parms[hrefindex])
         ylim <- range(ts$B/Bref, 1.1, na.rm = TRUE)
         lab.y <- paste("B / ", hrefstring,sep="")
         if (from.zero) ylim <- range(ylim, 0)
@@ -167,13 +166,13 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #########  Plot B/B0 with reference line at Bref/B0 ###############
     if ("B" %in% names(ts) && "B0" %in% names(parms))
     {   lab.y <- "B / B0"
-        
+
         if (ref.parms[1] && h.ref)
-            {   
+            {
               href <- Bref/parms$B0
               hrefnames <- paste(BSR.references[[1]]," / B0", sep="")
               ylim <- range(ts$B / parms$B0, Bref / parms$B0, 1, na.rm = TRUE)
-              
+
             }
         else  { href <- NULL ; hrefnames <- NULL
                 ylim <- range(ts$B / parms$B0, 1, na.rm = TRUE)
@@ -192,30 +191,30 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
         ylim  <- range(ts$SSB, na.rm = TRUE)
         if (from.zero) ylim <- range(ylim, 0)
         href <- as.numeric(c(NA, NA))
-        hrefnames <- as.character(c(NA, NA))        
-        
+        hrefnames <- as.character(c(NA, NA))
+
         if ((!is.null(BSR.references[[2]])) && h.ref)
         {  hrefstring <- BSR.references[[2]]
            hrefindex <- which(names(x$parms) == BSR.references[[2]])
-           href[1] <- unlist(x$parms[hrefindex])  
+           href[1] <- unlist(x$parms[hrefindex])
            hrefnames[1] <- BSR.references[[2]]
            ylim <- range(ylim, href[1])
-           
+
            if ("msst" %in% names(parms))
            {   href[2] <- parms$msst
                hrefnames[2] <- "M*S*S*T"
                ylim <- range(ylim, href[2])
            }
-           
+
            href <- href[! is.na(href)]
            # Note: we had to store the names as character so we could see if they
            # are NA or not.  After we select the ones that are not NA, we convert
            # them to expressions (to get math effect) with parse():
            hrefnames <- parse(text = hrefnames[! is.na(hrefnames)])
-           
+
         }
         else { href <- NULL ; hrefnames <- NULL }
-                
+
         if(draft) PlotTitle <- FGMakeTitle("Spawning biomass", DataName)
         FGTimePlot(ts$year, ts$SSB, lab.x = lab.x, lab.y = lab.y,
             href = href, hrefnames = hrefnames, legend.pos = legend.pos,
@@ -225,10 +224,10 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
     }
 ###############  Plot SSB/Sref with reference line at 1.0 #################
     if ("SSB" %in% names(ts) && ref.parms[2])
-    {   
+    {
       hrefstring <- BSR.references[[2]]
       hrefindex <- which(names(x$parms) == BSR.references[[2]])
-      Sref <- unlist(x$parms[hrefindex])        
+      Sref <- unlist(x$parms[hrefindex])
       ylim <- range(ts$SSB/Sref, 1.2, na.rm = TRUE)
       lab.y <- paste("SSB / ", hrefstring, sep="")
       if (from.zero) ylim <- range(ylim, 0)
@@ -243,13 +242,13 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 ###############  Plot SSB/SSB0 with reference line at SSBmsy/SSB0 ################
     if ("SSB" %in% names(ts) && "SSB0" %in% names(parms))
     {   lab.y <- "SSB / SSB0"
-        
+
         if (ref.parms[2] && h.ref)
-        {   
+        {
           href <- Sref/parms$SSB0
           hrefnames <- paste(BSR.references[[2]]," / SSB0", sep="")
           ylim <- range(ts$SSB / parms$SSB0, Sref / parms$SSB0, 1, na.rm = TRUE)
-          
+
         }
         else  { href <- NULL ; hrefnames <- NULL
                 ylim <- range(ts$SSB / parms$SSB0, 1, na.rm = TRUE)
@@ -271,7 +270,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
         if ((!is.null(BSR.references[[3]])) && h.ref)
         {  hrefstring <- BSR.references[[3]]
            hrefindex <- which(names(x$parms) == BSR.references[[3]])
-           href <- unlist(x$parms[hrefindex])  
+           href <- unlist(x$parms[hrefindex])
            hrefnames <- BSR.references[[3]]
            ylim <- range(ylim, href)
         }
@@ -286,10 +285,10 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 
 ###############  Plot Recruits/Rref by year with ref. line at 1.0 ###############
     if ("recruits" %in% names(ts) && ref.parms[3])
-    {   
+    {
       hrefstring <- BSR.references[[3]]
       hrefindex <- which(names(x$parms) == BSR.references[[3]])
-      Rref <- unlist(x$parms[hrefindex])        
+      Rref <- unlist(x$parms[hrefindex])
       ylim <- range(ts$recruits/Rref, 1.2, na.rm = TRUE)
       lab.y <- paste("Recruits / ", hrefstring, sep="")
       if (from.zero) ylim <- range(ylim, 0)
@@ -304,13 +303,13 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 ###############  Plot Recruits/R0 by year with ref. line at Rref/R0 ###############
     if ("recruits" %in% names(ts) && "R0" %in% names(parms))
     {   lab.y <- "Recruits / R0"
-        
+
         if (ref.parms[3] && h.ref)
-        {   
+        {
           href <- Rref/parms$R0
           hrefnames <- paste(BSR.references[[3]]," / R0", sep="")
           ylim <- range(ts$recruits / parms$R0, Rref / parms$R0, 1, na.rm = TRUE)
-          
+
         }
         else  { href <- NULL ; hrefnames <- NULL
                 ylim <- range(ts$recruits / parms$R0, 1, na.rm = TRUE)

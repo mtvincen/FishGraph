@@ -16,7 +16,7 @@ Bound.vec.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -32,7 +32,6 @@ Graphically displays estimated vectors and bound values for a stock-assessment m
 \donttest{
 Bound.vec.plots(gag)
 }
-
 }
 \author{
 M Prager

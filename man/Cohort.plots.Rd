@@ -16,7 +16,7 @@ Cohort.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -36,7 +36,6 @@ colors may be recycled depending on the number of ages.
 \donttest{
 Cohort.plots(gag)
 }
-
 }
 \author{
 M Prager

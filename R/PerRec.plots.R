@@ -1,38 +1,38 @@
 #' Per-recruit plots
-#' 
+#'
 #' The function \code{PerRec.plots} generates plots of quantities
-#' on a per-recruit basis as a function of fishing mortality 
+#' on a per-recruit basis as a function of fishing mortality
 #' rate \emph{F}.
-#' 
+#'
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
-#' @param graphics.type a vector of graphics file types to which graphics are saved.  
+#' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param units.ypr A character string (e.g. \code{"pounds"}) used in labeling
 #' the plot of yield per recruit.
-#' @param user.PR A list whose elements are names of additional columns of 
-#' \code{x$pr.series} to be plotted against \emph{F}. 
+#' @param user.PR A list whose elements are names of additional columns of
+#' \code{x$pr.series} to be plotted against \emph{F}.
 #' @param legend.pos A text string compatible with the \code{legend} function of \code{R}.
 #' Defines the position of the legend (ex. "bottomright", "bottom", etc.)
 #' @param F.references A list of character-string vectors to specify reference
 #' points to appear on \emph{F} plots.
 
-#' 
+#'
 #' @return Graphics
-#' 
+#'
 #' @author M Prager
 #' @author E Williams
 #' @author K Shertzer
 #' @author R Cheshire
 #' @author K Purcell
-#' 
+#'
 #' @examples \donttest{
 #' PerRec.plots(gag)
 #' }
-#' 
+#' @export
 PerRec.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
     graphics.type = NULL, use.color = TRUE, units.ypr = x$info$units.ypr,
@@ -49,21 +49,21 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
     # Set up plotting-related stuff:
     ltyvec <- c("dashed", "dotdash", "twodash", "431313", "dotted", "22848222")
 
-    vref<-vrefindex <-vrefnames <- NULL    
+    vref<-vrefindex <-vrefnames <- NULL
     if (is.list(F.references))
-    { ref.check=F.references %in% names(x$parms) 
+    { ref.check=F.references %in% names(x$parms)
       if (!all(ref.check)){warning("Missing F.reference in parms", immediate.=TRUE); return(invisible(-1))}
       nrefs = length(F.references)
        for (iplot in 1:nrefs)
-       { 
+       {
           vrefnames <- c(vrefnames,F.references[[iplot]])
           vrefindex <- c(vrefindex, which(names(x$parms) == F.references[[iplot]]))
-       }          
-      vref <- unlist(x$parms[vrefindex])    
+       }
+      vref <- unlist(x$parms[vrefindex])
     }
     xmax <- max(pr.df$F.spr, 0.01, vref, na.rm = TRUE)
-    
-          
+
+
     PlotTitle <- ""
     savepar <- FGSetPar(draft)
     if (! is.null(graphics.type))
@@ -83,10 +83,10 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
             main = PlotTitle, use.color = use.color,
             ylim = c(0, max(pr.df$spr.prop)), xlim=c(0,xmax))
         if (is.list(F.references))
-        {  
+        {
           abline(v=vref, lty=ltyvec, lwd=2)
           legend(legend.pos, legend=vrefnames, lty=ltyvec, lwd=2, bg="white")
-        }        
+        }
         if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
             GraphName = "PR.spr", graphics.type)
     }
@@ -99,10 +99,10 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
             FGtype = "linepointnodots", main = PlotTitle, use.color = use.color,
             ylim = c(0, 1.2 * max(pr.df$ypr, na.rm = TRUE)), xlim=c(0,xmax))
         if (is.list(F.references))
-        {  
+        {
           abline(v=vref, lty=ltyvec, lwd=2)
           legend(legend.pos, legend=vrefnames, lty=ltyvec, lwd=2, bg="white")
-        }        
+        }
         if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
             GraphName = "PR.ypr", graphics.type)
     }
@@ -120,7 +120,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 use.color = use.color, ylim = c(0, 1.2 * max(pr.df[, prindex],
                 na.rm = TRUE)), xlim=c(0,xmax))
             if (is.list(F.references))
-            {  
+            {
               abline(v=vref, lty=ltyvec, lwd=2)
               legend(legend.pos, legend=vrefnames, lty=ltyvec, lwd=2, bg="white")
             }

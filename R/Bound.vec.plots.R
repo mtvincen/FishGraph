@@ -1,27 +1,27 @@
 #' Plots time and age vectors and their bounds for stock-assessment models
-#' 
+#'
 #' Graphically displays estimated vectors and bound values for a stock-assessment model run.
-#' 
+#'
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
-#' @param graphics.type a vector of graphics file types to which graphics are saved.  
+#' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 
-#' 
+#'
 #' @return Graphics
-#' 
+#'
 #' @author M Prager
 #' @author E Williams
 #' @author K Shertzer
 #' @author R Cheshire
 #' @author K Purcell
-#' 
+#'
 #' @examples \donttest{
 #' Bound.vec.plots(gag)
 #' }
-#' 
+#' @export
 Bound.vec.plots <- function(x, DataName = deparse(substitute(x)), draft=TRUE, graphics.type = NULL)
 #=================================================================================
 {
@@ -40,7 +40,7 @@ Bound.vec.plots <- function(x, DataName = deparse(substitute(x)), draft=TRUE, gr
         return(invisible(-1))
     }
   }
-  
+
   if (avec.check) {
     if (! ("age"  %in% names(x$parm.avec)))
     {   Errmsg <- paste("Variable 'age' not found in ",
@@ -49,7 +49,7 @@ Bound.vec.plots <- function(x, DataName = deparse(substitute(x)), draft=TRUE, gr
         return(invisible(-1))
     }
   }
-  
+
   ### Set up plotting-related stuff:
   savepar <- FGSetPar(draft)
   PlotTitle <- ""
@@ -58,16 +58,16 @@ Bound.vec.plots <- function(x, DataName = deparse(substitute(x)), draft=TRUE, gr
       GraphicsDirName <- paste(DataName, "-figs/boundvecs", sep="")
       FGCheckGraphDir(GraphicsDirName)
   } else {write.graphs <- FALSE}
-  
-  
-  
+
+
+
   ##### plot bounds and estimate of time vectors ###################################
   if (tvec.check) {
     namevec=names(x$parm.tvec)[-1]
     numvecs=ncol(x$parm.tvec)-1
     nameveccons=names(x$parm.tvec.cons)
     numveccons=ncol(x$parm.tvec.cons)
-    
+
     for(p in 1:numvecs)
     {
       name=namevec[p]
@@ -83,24 +83,24 @@ Bound.vec.plots <- function(x, DataName = deparse(substitute(x)), draft=TRUE, gr
       grid()
       points(xdat,ydat, pch=16)
       abline(h=ymin,col=2,lwd=2)
-      abline(h=ymax,col=2,lwd=2)  
+      abline(h=ymax,col=2,lwd=2)
       if (phase<0) {text(grconvertX(0.50,"npc"),grconvertY(0.1,"npc"), "Fixed Values", cex=1.)}
-      
-      if (write.graphs) FGSavePlot(GraphicsDirName, DataName, 
+
+      if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
                                    GraphName = paste("tvec.",name,sep=""),
                                    graphics.type)
-      
-    } # end numvecs loop  
-  } #end tvec.check
- 
 
-  ##### plot bounds and estimate of time vectors ###################################  
+    } # end numvecs loop
+  } #end tvec.check
+
+
+  ##### plot bounds and estimate of time vectors ###################################
   if (avec.check) {
     namevec=names(x$parm.avec)[-1]
     numvecs=ncol(x$parm.avec)-1
     nameveccons=names(x$parm.avec.cons)
     numveccons=ncol(x$parm.avec.cons)
-    
+
     for(p in 1:numvecs)
     {
       name=namevec[p]
@@ -116,19 +116,19 @@ Bound.vec.plots <- function(x, DataName = deparse(substitute(x)), draft=TRUE, gr
       grid()
       points(xdat,ydat, pch=16)
       abline(h=ymin,col=2,lwd=2)
-      abline(h=ymax,col=2,lwd=2)  
+      abline(h=ymax,col=2,lwd=2)
       if (phase<0) {text(grconvertX(0.50,"npc"),grconvertY(0.1,"npc"), "Fixed Values", cex=1.)}
-      
-      if (write.graphs) FGSavePlot(GraphicsDirName, DataName, 
+
+      if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
                                    GraphName = paste("avec.",name,sep=""),
                                    graphics.type)
-      
-    } # end numvecs loop  
+
+    } # end numvecs loop
   } #end avec.check
-  
+
   par(savepar)
   return(invisible(0))
-  
+
 } # close plotting function
 
 

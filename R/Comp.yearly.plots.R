@@ -1,21 +1,21 @@
 #' Plots of age- and length-composition fits by year
-#' 
-#' The routine \code{Comp.yearly.plots} generates plots of age- and length-composition 
+#'
+#' The routine \code{Comp.yearly.plots} generates plots of age- and length-composition
 #' fits by year and data series. Optionally, the sample size N, effective sample
-#' size Neff, angular deviation can be printed on the plot surface. The background is 
-#' shaded if the model does not fit to the composition (Neff < 0).  Plots of the					
-#' ratio Neff/N over time may be made. Plots are available in two formats: one 
+#' size Neff, angular deviation can be printed on the plot surface. The background is
+#' shaded if the model does not fit to the composition (Neff < 0).  Plots of the
+#' ratio Neff/N over time may be made. Plots are available in two formats: one
 #' plot per page, or a compact format with 21 plots per page.
-#' 
+#'
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
-#' @param graphics.type a vector of graphics file types to which graphics are saved.  
+#' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param units a character string (e.g. \code{"cm"}) for labeling the X-axis of
-#' length-composition plots.  
+#' length-composition plots.
 #' @param print.n When \code{TRUE}, \emph{N} is printed in each plot.
 #' @param print.neff When \code{TRUE}, \emph{N_eff} (rounded) is printed in each plot.
 #' @param plot.neff When \code{TRUE}, a timeplot of \emph{N_eff} is made for each data
@@ -26,22 +26,22 @@
 #' @param print.year When \code{TRUE}, the year is printed in each plot.
 #' @param compact When \code{TRUE}, plots are arranged by default in 5x3 matrix on each page.
 #' @param uniform When \code{TRUE}, all years of the same data series are scaled
-#' the same.   
-#' @param connect.obsd When \code{TRUE}, observed points are connected by lines.   
-#' 
+#' the same.
+#' @param connect.obsd When \code{TRUE}, observed points are connected by lines.
+#'
 #' @return Graphics
-#' 
+#'
 #' @author M Prager
 #' @author E Williams
 #' @author K Shertzer
 #' @author R Cheshire
 #' @author K Purcell
-#' 
-#' 
+#'
+#'
 #' @examples \donttest{
 #' Comp.yearly.plots(gag)
 #' }
-#' 
+#' @export
 Comp.yearly.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
@@ -153,7 +153,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                             paste("   x$t.series$", fileroot, ".neff", sep = ""), call. = FALSE)
                         Neff <- rep(NA_integer_, nyears)
 					 } else (Neff<-round(Neff,digits=1))
-                  
+
                 }
          }
       ### Set up an empty vector for angular deviation:
@@ -251,7 +251,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                   if (Neff[iyear]<=0|is.na(Neff[iyear])==TRUE)
                   {
                     polygon(c(0,0,mypar$fin[1],mypar$fin[1]),c(0,mypar$fin[2],mypar$fin[2],0),col=rgb(.211, .211, .211, .2))
-                  }										 
+                  }
                }
             }
          if (print.year)

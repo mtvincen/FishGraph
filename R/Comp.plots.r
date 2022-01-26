@@ -36,7 +36,7 @@
 #' @examples \donttest{
 #' Comp.plots(gag)
 #' }
-#'
+#' @export
 ###########################################################################################
 #  R function to make bubble plots of age- or length-composition matrices
 #  from fish stock-assessment models.
@@ -234,9 +234,9 @@ for (iplot in 1:nplots)
       m22dp <- m2%*%m2
       fit.metric=cor(m1,m2,method='pearson')
   } else {
-      m12dpa <- apply(m1*m2, 1, sum)   # This returns a vector of length nyear
-      m11dpa <- apply(m1*m1, 1, sum)   # Ditto
-      m22dpa <- apply(m2*m2, 1, sum)   # Ditto
+      m12dp <- apply(m1*m2, 1, sum)   # This returns a vector of length nyear
+      m11dp <- apply(m1*m1, 1, sum)   # Ditto
+      m22dp <- apply(m2*m2, 1, sum)   # Ditto
       ## Could do m12dpa <- diag(m1%*%t(m2)) but doesn't work for vectors still because of the transposing
 
 

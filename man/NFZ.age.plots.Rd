@@ -23,7 +23,7 @@ NFZ.age.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{start.drop}{Number of years at the start of the data to be omitted from
@@ -40,10 +40,10 @@ the plot of numbers at age.}
 \item{units.biomass}{A text string (e.g. \code{"t"}) used in labeling the plot
 of biomass at age.}
 
-\item{max.bub}{A numerical scalar for the maximum bubble size (e.g. \code{"4.0"}) 
+\item{max.bub}{A numerical scalar for the maximum bubble size (e.g. \code{"4.0"})
 in bubble plots of numbers at age and biomass at age.}
 
-\item{user.plots}{A vector of text strings with the names of additional matrix 
+\item{user.plots}{A vector of text strings with the names of additional matrix
 components of \code{x} to be plotted.}
 
 \item{plot.CLD}{When \code{TRUE}, each matrix in \code{x$CLD.est.mats} is plotted,
@@ -53,15 +53,14 @@ in addition to the plots described here.}
 Graphics
 }
 \description{
-The function \code{NFZ.age.plots} generates barplots of estimated abundance and 
-mortality at age over time and bubble plots of number and biomass at age.  Bubble 
+The function \code{NFZ.age.plots} generates barplots of estimated abundance and
+mortality at age over time and bubble plots of number and biomass at age.  Bubble
 areas are scaled to the largest value within each plot.
 }
 \examples{
 \donttest{
 NFZ.age.plots(gag)
 }
-
 }
 \author{
 M Prager

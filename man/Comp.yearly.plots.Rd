@@ -26,7 +26,7 @@ Comp.yearly.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -61,18 +61,17 @@ the same.}
 Graphics
 }
 \description{
-The routine \code{Comp.yearly.plots} generates plots of age- and length-composition 
+The routine \code{Comp.yearly.plots} generates plots of age- and length-composition
 fits by year and data series. Optionally, the sample size N, effective sample
-size Neff, angular deviation can be printed on the plot surface. The background is 
-shaded if the model does not fit to the composition (Neff < 0).  Plots of the					
-ratio Neff/N over time may be made. Plots are available in two formats: one 
+size Neff, angular deviation can be printed on the plot surface. The background is
+shaded if the model does not fit to the composition (Neff < 0).  Plots of the
+ratio Neff/N over time may be made. Plots are available in two formats: one
 plot per page, or a compact format with 21 plots per page.
 }
 \examples{
 \donttest{
 Comp.yearly.plots(gag)
 }
-
 }
 \author{
 M Prager

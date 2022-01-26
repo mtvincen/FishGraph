@@ -25,7 +25,7 @@ StockRec.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -39,10 +39,10 @@ plots, as when a model includes an initialization period.}
 \item{units.ssb}{A text string (e.g. \code{"tons"} or \code{"10^9 eggs"}) used
 in labeling plots of spawning stock.}
 
-\item{units.rec}{A text string (e.g. \code{"million fish"}) for labeling plots 
+\item{units.rec}{A text string (e.g. \code{"million fish"}) for labeling plots
 of recruitment}
 
-\item{rec.model}{Specifies the type of recruitment function to draw.  Valid 
+\item{rec.model}{Specifies the type of recruitment function to draw.  Valid
 values are: \code{"BH", "BH-steep", "Ricker", "Ricker-steep", "Mean"}.}
 
 \item{draw.model}{If \code{TRUE}, a function curve is drawn on plots of stock
@@ -54,7 +54,7 @@ and recruitment.}
 \item{draw.time}{If \code{TRUE}, stock-recruitment points are connected to indicate
 progression of time.}
 
-\item{year.pos}{An integer (= 1, 2, 3, or 4) defining the position of text relative to points. 
+\item{year.pos}{An integer (= 1, 2, 3, or 4) defining the position of text relative to points.
 The text indicates first and last years in the time series, and applies only if draw.time=TRUE. A
 value of year.pos=0 turns off the text feature.}
 }
@@ -62,14 +62,13 @@ value of year.pos=0 turns off the text feature.}
 Graphics
 }
 \description{
-The function \code{StockRec.plots} generates plots of stock vs. recruitment in 
+The function \code{StockRec.plots} generates plots of stock vs. recruitment in
 linear and logarithmic scales.
 }
 \examples{
 \donttest{
 StockRec.plots(gag)
 }
-
 }
 \author{
 M Prager

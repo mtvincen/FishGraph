@@ -71,7 +71,6 @@ different resolutions, quantities that vary with \emph{F}.
 \donttest{
 Eq.plots(gag)
 }
-
 }
 \author{
 M Prager

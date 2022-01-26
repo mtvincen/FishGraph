@@ -30,6 +30,7 @@
 #' @examples \donttest{
 #' Index.plots(gag)
 #' }
+#' @export
 #######################################################################################
 #  R function to plot abundance indices from fish stock assessment models.
 #  Plots observed and predicted, and residual diagnostics.

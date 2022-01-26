@@ -70,7 +70,6 @@ pooled across years.
 \donttest{
 Comp.plots(gag)
 }
-
 }
 \author{
 M Prager
