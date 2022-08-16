@@ -16,6 +16,7 @@
 #' @param err.bar When \code{TRUE}, error bars indicating plus/minus two standard errors of the observed index are plotted
 #' @param resid.analysis When \code{TRUE}, additional diagnostic plots of residuals are created
 #' @param resid.tests Runs statistical tests on residuals. Set to "runs" for runs test only or "multiple" for additional tests. Defaults to argument \code{NULL} for none.
+#' @param runs.box Boolean for if you want to print the runs test 3 times SD on the log residual plot for the 2 box
 #'
 #' @return Graphics
 #'
@@ -48,7 +49,7 @@
 #######################################################################################
 Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, connect.obsd = FALSE, from.zero = TRUE,
-   two.panel = TRUE, log.resid = FALSE, err.bar = TRUE, resid.analysis = TRUE, resid.tests=NULL)
+   two.panel = TRUE, log.resid = TRUE, err.bar = TRUE, resid.analysis = TRUE, resid.tests=NULL, runs.box = TRUE)
 #######################################################################################
 #  ARGUMENTS:
 #  x - an R list with output from the assessment models
@@ -223,13 +224,27 @@ Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             scaled.resids <- (resids[iplot,] + 1e-20) / (meany + 1e-20)
             lab.y <- "Scaled residual"
         }
+
         maxy <- max(abs(scaled.resids), na.rm = TRUE)
+
+        if (runs.box){
+            runstest=runs.sig3(scaled.resids)
+            maxy <- max(c(abs(scaled.resids),runstest$sig3lim), na.rm = TRUE)
+        }
+
         ylim = maxy * 1.05 * c(-1, 1)
 
         FGTimePlot(x = ts$year, y = scaled.resids, lab.x = "Year",
             lab.y = lab.y, href = NULL, hrefnames = NULL, use.color = use.color,
             FGtype = "stick", ylim = ylim,  main = PlotTitle)
         abline(h = 0)
+
+        if (runs.box){
+            lims=runstest$sig3lim
+            cols =  ifelse(runstest$p.runs<0.05,rgb(1,0,0,0.5),ifelse(runstest$p.runs<0.1,rgb(1,1,0,0.5),rgb(0,1,0,0.5)))
+            rect(min(ts$year-1),lims[1],max(ts$year+1),lims[2],col=cols,border=cols)
+            points(ts$year[scaled.resids<lims[1]|scaled.resids>lims[2]],scaled.resids[scaled.resids<lims[1]|scaled.resids>lims[2]],pch=16,col='red',cex=1)
+        }
 
         ### Write plot to file(s)
         if (two.panel) GraphName <- paste("U", IndexName, sep=".") else GraphName = paste("U", IndexName, "resid", sep=".")
@@ -288,64 +303,6 @@ Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #Log-residual analysis plots (EHW added on 9-10-14)
 #---------------------------------------------------------------------------------------------------------------------------
 if (resid.analysis) {
-  #--test used in residual analysis---
-  runs.test.v2=function (y, plot.it = FALSE, alternative = c("two.sided", "positive.correlated", "negative.correlated"))
-  {
-    alternative <- match.arg(alternative)
-    DNAME = deparse(substitute(y))
-    y <- na.omit(y)
-    med <- median(y, na.rm = TRUE)
-    for (k in 2:length(y)) {
-      if ((y[k] == med) & (y[k - 1] < med)) {
-        y[k] = y[k - 1]
-      }
-      else if ((y[k] == med) & (y[k - 1] > med)) {
-        y[k] = y[k - 1]
-      }
-    }
-    q <- rep(0.05, length(y))
-    p <- rep(-0.05, length(y))
-    d <- y
-    q[I(d < med) | I(d == med)] <- NA
-    p[I(d >= med)] <- NA
-    if (plot.it) {
-      plot(q, type = "p", pch = "A", col = "red", ylim = c(-0.5, 0.5),
-           xlim = c(1, length(y)), xlab = "", ylab = "",main="Runs Test")
-      points(p, pch = "B", col = "blue")
-      abline(h = 0)
-    }
-    m <- length(na.omit(q))
-    n <- length(na.omit(p))
-    R <- 1
-    s <- sign(y - med)
-    for (k in 1:(length(y) - 1)) {
-      if (s[k] != s[k + 1]) {
-        R <- R + 1
-      }
-    }
-    E <- 1 + 2 * n * m/(n + m)
-    s2 <- (2 * n * m * (2 * n * m - n - m))/((n + m)^2 * (n +
-                                                            m - 1))
-    statistic <- (R - E)/sqrt(s2)
-    if (alternative == "positive.correlated") {
-      p.value = pnorm(statistic)
-      METHOD = "Runs Test - Positive Correlated"
-    }
-    else if (alternative == "negative.correlated") {
-      p.value = 1 - pnorm(statistic)
-      METHOD = "Runs Test - Negative Correlated"
-    }
-    else {
-      p.value = 2 * min(pnorm(statistic), 1 - pnorm(statistic))
-      alternative = "two.sided"
-      METHOD = "Runs Test - Two sided"
-    }
-    STATISTIC = statistic
-    names(STATISTIC) = "Standardized Runs Statistic"
-    structure(list(statistic = STATISTIC, p.value = p.value,
-                   method = METHOD, data.name = DNAME), class = "htest")
-  }
-
   #--start residual analysis plots------------------------------
   #---- Residual analysis page 1--------------------------------------------------
 

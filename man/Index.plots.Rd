@@ -13,10 +13,11 @@ Index.plots(
   connect.obsd = FALSE,
   from.zero = TRUE,
   two.panel = TRUE,
-  log.resid = FALSE,
+  log.resid = TRUE,
   err.bar = TRUE,
   resid.analysis = TRUE,
-  resid.tests = NULL
+  resid.tests = NULL,
+  runs.box = TRUE
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ When \code{NULL}, no plots are saved.}
 \item{resid.analysis}{When \code{TRUE}, additional diagnostic plots of residuals are created}
 
 \item{resid.tests}{Runs statistical tests on residuals. Set to "runs" for runs test only or "multiple" for additional tests. Defaults to argument \code{NULL} for none.}
+
+\item{runs.box}{Boolean for if you want to print the runs test 3 times SD on the log residual plot for the 2 box}
 }
 \value{
 Graphics
