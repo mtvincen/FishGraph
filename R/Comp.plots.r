@@ -171,19 +171,19 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             nname<-paste(gfileroot,".n", sep="")
             if (neffname%in%names(x$t.series)&dim(m1.sub)[1]>1) {
                 nseries<-x$t.series[,names(x$t.series)==neffname]
-                yrs.include<-x$t.series$year[nseries>0]
+                yrs.include<-x$t.series$year[nseries>0 & !is.na(nseries)]
                 m1<-m1.sub[rownames(m1.sub)%in%yrs.include,,drop=FALSE]
                 m2<-m2.sub[rownames(m2.sub)%in%yrs.include,,drop=FALSE]
                 poolylabtxt="wgt by effective N"
-                wt=x$t.series[[neffname]][x$t.series[[neffname]]>0&x$t.series$year%in%as.numeric(rownames(m1))]
+                wt=x$t.series[[neffname]][!is.na(x$t.series[[neffname]])&x$t.series[[neffname]]>0&x$t.series$year%in%as.numeric(rownames(m1))]
                 wt=wt[is.na(wt)==FALSE]
             } else if(nname%in%names(x$t.series)&dim(m1.sub)[1]>1) {
                 nseries<-x$t.series[,names(x$t.series)==nname]
-                yrs.include<-x$t.series$year[nseries>0]
+                yrs.include<-x$t.series$year[nseries>0 & !is.na(nseries)]
                 m1<-m1.sub[rownames(m1.sub)%in%yrs.include,]
                 m2<-m2.sub[rownames(m2.sub)%in%yrs.include,]
                 poolylabtxt="wgt by N"
-                wt=x$t.series[[nname]][x$t.series[[nname]]>0&x$t.series$year%in%as.numeric(rownames(m1))]
+                wt=x$t.series[[nname]][!is.na(x$t.series[[nname]])&x$t.series[[nname]]>0&x$t.series$year%in%as.numeric(rownames(m1))]
                 wt=wt[is.na(wt)==FALSE]
             } else {
                 m1<-m1.sub
@@ -196,6 +196,11 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             }else{title.y <- "Age class"}
 
             ## allow plotting of vector instead of data frame object
+            if (length(m1)==0) {
+                warning(paste0("You do not have any samples to plot for ", gfileroot," in year block ",yr.block[iyrs],". Skipping this for now but you should probably check this in BAM!"))
+                next
+            }
+
             if(dim(m1)[1]>1){
                 ob.m=apply(m1,2,weighted.mean,w=wt)
                 pr.m=apply(m2,2,weighted.mean,w=wt)

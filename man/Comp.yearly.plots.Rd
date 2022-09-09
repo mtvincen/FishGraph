@@ -13,6 +13,7 @@ Comp.yearly.plots(
   units = x$info$units.length,
   print.n = !compact,
   print.neff = !compact,
+  plot.missing = FALSE,
   plot.neff = FALSE,
   compute.neff = FALSE,
   print.year = compact,
@@ -40,6 +41,9 @@ length-composition plots.}
 \item{print.n}{When \code{TRUE}, \emph{N} is printed in each plot.}
 
 \item{print.neff}{When \code{TRUE}, \emph{N_eff} (rounded) is printed in each plot.}
+
+\item{plot.missing}{When \code{TRUE}, plots out all comps. Otherwise comps where
+\code{is.na(N)} are not printed.}
 
 \item{plot.neff}{When \code{TRUE}, a timeplot of \emph{N_eff} is made for each data
 series}

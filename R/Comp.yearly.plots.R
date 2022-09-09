@@ -20,6 +20,8 @@
 #' @param print.neff When \code{TRUE}, \emph{N_eff} (rounded) is printed in each plot.
 #' @param plot.neff When \code{TRUE}, a timeplot of \emph{N_eff} is made for each data
 #' series
+#' @param plot.missing When \code{TRUE}, plots out all comps. Otherwise comps where
+#' \code{is.na(N)} are not printed.
 #' @param compute.neff When \code{TRUE}, \strong{FishGraph} computes \emph{N_eff}
 #' internally, rather than using values stored by the user.  The computations are
 #' based on the sample sizes and observed and estimated proportions.
@@ -45,7 +47,7 @@
 Comp.yearly.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
-   print.n = !compact, print.neff = !compact,
+   print.n = !compact, print.neff = !compact, plot.missing = FALSE,
    plot.neff = FALSE, compute.neff = FALSE, print.year = compact, compact = TRUE,
    uniform = TRUE, connect.obsd = FALSE)
 #-------------------------------------------------------------------------------
@@ -200,6 +202,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
          #   }
          #else { if (length(bins) == 1) xlim <- c(bins[1] - 2, bins[1] + 2) else
          #       xlim <- c(bins[1], bins[1] + (bins[2]-bins[1]) * 4)}
+         if (!is.na(Nobs[iyear]) | plot.missing ) { #Only print out if not na sample size or if plot.missing is TRUE
          plot(bins, prop.pred[iyear,], ylim = c(0, ymax),
             xlab = title.x, ylab = "Proportion", main = mtitle, type = "n")
          grid(col = "lightgray", lty = 1)
@@ -247,18 +250,20 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                   #   .(round(Neff[iyear]/Nobs[iyear], digits=2)))
                   #text(xloc, yloc, anntext, adj = c(1, 1), cex = 0.9)
                   #yloc <- yloc - vspace
-				# background shading for years not fitted
-                  if (Neff[iyear]<=0|is.na(Neff[iyear])==TRUE)
-                  {
-                    polygon(c(0,0,mypar$fin[1],mypar$fin[1]),c(0,mypar$fin[2],mypar$fin[2],0),col=rgb(.211, .211, .211, .2))
-                  }
+
                }
             }
+         ## background shading for years not fitted
+         if (Neff[iyear]<=0|is.na(Neff[iyear])==TRUE|is.na(Nobs[iyear]))
+         {
+             polygon(c(0,0,mypar$fin[1],mypar$fin[1]),c(0,mypar$fin[2],mypar$fin[2],0),col=rgb(.211, .211, .211, .2))
+         }
          if (print.year)
             {  anntext <- thisyear
                text(xloc, yloc, anntext, adj = c(1, 1), cex = 0.9)
                yloc <- yloc - vspace
             }
+
          ### Write plot to file(s)
          if (write.graphs)
             {  if ( !compact || (PlotsWaiting == PlotsPerPage) )
@@ -272,12 +277,13 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                   PlotsPage = PlotsPage + 1
                   }
             }
+         }                              #end if statement for sample size
          }  # end for iyear in 1:nyears
 
-         if (plot.neff && nyears > 1 && ! any(is.na(Neff)))
+         if (plot.neff && nyears > 1)
          {  ### Plot relative effective sample size over time
             lab.y <- expression(italic(N)[eff] / italic(N))
-            max.y <- max(Neff / Nobs, 1.0)
+            max.y <- max(Neff / Nobs, 1.0,na.rm=TRUE)
             if (!draft) mtitle <- ""
             else mtitle <- FGMakeTitle(fileroot, DataName)
             # Prevent plotting fractional years:
@@ -285,7 +291,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 {   xlim <- years[1] + c(-2, 2)
                 }
             else
-                { if (length(years) > 4)
+                { if (range(years)[2]-range(years)[1] > 4)
                     {   xlim <- range(years)
                     }
                     else
