@@ -132,14 +132,19 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 ### Get various string representations of data series:
                                         #  gfileroot is used in the name for the graphics file(s):
         gfileroot <- FGTrimName(names(cm)[iplot * 2], removePrefix = 0, removeSuffix = 1)
+        groot=FGTrimName(names(cm)[iplot * 2], removePrefix = 1, removeSuffix = 1)
         gfilename <- paste("pooled.",gfileroot, sep="")
         ## test if a matrix or a vector
-        if (paste("sel.m",FGTrimName(names(cm)[iplot * 2], removePrefix = 1, removeSuffix = 1),sep=".") %in% names(sel)){
-        sel.block <- sel[[paste("sel.m",FGTrimName(names(cm)[iplot * 2], removePrefix = 1, removeSuffix = 1),sep=".")]]
-        sel.block <- sel.block[rownames(sel.block)%in%rownames(m1.all),,drop=FALSE]
-        block.text <- rownames(unique(as.data.frame(sel.block)))
-        block.text <- rownames(unique(as.data.frame(m1.all)))
-        } else if (paste("sel.v",FGTrimName(names(cm)[iplot * 2], removePrefix = 1, removeSuffix = 1),sep=".") %in% names(sel)){
+        if(!any(paste(c("sel.m","sel.v"),groot,sep=".") %in% names(sel))) {
+            warning(paste0("Neither sel.m.",groot," nor sel.v.",groot," were found in the selectivity information in the rdat provided. Skipping this plot for now.") )
+            next
+        }
+
+        if (paste("sel.m",groot,sep=".") %in% names(sel)){
+            sel.block <- sel[[paste("sel.m",groot,sep=".")]]
+            sel.block <- sel.block[rownames(sel.block)%in%rownames(m1.all),,drop=FALSE]
+            block.text <- rownames(unique(as.data.frame(sel.block)))
+        } else if (paste("sel.v",groot,sep=".") %in% names(sel)){
             block.text = rownames(m1.all)[1]
         }
         yr.block <- as.numeric(block.text)
@@ -148,7 +153,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
         ## titleroot is used as part of the plot title:
         titleroot <- paste("Fishery: ", gfileroot)
         if(length(block.text)<4){par(mfcol=c(length(block.text),1))
-        } else if (length(block.text)>3&length(block.text)<7){par(mfcol=c(ceiling(length(block.text)/2),2))
+        } else if (length(block.text)<7){par(mfcol=c(ceiling(length(block.text)/2),2))
         } else if (length(block.text)>6){par(mfcol=c(ceiling(length(block.text)/4),4))}
         ##subset to years in each selectivity block (last block interval is defined differntly because last value of yr.block is
         ## end of interval instead of beginning of next interval)
