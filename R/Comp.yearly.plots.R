@@ -249,12 +249,16 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                   #anntext <- bquote(italic(N)[eff] / italic(N) ==
                   #   .(round(Neff[iyear]/Nobs[iyear], digits=2)))
                   #text(xloc, yloc, anntext, adj = c(1, 1), cex = 0.9)
-                  #yloc <- yloc - vspace
+                                        #yloc <- yloc - vspace
+                  if (Neff[iyear]<=0|is.na(Neff[iyear])==TRUE)
+               {
+                   polygon(c(0,0,mypar$fin[1],mypar$fin[1]),c(0,mypar$fin[2],mypar$fin[2],0),col=rgb(.211, .211, .211, .2))
+               }
 
                }
             }
          ## background shading for years not fitted
-         if (Neff[iyear]<=0|is.na(Neff[iyear])==TRUE|is.na(Nobs[iyear]))
+         if (is.na(Nobs[iyear]))
          {
              polygon(c(0,0,mypar$fin[1],mypar$fin[1]),c(0,mypar$fin[2],mypar$fin[2],0),col=rgb(.211, .211, .211, .2))
          }
