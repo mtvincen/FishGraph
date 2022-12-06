@@ -14,6 +14,7 @@ Comp.yearly.plots(
   print.n = !compact,
   print.neff = !compact,
   plot.missing = FALSE,
+  plot.pred = TRUE,
   plot.neff = FALSE,
   compute.neff = FALSE,
   print.year = compact,
@@ -44,6 +45,8 @@ length-composition plots.}
 
 \item{plot.missing}{When \code{TRUE}, plots out all comps. Otherwise comps where
 \code{is.na(N)} are not printed.}
+
+\item{plot.pred}{when \code{TRUE}, plots the fit to the composition data, when \code{FALSE} only plots the observed compositions}
 
 \item{plot.neff}{When \code{TRUE}, a timeplot of \emph{N_eff} is made for each data
 series}

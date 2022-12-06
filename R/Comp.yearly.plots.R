@@ -22,6 +22,7 @@
 #' series
 #' @param plot.missing When \code{TRUE}, plots out all comps. Otherwise comps where
 #' \code{is.na(N)} are not printed.
+#' @param plot.pred when \code{TRUE}, plots the fit to the composition data, when \code{FALSE} only plots the observed compositions
 #' @param compute.neff When \code{TRUE}, \strong{FishGraph} computes \emph{N_eff}
 #' internally, rather than using values stored by the user.  The computations are
 #' based on the sample sizes and observed and estimated proportions.
@@ -47,7 +48,7 @@
 Comp.yearly.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
-   print.n = !compact, print.neff = !compact, plot.missing = FALSE,
+   print.n = !compact, print.neff = !compact, plot.missing = FALSE, plot.pred = TRUE,
    plot.neff = FALSE, compute.neff = FALSE, print.year = compact, compact = TRUE,
    uniform = TRUE, connect.obsd = FALSE)
 #-------------------------------------------------------------------------------
@@ -207,7 +208,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
             xlab = title.x, ylab = "Proportion", main = mtitle, type = "n")
          grid(col = "lightgray", lty = 1)
          ### Plot data:
-         lines (bins, prop.pred[iyear,], type = "l", lty = 1, col = col.pred, lwd = 2)
+         if(plot.pred) lines (bins, prop.pred[iyear,], type = "l", lty = 1, col = col.pred, lwd = 2)
          points(bins, prop.obsd[iyear,], type = "p", pch = 21, cex = 1.25, col = col.obsd,
             lwd = 2)
          if (connect.obsd) points(bins, prop.obsd[iyear,], type = "l", col = col.obsd,

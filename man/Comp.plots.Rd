@@ -15,7 +15,8 @@ Comp.plots(
   corr = TRUE,
   c.min = 0.25,
   max.bub = 8,
-  b.plot = FALSE
+  b.plot = FALSE,
+  OSA.resids = FALSE
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ correlations.}
 \item{max.bub}{cex value for maximum bubble size, default is 8.0.}
 
 \item{b.plot}{create boxplots of composition residusls, default is FALSE.}
+
+\item{OSA.resids}{create plot of one step ahead residuals using the compResidual package}
 }
 \value{
 Graphics

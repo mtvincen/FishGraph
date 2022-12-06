@@ -24,7 +24,7 @@
 #' @param c.min lower bound on the y-axis range of the inset plot, applies only when corr is \code{TRUE}
 #' @param max.bub cex value for maximum bubble size, default is 8.0.
 #' @param b.plot create boxplots of composition residusls, default is FALSE.
-#'
+#' @param OSA.resids create plot of one step ahead residuals using the compResidual package
 #'
 #' @return Graphics
 #'
@@ -55,7 +55,7 @@
 #######################################################################################
 Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                        graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
-                       p.resid = FALSE, corr = TRUE, c.min = 0.25, max.bub = 8.0, b.plot = FALSE)
+                       p.resid = FALSE, corr = TRUE, c.min = 0.25, max.bub = 8.0, b.plot = FALSE,OSA.resids=FALSE)
   #######################################################################################
 #  ARGUMENTS:
 #  x - an R list with output from the assessment models
@@ -422,7 +422,92 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             mtext(ylabresidtxt,side=2,outer=TRUE,line=0)
             if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = gfilename,
                                          graphics.type)
-        } }     # end (for ....)
+        } }     # end (for ....)\
+###################################One Step Ahead Residuals############################
+
+    if (OSA.resids){
+
+    add_legend <- function(x, cex.text=1, ...) {
+      # opar <- par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0),
+      #             mar=c(0, 0, 0, 0), new=TRUE)
+      # on.exit(par(opar))
+      #plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
+      zscale <- pretty(x,min.n=4)
+      uu<-par("usr")
+      yy<-rep(uu[3]+.03*(uu[4]-uu[3]), length(zscale))
+      xx<-seq(uu[1]+.10*(uu[2]-uu[1]),uu[1]+.4*(uu[2]-uu[1]), length=length(zscale))
+      text(xx,yy,labels=zscale, cex=cex.text)
+      colb <- ifelse(zscale<0, rgb(1, 0, 0, alpha=.5), rgb(0, 0, 1, alpha=.5))
+      bs<-1
+      if("bubblescale"%in%names(list(...))) bs <- list(...)$bubblescale
+      points(xx,yy,cex=sqrt(abs(zscale))/max(sqrt(abs(zscale)), na.rm=TRUE)*5*bs, pch=19, col=colb)
+    }
+
+        for (iplot in 1:nplots)
+        {  #loop over plots in compositions
+
+            m1.all <- cm[[iplot*2-1]]         # Matrix of observed
+            m2.all <- cm[[iplot*2]]           # matrix of predicted
+
+            ## Extract column names for plots
+            binnames=colnames(m1.all)
+
+            ### Get various string representations of data series:
+            ##  gfileroot is name for the graphics file(s):
+            gfileroot <- FGTrimName(names(cm)[iplot * 2], removePrefix = 0, removeSuffix = 1)
+            ## titleroot is used as part of the plot title:
+            titleroot <- paste("Fishery: ", gfileroot)
+            ##get effective sample size for calculating pearson residuals
+            nname<-paste(gfileroot,".n", sep="")
+            if (nname%in%names(ts)) {
+                nseries<-ts[,names(ts)==nname]
+                yrs.include<-ts$year[nseries>0&!is.na(nseries)]
+                m1<-m1.all[rownames(m1.all)%in%yrs.include,]
+                m2<-m2.all[rownames(m2.all)%in%yrs.include,]
+            } else {
+                m1<-m1.all
+                m2<-m2.all
+            }
+
+            if(!is.null(dim(m1))){
+            ## Calculate residuals using compResidual package
+                resids=compResidual::resDirM(t(m1+1e-11),t(m2+1e-11))
+            } else {
+                resids=compResidual::resDirM((m1+1e-11),(m2+1e-11))
+            }
+            ## resids=compResidual::resMulti(t(m1+1e-11),t(m2+1e-11))
+
+
+            par(savepar,mfrow=c(2,2),mar=c(4,4,3,1),oma=c(0,0,0,0))
+
+            ## Make bubble plot of residuals
+            sample <- rep(1:ncol(resids), each=nrow(resids))
+            composition <- rep(1:nrow(resids), ncol(resids))
+            col <- rep(1:nrow(resids), ncol(resids))
+            compResidual::plotby(sample, composition, resids, bubblescale = 0.3, xlab="Year", yaxt="n", xaxt="n")
+            xTicks=pretty(1:ncol(resids))
+            xTicks[xTicks==0]=1
+            xtlabs=yrs.include[xTicks]
+            axis(1,at=xTicks,labels=xtlabs)
+            yTicks=pretty(1:nrow(resids))
+            yTicks[yTicks==0]=1
+            ytlabs=binnames[yTicks]
+            axis(2,at=yTicks,labels=ytlabs)
+            title(main=FGMakeTitle(paste("OSA for ",titleroot),DataName))
+            add_legend(resids, cex.text=0.8, bubblescale = 0.3)
+
+            ## Make QQ plot of residuals
+            qqnorm(resids,col=col,main=FGMakeTitle(paste("QQ for ",titleroot),DataName))
+            abline(0,1)
+            legend("topleft",col=col,legend=binnames,pch=1,bty='n',cex=0.8,ncol=2)
+
+            ## Make residual plots
+            plot(as.vector(resids), col=col, ylab="residuals", xlab="")
+            title(main=FGMakeTitle(titleroot,DataName))
+            if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = paste0("OSA",gfileroot),
+                                     graphics.type)
+        }                               #Loop over data types
+    }                                   #If adding OSA plots
     par(savepar)
     return(invisible(NULL))
 }
