@@ -497,7 +497,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             add_legend(resids, cex.text=0.8, bubblescale = 0.3)
 
             ## Make QQ plot of residuals
-            qqnorm(resids,col=col)
+            qqnorm(resids,col=col,main="")
             if(draft) title(main=FGMakeTitle(paste("QQ for ",titleroot),DataName))
             abline(0,1)
             legend("topleft",col=col,legend=binnames,pch=1,bty='n',cex=0.8,ncol=2)

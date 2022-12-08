@@ -24,12 +24,17 @@ Data.Plots(
 #' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
+are omitted.}
+
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
 When \code{NULL}, no plots are saved.}
 
 \item{use.color}{plots are made in grayscale when \code{FALSE}}
 
 \item{scaleSize}{a boolean whether to scale size of point for age and length composition based on the sample size. Default is FALSE}
+
+\item{cexval}{cex multiplier of squares to make continuous bar if desired}
 
 \item{fill}{a boolean whether to fill the point, this is useful for diagnosing how much overlap occurs in the points, Default if TRUE}
 
