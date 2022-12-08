@@ -493,17 +493,18 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             yTicks[yTicks==0]=1
             ytlabs=binnames[yTicks]
             axis(2,at=yTicks,labels=ytlabs)
-            title(main=FGMakeTitle(paste("OSA for ",titleroot),DataName))
+            if(draft) title(main=FGMakeTitle(paste("OSA for ",titleroot),DataName))
             add_legend(resids, cex.text=0.8, bubblescale = 0.3)
 
             ## Make QQ plot of residuals
-            qqnorm(resids,col=col,main=FGMakeTitle(paste("QQ for ",titleroot),DataName))
+            qqnorm(resids,col=col)
+            if(draft) title(main=FGMakeTitle(paste("QQ for ",titleroot),DataName))
             abline(0,1)
             legend("topleft",col=col,legend=binnames,pch=1,bty='n',cex=0.8,ncol=2)
 
             ## Make residual plots
             plot(as.vector(resids), col=col, ylab="residuals", xlab="")
-            title(main=FGMakeTitle(titleroot,DataName))
+            if(draft) title(main=FGMakeTitle(titleroot,DataName))
             if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = paste0("OSA",gfileroot),
                                      graphics.type)
         }                               #Loop over data types

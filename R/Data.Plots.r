@@ -5,10 +5,13 @@
 #' @param DataName string used in plot titles. Defaults to argument \code{x}.
 #' #' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
+#' are omitted.
 #' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param scaleSize a boolean whether to scale size of point for age and length composition based on the sample size. Default is FALSE
+#' @param cexval cex multiplier of squares to make continuous bar if desired
 #' @param fill a boolean whether to fill the point, this is useful for diagnosing how much overlap occurs in the points, Default if TRUE
 #' @param sampleName a character string of the length and age composition name to search for in the tseries matrix. Do not include the '.'. Default is 'neff'
 #'
