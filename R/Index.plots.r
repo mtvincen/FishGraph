@@ -241,7 +241,7 @@ Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 
         if (runs.box){
             lims=runstest$sig3lim
-            cols =  ifelse(runstest$p.runs<0.05,rgb(1,0,0,0.5),ifelse(runstest$p.runs<0.1,rgb(1,1,0,0.5),rgb(0,1,0,0.5)))
+            cols =  ifelse(runstest$p.runs<0.01,rgb(1,0,0,0.5),ifelse(runstest$p.runs<0.05,rgb(1,0.647,0,0.5),rgb(0,1,0,0.5)))
             rect(min(ts$year-1),lims[1],max(ts$year+1),lims[2],col=cols,border=cols)
             points(ts$year[scaled.resids<lims[1]|scaled.resids>lims[2]],scaled.resids[scaled.resids<lims[1]|scaled.resids>lims[2]],pch=16,col='red',cex=1)
         }
@@ -249,7 +249,7 @@ Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
         ### Write plot to file(s)
         if (two.panel) GraphName <- paste("U", IndexName, sep=".") else GraphName = paste("U", IndexName, "resid", sep=".")
         if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName, graphics.type)
-        if (two.panel) close.screen(all = TRUE)
+        if (two.panel) close.screen(all.screens = TRUE)
 
     } # end for iplot
     if (two.panel) par(localpar)
@@ -362,8 +362,6 @@ if (resid.analysis) {
 
     if (draft) PlotTitle <- FGMakeTitle(paste("Residual Analysis (2 of 2), Index:", IndexName), DataName) else PlotTitle <- ""
     GraphName=paste("U.",IndexName,".resid2", sep="")
-    #from package lmtest
-    require(lmtest)
     ##Breusch-Pagan Test for heteroskedasticity
     bptest.out=bptest(yr~res)
     #Harrison-McCabe test for heteroskedasticity
@@ -375,7 +373,6 @@ if (resid.analysis) {
     dwtest.out=dwtest(yr~res)
 
     #from package nortest
-    require(nortest)
     #Lilliefors (Kolmogorov-Smirnov) test for normality
    if (n.res>4) {lillie.test.out=lillie.test(res)}
    if (n.res<=4)
@@ -393,8 +390,6 @@ if (resid.analysis) {
     #Shapiro-Wilk test for normality
     shapiro.test.out=shapiro.test(res)
 
-    ##using package tseries
-    require(tseries)
     #Phillips-Perron test for the null hypothesis that x has a unit root
     pp.test.out=pp.test(res)
 

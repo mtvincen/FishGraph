@@ -38,6 +38,15 @@
 #' BSR.time.plots(gag)
 #' }
 #'
+#' @import stats
+#' @import graphics
+#' @import grDevices
+#' @import nortest
+#' @import utils
+#' @import lmtest
+#' @import tseries
+#' @import compResidual
+#'
 #' @export
 BSR.time.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,

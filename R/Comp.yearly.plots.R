@@ -96,8 +96,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
          cex.axis = 0.75, mfcol = plot.options$graphics$fglayout, lab = c(5, 2, 4),
          mgp=c(1.8, 0.75, 0), las = 0)
       draft <- FALSE  ### Plots have no main titles in compact mode
-   }
-   else
+   }    else
    {  par(las = 1)
    }
    PlotsPerPage <- prod(par("mfrow"))
@@ -108,8 +107,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
    {  col.obsd <- plot.options$color$clr.obsd
       col.pred <- plot.options$color$clr.pred
       Y1Col  <- plot.options$color$clr.line
-   }
-   else
+   }    else
    {  col.obsd <- plot.options$bw$clr.obsd
       col.pred <- plot.options$bw$clr.pred
       Y1Col  <- plot.options$bw$clr.line
@@ -118,8 +116,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
    if (length(graphics.type > 0))
    {  write.graphs <- TRUE
       GraphicsDirName <- paste(DataName, "-figs/compyr", sep="")
-   }
-   else
+   }   else
    {  write.graphs <- FALSE
    }
    ### Make plots:
@@ -203,7 +200,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
          #   }
          #else { if (length(bins) == 1) xlim <- c(bins[1] - 2, bins[1] + 2) else
          #       xlim <- c(bins[1], bins[1] + (bins[2]-bins[1]) * 4)}
-         if (!is.na(Nobs[iyear]) | plot.missing ) { #Only print out if not na sample size or if plot.missing is TRUE
+         if ((!is.na(Nobs[iyear]) & Nobs[iyear]>0) | plot.missing ) { #Only print out if not na sample size or if plot.missing is TRUE
          plot(bins, prop.pred[iyear,], ylim = c(0, ymax),
             xlab = title.x, ylab = "Proportion", main = mtitle, type = "n")
          grid(col = "lightgray", lty = 1)
@@ -259,7 +256,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                }
             }
          ## background shading for years not fitted
-         if (is.na(Nobs[iyear]))
+         if (is.na(Nobs[iyear])|Nobs[iyear]==0)
          {
              polygon(c(0,0,mypar$fin[1],mypar$fin[1]),c(0,mypar$fin[2],mypar$fin[2],0),col=rgb(.211, .211, .211, .2))
          }
@@ -288,7 +285,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
          if (plot.neff && nyears > 1)
          {  ### Plot relative effective sample size over time
             lab.y <- expression(italic(N)[eff] / italic(N))
-            max.y <- max(Neff / Nobs, 1.0,na.rm=TRUE)
+            max.y <- max(Neff / (Nobs+1e-6), 1.0,na.rm=TRUE)
             if (!draft) mtitle <- ""
             else mtitle <- FGMakeTitle(fileroot, DataName)
             # Prevent plotting fractional years:
@@ -303,7 +300,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
                     {   xlim <- years[1] + c(0, 4)
                     }
                 }
-            FGTimePlot(years, Neff/Nobs,  lab.x = "Year", lab.y = lab.y,
+            FGTimePlot(years, Neff/(Nobs+1e-6),  lab.x = "Year", lab.y = lab.y,
                href = NULL, hrefnames = NULL, Y1Col = Y1Col, ylim = c(0, max.y),
                xlim = xlim, FGtype = "stick", main = mtitle)
             PlotsWaiting <- PlotsWaiting + 1

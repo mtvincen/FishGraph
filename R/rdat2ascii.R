@@ -4,7 +4,7 @@
 #' file for alternative uses.
 #'
 #' @param x an R list with output from the assessment models.
-#'
+#' @param file the output file name and directory
 #'
 #' @return ASCII file
 #'

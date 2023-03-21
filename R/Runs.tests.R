@@ -98,6 +98,7 @@ runs.sig3 <- function(x,type="resid",mixing="positive.correlated") {
 #' @param year a vector with the year of the residual
 #' @param scaled.resids a vector of the
 #' @param lab.y a string of the y axis label
+#' @param PlotTitle a string of the plot title
 #'
 #' @return Graphics
 #'
@@ -188,7 +189,7 @@ ALRuns.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE, gra
                 resid= log(meanlenObs)-log(meanlenPred)
             } else {
                 resid= meanlenObs-meanlenPred
-                resid = (resid+1e-20)/(mean(abs(resid,na.rm=TRUE))+1e-20)
+                resid = (resid+1e-20)/(mean(abs(resid),na.rm=TRUE)+1e-20)
             }
             lab.y=ifelse(log.resid,"Log residual","Scaled residual")
             FGRunsPlot(years,resid,lab.y,FGTrimName(names(lcomp[2*iplot-1]),1,1))

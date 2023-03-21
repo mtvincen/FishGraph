@@ -30,6 +30,8 @@ plots, as when a model includes an initialization period.}
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
 When \code{NULL}, no plots are saved.}
 
+\item{use.color}{plots are made in grayscale when \code{FALSE}}
+
 \item{legend.pos}{A text string compatible with the \code{legend} function of \code{R}.
 Defines the position of the legend (ex. "bottomright", "bottom", etc.)}
 

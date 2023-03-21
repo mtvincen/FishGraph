@@ -12,6 +12,8 @@ FGRunsPlot(year, scaled.resids, lab.y, PlotTitle)
 \item{scaled.resids}{a vector of the}
 
 \item{lab.y}{a string of the y axis label}
+
+\item{PlotTitle}{a string of the plot title}
 }
 \value{
 Graphics

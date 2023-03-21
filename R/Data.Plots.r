@@ -204,14 +204,14 @@ Data.Plots  <-  function(x, DataName = deparse(substitute(x)), draft = TRUE,
         text(midyr,counter,"Length Composition",cex=1.25,adj=c(0.5,0))
         counter=counter-spacer
         if (length(LengthNames)==1){
-            ifelse(scaleSize,cexmult <- (LengthN[!is.na(LengthN)]/max(LengthN,na.rm=TRUE))*cexval ,cexmult <- cexval)
-            points(xyears[!is.na(LengthN)],rep(counter,length(xyears[!is.na(LengthN)])),pch=22,lwd=3,bg=ifelse(fill,fishcols[fishcols$names==LengthNames,2],"transparent"),cex=cexmult,col=fishcols[fishcols$names==LengthNames,2])
+            ifelse(scaleSize,cexmult <- (LengthN[!is.na(LengthN)&LengthN>0]/max(LengthN,na.rm=TRUE))*cexval ,cexmult <- cexval)
+            points(xyears[!is.na(LengthN)&LengthN>0],rep(counter,length(xyears[!is.na(LengthN)&LengthN>0])),pch=22,lwd=3,bg=ifelse(fill,fishcols[fishcols$names==LengthNames,2],"transparent"),cex=cexmult,col=fishcols[fishcols$names==LengthNames,2])
             savecount=c(savecount,counter)
             counter=counter-spacer
         } else {
             for (i in 1:length(LengthNames)) {
-                ifelse(scaleSize,cexmult <- (LengthN[!is.na(LengthN[,i]),i]/max(LengthN,na.rm=TRUE))*cexval ,cexmult <- cexval)
-                points(xyears[!is.na(LengthN[,i])],rep(counter,length(xyears[!is.na(LengthN[,i])])),pch=22,lwd=3,bg=ifelse(fill,fishcols[fishcols$names==LengthNames[i],2],"transparent"),cex=cexmult,col=fishcols[fishcols$names==LengthNames[i],2])
+                ifelse(scaleSize,cexmult <- (LengthN[(!is.na(LengthN[,i])&LengthN[,i]>0),i]/max(LengthN,na.rm=TRUE))*cexval ,cexmult <- cexval)
+                points(xyears[(!is.na(LengthN[,i])&LengthN[,i]>0)],rep(counter,length(xyears[(!is.na(LengthN[,i])&LengthN[,i]>0)])),pch=22,lwd=3,bg=ifelse(fill,fishcols[fishcols$names==LengthNames[i],2],"transparent"),cex=cexmult,col=fishcols[fishcols$names==LengthNames[i],2])
                 savecount=c(savecount,counter)
                 counter=counter-spacer
             }                               #For Length length
@@ -244,7 +244,7 @@ Data.Plots  <-  function(x, DataName = deparse(substitute(x)), draft = TRUE,
     ### If writing graphics files, make sure there is a directory for them:
     if (! is.null(graphics.type)){
         write.graphs <- TRUE
-        GraphicsDirName <- paste(DataName, "-figs/", sep="")
+        GraphicsDirName <- paste(DataName, "-figs", sep="")
         FGCheckGraphDir(GraphicsDirName)
     } else {  write.graphs <- FALSE }
 

@@ -12,6 +12,8 @@ PerRec.plots(
   use.color = TRUE,
   units.ypr = x$info$units.ypr,
   user.PR = NULL,
+  user.lab = NULL,
+  user.xmax = NULL,
   legend.pos = "topright",
   F.references = NULL
 )
@@ -34,6 +36,10 @@ the plot of yield per recruit.}
 
 \item{user.PR}{A list whose elements are names of additional columns of
 \code{x$pr.series} to be plotted against \emph{F}.}
+
+\item{user.lab}{A list of labels to be used as the y-axis label for the user supplied PR}
+
+\item{user.xmax}{A user specified maximum value for the x-axis of the plots}
 
 \item{legend.pos}{A text string compatible with the \code{legend} function of \code{R}.
 Defines the position of the legend (ex. "bottomright", "bottom", etc.)}

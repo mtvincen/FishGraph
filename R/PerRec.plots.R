@@ -15,6 +15,8 @@
 #' the plot of yield per recruit.
 #' @param user.PR A list whose elements are names of additional columns of
 #' \code{x$pr.series} to be plotted against \emph{F}.
+#' @param user.lab A list of labels to be used as the y-axis label for the user supplied PR
+#' @param user.xmax A user specified maximum value for the x-axis of the plots
 #' @param legend.pos A text string compatible with the \code{legend} function of \code{R}.
 #' Defines the position of the legend (ex. "bottomright", "bottom", etc.)
 #' @param F.references A list of character-string vectors to specify reference
@@ -36,7 +38,7 @@
 PerRec.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
     graphics.type = NULL, use.color = TRUE, units.ypr = x$info$units.ypr,
-    user.PR = NULL, legend.pos = "topright", F.references = NULL)
+    user.PR = NULL, user.lab = NULL, user.xmax = NULL, legend.pos = "topright", F.references = NULL)
 {   ### Check for required data:
     if (! ("pr.series" %in% names(x)))
     {   Errmsg <- paste("Data frame 'pr.series' not found in data object:",
@@ -61,21 +63,24 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
        }
       vref <- unlist(x$parms[vrefindex])
     }
-    xmax <- max(pr.df$F.spr, 0.01, vref, na.rm = TRUE)
 
+    if(is.null(user.xmax)) {
+        xmax <- max(pr.df$F.spr, 0.01, vref, na.rm = TRUE)
+    } else{
+        xmax = user.xmax
+    }
 
     PlotTitle <- ""
     savepar <- FGSetPar(draft)
-    if (! is.null(graphics.type))
-    {   write.graphs <- TRUE
+    if (! is.null(graphics.type)){
+       write.graphs <- TRUE
         GraphicsDirName <- paste(DataName, "-figs/PR", sep="")
-    }
-    else
+    }  else
     {   write.graphs <- FALSE }
 
     ### Plot of Spawning potential ratio (%SPR) vs. F:
-    if ("spr.prop" %in% names(pr.df))
-    {   if(draft) PlotTitle <- FGMakeTitle("SPR", DataName)
+    if ("spr.prop" %in% names(pr.df)){
+        if(draft) PlotTitle <- FGMakeTitle("SPR", DataName)
         FGTimePlot(x = pr.df$F.spr, y = pr.df$spr.prop, y2 = NULL,
             lab.x = "Fishing mortality rate",
             lab.y = expression(plain("Spawning potential ratio")~~Psi),
@@ -91,15 +96,14 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
             GraphName = "PR.spr", graphics.type)
     }
     ### Plot of YPR vs. F:
-    if ("ypr" %in% names(pr.df))
-    {   if(draft) PlotTitle <- FGMakeTitle("YPR", DataName)
+    if ("ypr" %in% names(pr.df)){
+        if(draft) PlotTitle <- FGMakeTitle("YPR", DataName)
         FGTimePlot(x = pr.df$F.spr, y = pr.df$ypr, y2 = NULL,
             lab.x = "Fishing mortality rate",
             lab.y = FGMakeLabel("Yield per recruit", units.ypr),
             FGtype = "linepointnodots", main = PlotTitle, use.color = use.color,
             ylim = c(0, 1.2 * max(pr.df$ypr, na.rm = TRUE)), xlim=c(0,xmax))
-        if (is.list(F.references))
-        {
+        if (is.list(F.references)){
           abline(v=vref, lty=ltyvec, lwd=2)
           legend(legend.pos, legend=vrefnames, lty=ltyvec, lwd=2, bg="white")
         }
@@ -115,7 +119,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
             # Get the index of the item in x$pr.series:
             prindex <- which(names(pr.df) == prname)
             FGTimePlot(x = pr.df$F.spr, y = pr.df[, prindex], y2 = NULL,
-                lab.x = "Fishing mortality rate", lab.y = prname,
+                lab.x = "Fishing mortality rate", lab.y = user.lab[[iplot]],
                 FGtype = "linepointnodots", main = PlotTitle,
                 use.color = use.color, ylim = c(0, 1.2 * max(pr.df[, prindex],
                 na.rm = TRUE)), xlim=c(0,xmax))

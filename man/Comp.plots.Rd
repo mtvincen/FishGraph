@@ -11,12 +11,12 @@ Comp.plots(
   graphics.type = NULL,
   use.color = TRUE,
   units = x$info$units.length,
-  p.resid = FALSE,
+  resid.type = "OSA",
   corr = TRUE,
   c.min = 0.25,
-  max.bub = 8,
+  max.bub = 1.5,
   b.plot = FALSE,
-  OSA.resids = FALSE
+  resid.plots = FALSE
 )
 }
 \arguments{
@@ -35,8 +35,7 @@ When \code{NULL}, no plots are saved.}
 \item{units}{a character string (e.g. \code{"cm"}) for labeling the X-axis of
 length-composition plots.}
 
-\item{p.resid}{when FALSE, scaled to area of residuals, otherwise scaled to area of the
-Pearson residuals (multinomial).}
+\item{resid.type}{type of residuals to plot for in each of the diagnostics, options are "OSA","standard","pearson", and "all". Input can be a single value or vector of values}
 
 \item{corr}{when \code{FALSE}, angular deviation is displayed in the inset plot; otherwise,
 correlations.}
@@ -47,7 +46,7 @@ correlations.}
 
 \item{b.plot}{create boxplots of composition residusls, default is FALSE.}
 
-\item{OSA.resids}{create plot of one step ahead residuals using the compResidual package}
+\item{resid.plots}{create qqplot and scatterplot of residuals, default is FALSE.}
 }
 \value{
 Graphics
