@@ -24,6 +24,7 @@
 #' @param max.bub cex value for maximum bubble size, default is 1.5.
 #' @param b.plot create boxplots of composition residusls, default is FALSE.
 #' @param resid.plots create qqplot and scatterplot of residuals, default is FALSE.
+#' @param Nyrs boolean for whether the number of pooled years is to be added to legend. Default is \code{FALSE}
 #'
 #'
 #' @return Graphics
@@ -55,7 +56,7 @@
 #######################################################################################
 Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                        graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
-                       resid.type = "OSA", corr = TRUE, c.min = 0.25, max.bub = 1.5, b.plot = FALSE,resid.plots=FALSE)
+                       resid.type = "OSA", corr = TRUE, c.min = 0.25, max.bub = 1.5, b.plot = FALSE, resid.plots=FALSE, Nyrs=FALSE)
 #######################################################################################
                                         #  ARGUMENTS:
                                         #  x - an R list with output from the assessment models
@@ -133,7 +134,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 
         ##---Cumulative fit plots-------------------------------------------------------------------
         par(oma=c(2,2.5,0,0))
-        if (draft){ par(mar = c(3, 3, 3, 1 ))
+        if (draft){ par(mar = c(3, 5, 3, 1 ))
         }else par(mar = c(3, 3, 1, 1))
         m1.all <- cm[[iplot*2-1]]         # Matrix of observed
         m2.all <- cm[[iplot*2]]           # matrix of predicted
@@ -179,11 +180,11 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
         subplots=length(which(sapply(1:length(block.text),function(i) length(which(rownames(m1.all[rownames(m1.all)%in%yr.block[i]:(yr.block[i+1]-1),,drop=FALSE])%in%yrs.include)))>0))
 
         ## Set the format based on the numnber of plots
-        if(subplots<4){par(mfcol=c(subplots,1));cexLab=1/.83
+        if(subplots<4){par(mfcol=c(subplots,1));cexLab=1#/.83
         } else if (subplots==4){par(mfrow=c(2,2));cexLab=1/.83
         } else if (subplots<=8){par(mfrow=c(ceiling(subplots/2),2));cexLab=1/.66
         } else if (subplots>9){par(mfrow=c(ceiling(subplots/3),3));cexLab=1/.66}
-        if (subplots==1)cexLab=1
+        #if (subplots==1)cexLab=1
         if (subplots==3)cexLab=1/.66
         ##subset to years in each selectivity block (last block interval is defined differntly because last value of yr.block is
         ## end of interval instead of beginning of next interval)
@@ -219,10 +220,12 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 ob.m=apply(m1,2,weighted.mean,w=wt)
                 pr.m=apply(m2,2,weighted.mean,w=wt)
                 x.vec=as.numeric(dimnames(m1)[[2]])
+                Poolyrs=dim(m1)[1]
             } else {
                 ob.m=m1
                 pr.m=m2
                 x.vec=as.numeric(dimnames(m1)[[2]])
+                Poolyrs=1
             }
 
             ymax=max(c(ob.m,pr.m))
@@ -236,10 +239,13 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 grid(col = "lightgray", lty = 1)
                 points(x=x.vec,y=ob.m,col=col.obsd,pch=21, cex = 1.25, lwd=2)
                 lines(x=x.vec,y=pr.m,col=Y1Col,lwd=2,type="l"); points(x=x.vec,y=pr.m,col=Y1Col,lwd=2, pch=16)
-                legend(x="topright",bg="white",legend=c(paste(yr.block[iyrs],yr.block[iyrs+1]-1,sep="-")),seg.len=0.0001,cex=cexLab,xjust=0.5)
+                YrRange=paste(yr.block[iyrs],yr.block[iyrs+1]-1,sep="-")
+                legend(x="topright",bg="white",legend=ifelse(Nyrs,paste(YrRange,paste0("Nyrs = ",Poolyrs),sep="\n"),YrRange),cex=cexLab,xjust=0.5,bty='n')
+                ## if (Nyrs) legend(x="topleft",bg="white",legend=c(paste0("Nyrs = ",Poolyrs)),cex=cexLab,xjust=1,bty='n')
+
+                if (draft){mtext(paste("Pooled",poolylabtxt,sep="-"),side=2,line=4)}
             }}
-        if (draft){mtext(paste("Pooled",poolylabtxt,sep="-"),side=2,outer=TRUE,line=0.5)
-        } else {mtext("Proportion",side=2,outer=TRUE,line=1)}
+        if (!draft) {mtext("Proportion",side=2,outer=TRUE,line=1,cex=cexLab)}
         mtext(title.x,side=1,outer=TRUE,line=0)
         if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = gfilename,
                                      graphics.type)
