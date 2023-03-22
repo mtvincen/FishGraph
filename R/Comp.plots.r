@@ -21,7 +21,7 @@
 #' @param corr when \code{FALSE}, angular deviation is displayed in the inset plot; otherwise,
 #' correlations.
 #' @param c.min lower bound on the y-axis range of the inset plot, applies only when corr is \code{TRUE}
-#' @param max.bub cex value for maximum bubble size, default is 8.0.
+#' @param max.bub cex value for maximum bubble size, default is 1.5.
 #' @param b.plot create boxplots of composition residusls, default is FALSE.
 #' @param resid.plots create qqplot and scatterplot of residuals, default is FALSE.
 #'
@@ -414,7 +414,8 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 ###################################Residual plots of qq and scatter plot###################
 
             if (resid.plots){
-                par(savepar,mfrow=c(2,1),mar=c(4,4,3,1),oma=c(0,0,0,0))
+                par(savepar)
+                par(mfrow=c(2,1),mar=c(4,4,3,1),oma=c(0,0,0,0))
                 col <- rep(1:nrow(z1), ncol(z1))
                 ## Make QQ plot of residuals
                 qqnorm(z1,col=col,main="")
