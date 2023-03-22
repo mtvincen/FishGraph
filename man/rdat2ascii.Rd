@@ -8,6 +8,8 @@ rdat2ascii(x, file = paste(deparse(substitute(x)), ".txt", sep = ""))
 }
 \arguments{
 \item{x}{an R list with output from the assessment models.}
+
+\item{file}{the output file name and directory}
 }
 \value{
 ASCII file

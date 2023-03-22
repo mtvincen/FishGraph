@@ -2,15 +2,7 @@
 % Please edit documentation in R/Comp.plots.r
 \name{Comp.plots}
 \alias{Comp.plots}
-\title{Plots of age- and length-composition fits
-test this
-The function \code{Comp.plots} generates bubble plots of residuals of age-
-and length-composition fits for the entire time frame of the assessment.
-Bubble areas are scaled to the largest residual within each plot. Optionally,
-a small inset plot displays the correlation or angular
-deviation between observed and predicted values each year. In addition,
-\code{Comp.plots} generates plots of predicted and observed mean compositions
-pooled across years.}
+\title{Plots of age- and length-composition fits}
 \usage{
 Comp.plots(
   x,
@@ -19,11 +11,12 @@ Comp.plots(
   graphics.type = NULL,
   use.color = TRUE,
   units = x$info$units.length,
-  p.resid = FALSE,
+  resid.type = "OSA",
   corr = TRUE,
   c.min = 0.25,
-  max.bub = 8,
-  b.plot = FALSE
+  max.bub = 1.5,
+  b.plot = FALSE,
+  resid.plots = FALSE
 )
 }
 \arguments{
@@ -42,8 +35,7 @@ When \code{NULL}, no plots are saved.}
 \item{units}{a character string (e.g. \code{"cm"}) for labeling the X-axis of
 length-composition plots.}
 
-\item{p.resid}{when FALSE, scaled to area of residuals, otherwise scaled to area of the
-Pearson residuals (multinomial).}
+\item{resid.type}{type of residuals to plot for in each of the diagnostics, options are "OSA","standard","pearson", and "all". Input can be a single value or vector of values}
 
 \item{corr}{when \code{FALSE}, angular deviation is displayed in the inset plot; otherwise,
 correlations.}
@@ -51,26 +43,27 @@ correlations.}
 \item{c.min}{lower bound on the y-axis range of the inset plot, applies only when corr is \code{TRUE}}
 
 \item{max.bub}{cex value for maximum bubble size, default is 8.0.}
+
+\item{b.plot}{create boxplots of composition residusls, default is FALSE.}
+
+\item{resid.plots}{create qqplot and scatterplot of residuals, default is FALSE.}
 }
 \value{
 Graphics
 }
 \description{
-Plots of age- and length-composition fits
-test this
 The function \code{Comp.plots} generates bubble plots of residuals of age-
 and length-composition fits for the entire time frame of the assessment.
 Bubble areas are scaled to the largest residual within each plot. Optionally,
 a small inset plot displays the correlation or angular
 deviation between observed and predicted values each year. In addition,
 \code{Comp.plots} generates plots of predicted and observed mean compositions
-pooled across years.
+pooled across years and weighted by sample size.
 }
 \examples{
 \donttest{
 Comp.plots(gag)
 }
-
 }
 \author{
 M Prager

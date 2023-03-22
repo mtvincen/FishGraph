@@ -1,22 +1,22 @@
 #' Stock-recruitment plots
-#' 
-#' The function \code{StockRec.plots} generates plots of stock vs. recruitment in 
+#'
+#' The function \code{StockRec.plots} generates plots of stock vs. recruitment in
 #' linear and logarithmic scales.
-#' 
+#'
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
-#' @param graphics.type a vector of graphics file types to which graphics are saved.  
+#' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param start.drop Number of years at the start of the data to be omitted from
 #' plots, as when a model includes an initialization period.
 #' @param units.ssb A text string (e.g. \code{"tons"} or \code{"10^9 eggs"}) used
 #' in labeling plots of spawning stock.
-#' @param units.rec A text string (e.g. \code{"million fish"}) for labeling plots 
+#' @param units.rec A text string (e.g. \code{"million fish"}) for labeling plots
 #' of recruitment
-#' @param rec.model Specifies the type of recruitment function to draw.  Valid 
+#' @param rec.model Specifies the type of recruitment function to draw.  Valid
 #' values are: \code{"BH", "BH-steep", "Ricker", "Ricker-steep", "Mean"}.
 #' @param draw.model If \code{TRUE}, a function curve is drawn on plots of stock
 #' and recruitment.
@@ -24,23 +24,23 @@
 #' and recruitment.
 #' @param draw.time If \code{TRUE}, stock-recruitment points are connected to indicate
 #' progression of time.
-#' @param year.pos An integer (= 1, 2, 3, or 4) defining the position of text relative to points. 
+#' @param year.pos An integer (= 1, 2, 3, or 4) defining the position of text relative to points.
 #' The text indicates first and last years in the time series, and applies only if draw.time=TRUE. A
 #' value of year.pos=0 turns off the text feature.
-#' 
+#'
 #' @return Graphics
-#' 
+#'
 #' @author M Prager
 #' @author E Williams
 #' @author K Shertzer
 #' @author R Cheshire
 #' @author K Purcell
-#' 
-#'  
+#'
+#'
 #' @examples \donttest{
 #' StockRec.plots(gag)
 #' }
-#' 
+#' @export
 StockRec.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
     graphics.type = NULL, use.color = TRUE, start.drop = 0,
     units.ssb = x$info$units.ssb, units.rec = x$info$units.rec,
@@ -163,7 +163,7 @@ StockRec.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
         bias.corr <- x$parms$Mean.biascorr
         rec.sim <-  rep(R0, length=length(stock.sim))
         curve.OK <- TRUE
-        }        								   		 
+        }
         if (! curve.OK)
         {   warning("Bad value of argument rec.model\n")
             draw.model <- FALSE
@@ -195,7 +195,7 @@ if (draw.time){
         text (x=ts$SSB[sndx[length(sndx)]], y=ts$recruits[rndx[length(rndx)]],
               labels=ts$year[rndx[length(rndx)]], pos=year.pos, cex=0.85, offset=0.35)
     }
-}    
+}
 redraw <- FALSE
     if(draw.lowess)
     {   lines(lowess(ts$SSB[sndx], ts$recruits[rndx],f = 0.55),
@@ -214,7 +214,7 @@ redraw <- FALSE
     }
     # Replot to reveal any points under legend:
     if (redraw) {points(ts$SSB[sndx], ts$recruits[rndx], col = clr.points)}
-    
+
     # Save plots to file:
     if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
         GraphName = paste("SR.",rec.model, sep = ""), graphics.type)
@@ -249,7 +249,7 @@ redraw <- FALSE
 #     if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
 #         GraphName = paste("SR.", rec.model, ".log", sep = ""), graphics.type)
 #=================================================================================
-### Plot of stock vs. log(recruitment/spawners) 
+### Plot of stock vs. log(recruitment/spawners)
 if(draft) PlotTitle <- FGMakeTitle("Stock v log(R/S)", DataName)
 logRS=log(ts$recruits[rndx]/ts$SSB[sndx])
 lab.y2   <- "log(recruits/spawner)"
@@ -291,7 +291,7 @@ if(draw.lowess)
 if (draw.model && curve.OK)
   {lines(stock.sim, logRS.sim, lwd = 2)}
 # Replot to reveal any points under legend:
-if (redraw) {points(ts$SSB[sndx], logRS, col = clr.points)}    
+if (redraw) {points(ts$SSB[sndx], logRS, col = clr.points)}
 # Save plots to file:
 if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
                              GraphName = paste("SlogRS.",rec.model, sep = ""), graphics.type)

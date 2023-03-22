@@ -23,7 +23,7 @@ Landings.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -33,7 +33,7 @@ When \code{NULL}, no plots are saved.}
 
 \item{from.zero}{When \code{TRUE}, the Y-axis of each plot starts at zero.}
 
-\item{L.units}{Character vector containing units of measure associate with 
+\item{L.units}{Character vector containing units of measure associate with
 each landings series found in \code{x$t.series}.}
 
 \item{D.units}{Same as the preceding, but for discards.}
@@ -41,8 +41,8 @@ each landings series found in \code{x$t.series}.}
 \item{start.drop}{Number of years at the start of the data to be omitted from
 plots, as when a model includes an initialization period.}
 
-\item{L.obs.pre}{When \code{TRUE}, landings data are interpreted as pairs of 
-columns (observed and predicted). When \code{FALSE}, each column represents 
+\item{L.obs.pre}{When \code{TRUE}, landings data are interpreted as pairs of
+columns (observed and predicted). When \code{FALSE}, each column represents
 observed landings.}
 
 \item{D.obs.pre}{Same as the preceding, but for discards.}
@@ -51,16 +51,15 @@ observed landings.}
 Graphics
 }
 \description{
-The function \code{Landings.plots} provides time trajectories of landings and 
-discards by fishery. Optional arguments specify whether data represent 
-observed and predicted landings or simply independent series of landings. 
+The function \code{Landings.plots} provides time trajectories of landings and
+discards by fishery. Optional arguments specify whether data represent
+observed and predicted landings or simply independent series of landings.
 The same holds for discards.
 }
 \examples{
 \donttest{
 Landings.plots(gag)
 }
-
 }
 \author{
 M Prager

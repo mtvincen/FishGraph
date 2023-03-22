@@ -13,6 +13,8 @@ Comp.yearly.plots(
   units = x$info$units.length,
   print.n = !compact,
   print.neff = !compact,
+  plot.missing = FALSE,
+  plot.pred = TRUE,
   plot.neff = FALSE,
   compute.neff = FALSE,
   print.year = compact,
@@ -26,7 +28,7 @@ Comp.yearly.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -40,6 +42,11 @@ length-composition plots.}
 \item{print.n}{When \code{TRUE}, \emph{N} is printed in each plot.}
 
 \item{print.neff}{When \code{TRUE}, \emph{N_eff} (rounded) is printed in each plot.}
+
+\item{plot.missing}{When \code{TRUE}, plots out all comps. Otherwise comps where
+\code{is.na(N)} are not printed.}
+
+\item{plot.pred}{when \code{TRUE}, plots the fit to the composition data, when \code{FALSE} only plots the observed compositions}
 
 \item{plot.neff}{When \code{TRUE}, a timeplot of \emph{N_eff} is made for each data
 series}
@@ -61,18 +68,17 @@ the same.}
 Graphics
 }
 \description{
-The routine \code{Comp.yearly.plots} generates plots of age- and length-composition 
+The routine \code{Comp.yearly.plots} generates plots of age- and length-composition
 fits by year and data series. Optionally, the sample size N, effective sample
-size Neff, angular deviation can be printed on the plot surface. The background is 
-shaded if the model does not fit to the composition (Neff < 0).  Plots of the					
-ratio Neff/N over time may be made. Plots are available in two formats: one 
+size Neff, angular deviation can be printed on the plot surface. The background is
+shaded if the model does not fit to the composition (Neff < 0).  Plots of the
+ratio Neff/N over time may be made. Plots are available in two formats: one
 plot per page, or a compact format with 21 plots per page.
 }
 \examples{
 \donttest{
 Comp.yearly.plots(gag)
 }
-
 }
 \author{
 M Prager

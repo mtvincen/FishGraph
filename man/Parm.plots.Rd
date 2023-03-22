@@ -31,7 +31,6 @@ Graphically displays parameter and bound values for a stock-assessment model run
 \donttest{
 Parm.plots(gag)
 }
-
 }
 \author{
 M Prager

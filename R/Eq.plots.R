@@ -40,7 +40,7 @@
 #' @examples \donttest{
 #' Eq.plots(gag)
 #' }
-#'
+#' @export
 
 Eq.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
     graphics.type = NULL, use.color = TRUE, units.L = x$info$units.landings[1],

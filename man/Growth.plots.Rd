@@ -20,7 +20,7 @@ Growth.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -41,16 +41,15 @@ against \code{x$a.series$age}.}
 Graphics
 }
 \description{
-The function Growth.plots provides plots of length, weight, and other 
-quantities at age. Length is also plotted with confidence intervals if the 
-CV of length at age is found. There is support for models with more than one 
+The function Growth.plots provides plots of length, weight, and other
+quantities at age. Length is also plotted with confidence intervals if the
+CV of length at age is found. There is support for models with more than one
 growth curve, such as models that describe growth as varying by sex.
 }
 \examples{
 \donttest{
 Growth.plots(gag)
 }
-
 }
 \author{
 M Prager

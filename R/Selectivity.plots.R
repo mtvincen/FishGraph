@@ -1,37 +1,37 @@
 #' Estimated selectivity curves
-#' 
-#' The function \code{Selectivity.plots} generates plots of selectivity curves 
+#'
+#' The function \code{Selectivity.plots} generates plots of selectivity curves
 #' at age and length.
-#' 
+#'
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
-#' @param graphics.type a vector of graphics file types to which graphics are saved.  
+#' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param plot.points A logical values; if \code{TRUE}, points will be plotted on curves.
 #' @param units.length A text string (e.g. \code{"mm"}) used in labeling plots
 #' of selectivity at length.
-#' @param units.age A text string (e.g. \code{"years"}) used in labeling plots 
+#' @param units.age A text string (e.g. \code{"years"}) used in labeling plots
 #' of selectivity at age.
 #' @param compact When \code{TRUE}, time-varying selectivity curves are placed on a single plot per fishery.
 #' @param legend.pos A text string compatible with the \code{legend} function of \code{R}.
-#' Defines the position of the legend (ex. "bottomright", "bottom", etc.). Applies only if 
+#' Defines the position of the legend (ex. "bottomright", "bottom", etc.). Applies only if
 #' \code{compact = TRUE}.
-#' 
+#'
 #' @return Graphics
-#' 
+#'
 #' @author M Prager
 #' @author E Williams
 #' @author K Shertzer
 #' @author R Cheshire
 #' @author K Purcell
-#' 
+#'
 #' @examples \donttest{
 #' Selectivity.plots(gag)
 #' }
-#' 
+#' @export
 Selectivity.plots <- function(x, DataName = deparse(substitute(x)),
    draft = TRUE, graphics.type = NULL, use.color = TRUE, plot.points = TRUE,
    units.length = x$info$units.length, units.age = x$info$units.age,
@@ -124,12 +124,12 @@ Selectivity.plots <- function(x, DataName = deparse(substitute(x)),
                   leg.lty=1
                   ifelse (use.color, leg.col<-"royalblue4", leg.col<-"black")
                   leg.lab=NULL
-                  
+
                   for (yrlab in yrlabvec)
                   {   # See if row is unequal to row before:
                     if (any(smat[yrlab,] != oldvec)) plot.it <- TRUE else plot.it <- FALSE
                     oldvec <- smat[yrlab,]          # save for next comparison
-                    
+
                     if (! plot.it) next             # Go to top of "for" loop
                     # Construct plot legend
                     leg.lab=c(leg.lab, as.character(yrlab))
@@ -141,30 +141,30 @@ Selectivity.plots <- function(x, DataName = deparse(substitute(x)),
                                  lab.y = lab.y, FGtype = GType, main = PlotTitle,
                                  use.color = use.color,  ylim = c(0,1))
                       block.counter=block.counter+1
-                      
+
                     } else {
-                      
+
                       if (use.color){
                         lines(xvec,smat[yrlab,], col=block.counter, lty=1, lwd=2)
                         if (plot.points){points(xvec,smat[yrlab,], col=block.counter, pch=16)}
-                        leg.lty=c(leg.lty,1); leg.col=c(leg.col, block.counter); 
+                        leg.lty=c(leg.lty,1); leg.col=c(leg.col, block.counter);
                       } else {
                         lines(xvec,smat[yrlab,], col="black", lty=block.counter, lwd=2)
-                        if (plot.points){points(xvec,smat[yrlab,], col="black", pch=16)}          
-                        leg.lty=c(leg.lty, block.counter); leg.col="black"; 
+                        if (plot.points){points(xvec,smat[yrlab,], col="black", pch=16)}
+                        leg.lty=c(leg.lty, block.counter); leg.col="black";
                       }
                       block.counter=block.counter+1
                     }
                   }   # End for (yrlab in yrlabvec)
                   # Save plot to file:
-                  legend(legend.pos, legend=leg.lab, lwd=2, lty=leg.lty, col=leg.col, bg="white") 
+                  legend(legend.pos, legend=leg.lab, lwd=2, lty=leg.lty, col=leg.col, bg="white")
                   if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
                                                GraphName = paste("sel", measure, gearname, sep = "."),
                                                graphics.type)
-                  
+
                 } # End compact
-                
-                
+
+
             }   # End for (imat in Mndx)
             if(n.matrices + n.vectors == 0) {message(paste("Warning:", Umeasure, "selectivity data not found but containing object present. Naming error?"))}
         }   # End else ....

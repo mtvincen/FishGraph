@@ -22,7 +22,7 @@ Selectivity.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -35,27 +35,26 @@ When \code{NULL}, no plots are saved.}
 \item{units.length}{A text string (e.g. \code{"mm"}) used in labeling plots
 of selectivity at length.}
 
-\item{units.age}{A text string (e.g. \code{"years"}) used in labeling plots 
+\item{units.age}{A text string (e.g. \code{"years"}) used in labeling plots
 of selectivity at age.}
 
 \item{compact}{When \code{TRUE}, time-varying selectivity curves are placed on a single plot per fishery.}
 
 \item{legend.pos}{A text string compatible with the \code{legend} function of \code{R}.
-Defines the position of the legend (ex. "bottomright", "bottom", etc.). Applies only if 
+Defines the position of the legend (ex. "bottomright", "bottom", etc.). Applies only if
 \code{compact = TRUE}.}
 }
 \value{
 Graphics
 }
 \description{
-The function \code{Selectivity.plots} generates plots of selectivity curves 
+The function \code{Selectivity.plots} generates plots of selectivity curves
 at age and length.
 }
 \examples{
 \donttest{
 Selectivity.plots(gag)
 }
-
 }
 \author{
 M Prager

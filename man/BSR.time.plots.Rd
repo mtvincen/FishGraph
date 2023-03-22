@@ -24,7 +24,7 @@ BSR.time.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{start.drop}{Number of years at the start of the data to be omitted from
@@ -44,20 +44,20 @@ When \code{NULL}, no plots are saved.}
 \item{legend.pos}{A text string compatible with the \code{legend} function of \code{R}.
 Defines the position of the legend (ex. "bottomright", "bottom", etc.)}
 
-\item{from.zero}{When \code{TRUE}, the Y-axis of each plot 
+\item{from.zero}{When \code{TRUE}, the Y-axis of each plot
 (except recruitment deviations) starts at zero.}
 
 \item{BSR.references}{A list of three character-string names to specify reference
-points to appear on BSR plots, in order of biomass, spawning biomass, and recruits. 
+points to appear on BSR plots, in order of biomass, spawning biomass, and recruits.
 Input NULL for none, e.g., BSR.references=list(NULL,"SSBmsy", NULL).}
 }
 \value{
 Graphics
 }
 \description{
-The function \code{BSR.time.plots} generates time-series plots of stock biomass, 
-spawning stock (as biomass or egg production), and recruitment. Plots are made 
-on absolute scales and also scaled to reference points. Plots may include 
+The function \code{BSR.time.plots} generates time-series plots of stock biomass,
+spawning stock (as biomass or egg production), and recruitment. Plots are made
+on absolute scales and also scaled to reference points. Plots may include
 reference lines at user-specified reference points.
 }
 \examples{
@@ -65,10 +65,6 @@ reference lines at user-specified reference points.
 BSR.time.plots(gag)
 }
 
-
-BSR.references - A list of three character-string names to specify reference
-points to appear on BSR plots, in order of Biomass, Spawning biomass, and Recruits. 
-Input NULL for none, e.g., BSR.references=list("Bmsy","SSBmsy",NULL).
 }
 \author{
 M. Prager

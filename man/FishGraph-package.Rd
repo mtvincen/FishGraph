@@ -70,6 +70,4 @@ Prager et al. (2015) User's guide to \code{FishGraph}: R graphics functions for 
 
 \keyword{ package }
 
-\examples{
-See go.r example in demo library installed in package folder.
-}
+%% \examples{ See go.r example in demo library installed in package folder.}

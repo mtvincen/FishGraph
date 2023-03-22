@@ -26,7 +26,7 @@ Phase.plots(
 
 \item{DataName}{string used in plot titles.  Defaults to argument \code{x}.}
 
-\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles 
+\item{draft}{modifies plots for use in a report.  When \code{FALSE} main titles
 are omitted.}
 
 \item{graphics.type}{a vector of graphics file types to which graphics are saved.
@@ -40,11 +40,11 @@ plots, as when a model includes an initialization period.}
 \item{end.drop}{Number of years at the end of data to be omitted from
 plots, as when a model includes a projection period.}
 
-\item{year.pos}{An integer (= 1, 2, 3, or 4) defining the position of text relative to points. 
-The text indicates first and last years in the time series. A value of year.pos=0 
+\item{year.pos}{An integer (= 1, 2, 3, or 4) defining the position of text relative to points.
+The text indicates first and last years in the time series. A value of year.pos=0
 turns off the text feature.}
 
-\item{from.zero}{When \code{TRUE}, the Y-axis of each plot 
+\item{from.zero}{When \code{TRUE}, the Y-axis of each plot
 starts at zero.}
 
 \item{legend.pos}{A text string compatible with the \code{legend} function of \code{R}.
@@ -58,7 +58,7 @@ NULL places text on the plot itself.}
 \item{B.series}{Character string specifying the name of the B (or SSB) metric to be plotted}
 
 \item{F.B.references}{a list of two character-sting names, the first specifying the
-fishing reference point and the second the biomass reference point. Insert 
+fishing reference point and the second the biomass reference point. Insert
 a value of NULL if reference points are not desired for plotting.}
 }
 \value{
@@ -71,7 +71,6 @@ The function Phase.plots provides plots of fishing status versus spawning biomas
 \donttest{
 Phase.plots(gag)
 }
-
 }
 \author{
 M Prager

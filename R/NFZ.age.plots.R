@@ -1,41 +1,41 @@
 #' At-age matrix plots
-#' 
-#' The function \code{NFZ.age.plots} generates barplots of estimated abundance and 
-#' mortality at age over time and bubble plots of number and biomass at age.  Bubble 
+#'
+#' The function \code{NFZ.age.plots} generates barplots of estimated abundance and
+#' mortality at age over time and bubble plots of number and biomass at age.  Bubble
 #' areas are scaled to the largest value within each plot.
-#' 
+#'
 #' @param x an R list with output from the assessment models.
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
-#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles 
+#' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
 #' @param start.drop Number of years at the start of the data to be omitted from
 #' plots, as when a model includes an initialization period.
-#' @param graphics.type a vector of graphics file types to which graphics are saved.  
+#' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
 #' @param units.naa A text string (e.g. \code{"million fish"}) used in labeling
 #' the plot of numbers at age.
 #' @param units.biomass A text string (e.g. \code{"t"}) used in labeling the plot
 #' of biomass at age.
-#' @param max.bub A numerical scalar for the maximum bubble size (e.g. \code{"4.0"}) 
+#' @param max.bub A numerical scalar for the maximum bubble size (e.g. \code{"4.0"})
 #' in bubble plots of numbers at age and biomass at age.
-#' @param user.plots A vector of text strings with the names of additional matrix 
+#' @param user.plots A vector of text strings with the names of additional matrix
 #' components of \code{x} to be plotted.
 #' @param plot.CLD When \code{TRUE}, each matrix in \code{x$CLD.est.mats} is plotted,
 #' in addition to the plots described here.
-#' 
+#'
 #' @return Graphics
-#' 
+#'
 #' @author M Prager
 #' @author E Williams
 #' @author K Shertzer
 #' @author R Cheshire
 #' @author K Purcell
-#' 
+#'
 #' @examples \donttest{
 #' NFZ.age.plots(gag)
 #' }
-#' 
+#' @export
 NFZ.age.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    start.drop = 0, graphics.type = NULL, use.color = TRUE,
@@ -184,7 +184,7 @@ x1 <- as.integer(rep(irn, ncol(dataset)))                   # year names
 y1 <- sort(rep(as.numeric(colnames(dataset)), nrow(dataset)))    # age- or length-class names
 
 ### Get size of the bubbles:
-wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")              
+wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")
 m.age=rowSums(wt.m.age)/rowSums(dataset)
 bub.size <- max.bub*(sqrt(abs(dataset))/sqrt(max(abs(dataset))))  ###plots area of bubble
 # This prevents plotting fractional years (e.g. 1995.5)
@@ -199,7 +199,7 @@ if (draft) PlotTitle <- FGMakeTitle("N at age", DataName)
 ifelse (use.color, bubble.col <- plot.options$color$clr.line, bubble.col <- plot.options$bw$clr.pred)
 lab.y = "Age"
 
-plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1, 
+plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1,
      xlim = c(xmin, xmax),ylim=c(ymin,ymax))
 grid(col = "lightgray", lty = 1)
 points(x1, y1, cex = bub.size, col = bubble.col,  pch = 21)
@@ -220,7 +220,7 @@ x1 <- as.integer(rep(irn, ncol(dataset)))                   # year names repeate
 y1 <- sort(rep(as.numeric(colnames(dataset)), nrow(dataset)))    # age- or length-class names
 
 ### Get size of the bubbles:
-wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")              
+wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")
 m.age=rowSums(wt.m.age)/rowSums(dataset)
 bub.size <- max.bub*(sqrt(abs(dataset))/sqrt(max(abs(dataset))))  ###plots area of bubble
 # This prevents plotting fractional years (e.g. 1995.5)
@@ -233,7 +233,7 @@ if (draft) PlotTitle <- FGMakeTitle("B at age", DataName)
 ifelse (use.color, bubble.col <- plot.options$color$clr.line, bubble.col <- plot.options$bw$clr.pred)
 lab.y = "Age"
 
-plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1, 
+plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1,
      xlim = c(xmin, xmax))
 grid(col = "lightgray", lty = 1)
 points(x1, y1, cex = bub.size, col = bubble.col,  pch = 21)
@@ -243,7 +243,7 @@ if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
 }
 
 #---------------------------------------------------------------------------------------
-### CLD BUBBLE PLOTS 
+### CLD BUBBLE PLOTS
 #---------------------------------------------------------------------------------------
 
 if (plot.CLD)
@@ -258,22 +258,22 @@ if (draft) PlotTitle <- FGMakeTitle(datname, DataName)
     irn <- as.integer(rownames(dataset))                        # year names
     x1 <- as.integer(rep(irn, ncol(dataset)))                   # year names repeated to fill matrix
     y1 <- sort(rep(as.numeric(colnames(dataset)), nrow(dataset)))    # age- or length-class names
-    
+
     ### Get size of the bubbles:
-    wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")              
+    wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")
     m.age=rowSums(wt.m.age)/rowSums(dataset)
     bub.size <- max.bub*(sqrt(abs(dataset))/sqrt(max(abs(dataset))))  ###plots area of bubble
     # This prevents plotting fractional years (e.g. 1995.5)
     xmin = irn[1]-1
     xmax = max(max(irn), xmin + 4)
     #par(cex = 1, cex.main = 1, cex.axis = 0.85)
-    
+
     #### Draw the main (bubble) plot:
     if (draft) PlotTitle <- FGMakeTitle(datname, DataName)
     ifelse (use.color, bubble.col <- plot.options$color$clr.line, bubble.col <- plot.options$bw$clr.pred)
     lab.y = "Age"
-    
-    plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1, 
+
+    plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1,
          xlim = c(xmin, xmax))
     grid(col = "lightgray", lty = 1)
     points(x1, y1, cex = bub.size, col = bubble.col,  pch = 21)
@@ -281,10 +281,10 @@ if (draft) PlotTitle <- FGMakeTitle(datname, DataName)
   }
     if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
                                  GraphName = paste("byage.CLD", datname,"bub", sep = "."), graphics.type='png')
-      
+
   }
 # Clean up and return
 #---------------------------------------------------------------------------------------
 par(savepar)    # reset graphics device
 return(invisible(par(savepar)))
-}   # end of function       
+}   # end of function

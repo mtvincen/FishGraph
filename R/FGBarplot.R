@@ -1,3 +1,6 @@
+
+
+
 FGBarplot <-
 function(x, lab.y, use.color, PlotTitle, leg.title="",
         proportion = FALSE, href = NULL, hrefname = NULL)
@@ -15,7 +18,7 @@ function(x, lab.y, use.color, PlotTitle, leg.title="",
         if (length(href>0))
             {lines(0:length(lab.tick),rep(href, length=length(lab.tick)+1), lty=2, lwd=2)
              text(0.05*length(lab.tick), href, labels=hrefname, pos=3, cex=0.85, offset=0.35)}
-        
+
         title(main = PlotTitle, cex = 0.9)
         # Get major and minor multiples for choosing labels:
         ntick <- length(mp)
@@ -33,7 +36,7 @@ function(x, lab.y, use.color, PlotTitle, leg.title="",
         plot.new()
         legend("center", fill = rev(colvec), cex = 0.85, ncol = leg.col,
             legend = rev(colnames(x)), title = leg.title, inset = c(0.01, 0.01))
-        layout(1)
+        layout(matrix(1,1,1))
         par(mar = oldmar)
         return(invisible(NULL))
     }   # END OF FUNCTION MakeBarplot
