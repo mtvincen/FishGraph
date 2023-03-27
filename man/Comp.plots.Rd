@@ -16,7 +16,8 @@ Comp.plots(
   c.min = 0.25,
   max.bub = 1.5,
   b.plot = FALSE,
-  resid.plots = FALSE
+  resid.plots = FALSE,
+  Nyrs = FALSE
 )
 }
 \arguments{
@@ -42,11 +43,13 @@ correlations.}
 
 \item{c.min}{lower bound on the y-axis range of the inset plot, applies only when corr is \code{TRUE}}
 
-\item{max.bub}{cex value for maximum bubble size, default is 8.0.}
+\item{max.bub}{cex value for maximum bubble size, default is 1.5.}
 
 \item{b.plot}{create boxplots of composition residusls, default is FALSE.}
 
 \item{resid.plots}{create qqplot and scatterplot of residuals, default is FALSE.}
+
+\item{Nyrs}{boolean for whether the number of pooled years is to be added to legend. Default is \code{FALSE}}
 }
 \value{
 Graphics

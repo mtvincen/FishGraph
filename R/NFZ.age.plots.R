@@ -23,6 +23,7 @@
 #' components of \code{x} to be plotted.
 #' @param plot.CLD When \code{TRUE}, each matrix in \code{x$CLD.est.mats} is plotted,
 #' in addition to the plots described here.
+#' @param drop.last.NB boolean for whether to drop the last year of the abundance and biomass at age, when \code{TRUE} doesn't plot the last year of abundance, default \code{TRUE}.
 #'
 #' @return Graphics
 #'
@@ -40,7 +41,8 @@ NFZ.age.plots <-
 function(x, DataName = deparse(substitute(x)), draft = TRUE,
    start.drop = 0, graphics.type = NULL, use.color = TRUE,
    units.naa = x$info$units.naa, units.biomass = x$info$units.biomass,
-   max.bub = 4.0,user.plots = NULL, plot.CLD = FALSE)
+   units.ssb = x$info$units.ssb,  max.bub = 4.0,user.plots = NULL, plot.CLD = FALSE,
+   drop.last.NB=FALSE)
 ########################################################################################
 {   ### Set up plotting-related stuff:
     savepar <- FGSetPar(draft)
@@ -58,8 +60,9 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #---------------------------------------------------------------------------------------
     ### PLOTS OF NUMBER AT AGE
     if ("N.age" %in% names(x))
-    {   if (start.drop == 0 ) dataset <- x$N.age
-        else dataset <- x$N.age[-(1:start.drop),]
+    {   if (start.drop == 0 ){ dataset <- x$N.age
+        } else dataset <- x$N.age[-(1:start.drop),]
+        if (drop.last.NB) dataset = head(dataset,-1)
         # Plot of N (unnormalized)
         if (draft) PlotTitle <- FGMakeTitle("N at age", DataName)
         lab.y = FGMakeLabel("Numbers", units.naa)
@@ -76,8 +79,9 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #---------------------------------------------------------------------------------------
     ### PLOTS OF BIOMASS AT AGE
     if ("B.age" %in% names(x))
-    {   if (start.drop == 0 ) dataset <- x$B.age
-        else dataset <- x$B.age[-(1:start.drop),]
+    {   if (start.drop == 0 ) { dataset <- x$B.age
+        } else dataset <- x$B.age[-(1:start.drop),]
+        if (drop.last.NB) dataset = head(dataset,-1)
         # Plot of B (unnormalized)
         if (draft) PlotTitle <- FGMakeTitle("Biomass at age", DataName)
         lab.y <- FGMakeLabel("Biomass", units.biomass)
@@ -94,8 +98,8 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #---------------------------------------------------------------------------------------
     ### PLOTS OF F AT AGE:
     if ("F.age" %in% names(x))
-    {   if (start.drop == 0 ) dataset <- x$F.age
-        else dataset <- x$F.age[-(1:start.drop),]
+    {   if (start.drop == 0 ) {dataset <- x$F.age
+        } else dataset <- x$F.age[-(1:start.drop),]
 #         # Plot of F (unnormalized)
 #         if (draft) PlotTitle <- FGMakeTitle("Cumulative F", DataName)
 #         FGBarplot(dataset, lab.y = "Cumulative F at age", use.color, PlotTitle,
@@ -112,8 +116,8 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
 #---------------------------------------------------------------------------------------
     ### PLOTS OF Z AT AGE:
     if ("Z.age" %in% names(x))
-    {   if (start.drop == 0 ) dataset <- x$Z.age
-        else dataset <- x$Z.age[-(1:start.drop),]
+    {   if (start.drop == 0 ){ dataset <- x$Z.age
+        } else dataset <- x$Z.age[-(1:start.drop),]
 #         # Plot of Z (unnormalized)
 #         if (draft) PlotTitle <- FGMakeTitle("Cumulative Z", DataName)
 #         FGBarplot(dataset, lab.y = "Cumulative Z at age", use.color, PlotTitle,
@@ -126,6 +130,44 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
             leg.title = "Age", proportion = TRUE)
         if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
             GraphName = "Z.age.prop", graphics.type)
+    }
+##---------------------------------------------------------------------------------------
+    ### PLOTS OF NUMBER  Spawners AT AGE
+    if ("N.age.spawn" %in% names(x))
+    {   if (start.drop == 0 ){ dataset <- x$N.age.spawn
+        } else dataset <- x$N.age.spawn[-(1:start.drop),]
+        if (drop.last.NB) dataset = head(dataset,-1)
+        # Plot of N (unnormalized)
+        if (draft) PlotTitle <- FGMakeTitle("N spawners at age", DataName)
+        lab.y = FGMakeLabel("Numbers", units.naa)
+        FGBarplot(dataset, lab.y = lab.y, use.color, PlotTitle, leg.title = "Age")
+        if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+            GraphName = "N.age.spawners", graphics.type)
+        # Plot of N (normalized)
+        if (draft) PlotTitle <- FGMakeTitle("Proportion N spawners at age", DataName)
+        FGBarplot(dataset, lab.y = "Proportion of N spawners", use.color, PlotTitle,
+            leg.title = "Age", proportion = TRUE)
+        if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+            GraphName = "N.age.spawners.prop", graphics.type)
+    }
+##---------------------------------------------------------------------------------------
+    ### PLOTS OF SSB AT AGE
+    if ("SSB.age" %in% names(x))
+    {   if (start.drop == 0 ){ dataset <- x$SSB.age
+        } else dataset <- x$SSB.age[-(1:start.drop),]
+        if (drop.last.NB) dataset = head(dataset,-1)
+        # Plot of N (unnormalized)
+        if (draft) PlotTitle <- FGMakeTitle("N spawners at age", DataName)
+        lab.y = FGMakeLabel("SSB", units.ssb)
+        FGBarplot(dataset, lab.y = lab.y, use.color, PlotTitle, leg.title = "Age")
+        if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+            GraphName = "SSB.age", graphics.type)
+        # Plot of N (normalized)
+        if (draft) PlotTitle <- FGMakeTitle("Proportion SSB at age", DataName)
+        FGBarplot(dataset, lab.y = "Proportion of SSB", use.color, PlotTitle,
+            leg.title = "Age", proportion = TRUE)
+        if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+            GraphName = "SSB.prop", graphics.type)
     }
 #---------------------------------------------------------------------------------------
 #  Plots of user quantities
@@ -176,8 +218,9 @@ plot.options = FGGetOptions()
 par <- FGSetPar(draft)
 
 if ("N.age" %in% names(x))
-{   if (start.drop == 0 ) dataset <- x$N.age
-    else dataset <- x$N.age[-(1:start.drop),]
+{   if (start.drop == 0 ){ dataset <- x$N.age
+    } else dataset <- x$N.age[-(1:start.drop),]
+    if (drop.last.NB) dataset = head(dataset,-1)
     if (draft) PlotTitle <- FGMakeTitle("N at age", DataName)
 irn <- as.integer(rownames(dataset))                        # year names
 x1 <- as.integer(rep(irn, ncol(dataset)))                   # year names
@@ -212,8 +255,9 @@ if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
 #---------------------------------------------------------------------------------------
 
 if ("B.age" %in% names(x))
-{   if (start.drop == 0 ) dataset <- x$B.age
-else dataset <- x$B.age[-(1:start.drop),]
+{   if (start.drop == 0 ){ dataset <- x$B.age
+} else dataset <- x$B.age[-(1:start.drop),]
+if (drop.last.NB) dataset = head(dataset,-1)
 if (draft) PlotTitle <- FGMakeTitle("B at age", DataName)
 irn <- as.integer(rownames(dataset))                        # year names
 x1 <- as.integer(rep(irn, ncol(dataset)))                   # year names repeated to fill matrix
@@ -241,6 +285,43 @@ lines(as.numeric(rownames(dataset)),m.age,lwd=2,lty=1)
 if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
                              GraphName = "B.age.bubble", graphics.type)
 }
+
+#---------------------------------------------------------------------------------------
+### BUBBLE PLOTS OF SSB AT AGE
+#---------------------------------------------------------------------------------------
+
+if ("SSB.age" %in% names(x))
+{   if (start.drop == 0 ){ dataset <- x$SSB.age
+} else dataset <- x$SSB.age[-(1:start.drop),]
+if (drop.last.NB) dataset = head(dataset,-1)
+if (draft) PlotTitle <- FGMakeTitle("SSB at age", DataName)
+irn <- as.integer(rownames(dataset))                        # year names
+x1 <- as.integer(rep(irn, ncol(dataset)))                   # year names repeated to fill matrix
+y1 <- sort(rep(as.numeric(colnames(dataset)), nrow(dataset)))    # age- or length-class names
+
+### Get size of the bubbles:
+wt.m.age=sweep(dataset,MARGIN=2,as.numeric(colnames(dataset)),"*")
+m.age=rowSums(wt.m.age)/rowSums(dataset)
+bub.size <- max.bub*(sqrt(abs(dataset))/sqrt(max(abs(dataset))))  ###plots area of bubble
+# This prevents plotting fractional years (e.g. 1995.5)
+xmin = irn[1]-1
+xmax = max(max(irn), xmin + 4)
+#par(cex = 1, cex.main = 1, cex.axis = 0.85)
+
+#### Draw the main (bubble) plot:
+if (draft) PlotTitle <- FGMakeTitle("SSB at age", DataName)
+ifelse (use.color, bubble.col <- plot.options$color$clr.line, bubble.col <- plot.options$bw$clr.pred)
+lab.y = "Age"
+
+plot(x1, y1, xlab = "Year", ylab = lab.y, main=PlotTitle, type = "n", las = 1,
+     xlim = c(xmin, xmax))
+grid(col = "lightgray", lty = 1)
+points(x1, y1, cex = bub.size, col = bubble.col,  pch = 21)
+lines(as.numeric(rownames(dataset)),m.age,lwd=2,lty=1)
+if (write.graphs) FGSavePlot(GraphicsDirName, DataName,
+                             GraphName = "SSB.age.bubble", graphics.type)
+}
+
 
 #---------------------------------------------------------------------------------------
 ### CLD BUBBLE PLOTS
