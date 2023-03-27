@@ -51,7 +51,7 @@ components of \code{x} to be plotted.}
 \item{plot.CLD}{When \code{TRUE}, each matrix in \code{x$CLD.est.mats} is plotted,
 in addition to the plots described here.}
 
-\item{drop.last.NB}{boolean for whether to drop the last year of the abundance and biomass at age, when \code{TRUE} doesn't plot the last year of abundance, default \code{TRUE}.}
+\item{drop.last.NB}{boolean for whether to drop the last year of the abundance and biomass at age, when \code{TRUE} doesn't plot the last year of abundance, default \code{FALSE}.}
 }
 \value{
 Graphics
