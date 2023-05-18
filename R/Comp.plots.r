@@ -136,14 +136,21 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
         par(oma=c(2,2.5,0,0))
         if (draft){ par(mar = c(3, 5, 3, 1 ))
         }else par(mar = c(3, 3, 1, 1))
-        m1.all <- cm[[iplot*2-1]]         # Matrix of observed
-        m2.all <- cm[[iplot*2]]           # matrix of predicted
+        ## check to make sure that ob comes first
+        if(length(grep("ob",names(cm)[iplot * 2-1]))==1){
+            m1.all <- cm[[iplot*2-1]]         # Matrix of observed
+            m2.all <- cm[[iplot*2]]           # matrix of predicted
+        } else{
+            m1.all <- cm[[iplot*2]]         # Matrix of observed
+            m2.all <- cm[[iplot*2-1]]       # matrix of predicted
+        }
         ## Extract column names for plots
         binnames=colnames(m1.all)
 
         ## Get various string representations of data series:
         ##  gfileroot is used in the name for the graphics file(s):
         gfileroot <- FGTrimName(names(cm)[iplot * 2], removePrefix = 0, removeSuffix = 1)
+        if (gfileroot != FGTrimName(names(cm)[iplot * 2-1], removePrefix = 0, removeSuffix = 1)) {stop(paste("There is not an observed and predicted matrix for",gfileroot),sep=" ")}
         groot=FGTrimName(names(cm)[iplot * 2], removePrefix = 1, removeSuffix = 1)
         gfilename <- paste("pooled.",gfileroot, sep="")
         ## test if a matrix or a vector
@@ -256,13 +263,13 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             ylabresidtxt= switch(RT,"osa"="OSA Residuals","pearson"="Pearson Residuals","standard"="Deviance Residuals")
 
             ## Extract the used years
-            if (nname%in%names(ts)) {
+            ## if (nname%in%names(ts)) {
                 m1<-m1.all[rownames(m1.all)%in%yrs.include,,drop=FALSE]
                 m2<-m2.all[rownames(m2.all)%in%yrs.include,,drop=FALSE]
-            } else {
-                m1<-m1.all
-                m2<-m2.all
-            }
+            ## } else {
+            ##     m1<-m1.all
+            ##     m2<-m2.all
+            ## }
 
             ## Set Y-axis title according to data type:
             if(substr(gfileroot, 1, 1)  == "l"){ title.y <- FGMakeLabel(paste(ylabresidtxt,"Length bin",sep=" - "), units)
@@ -276,26 +283,50 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 z1=(m1-m2)/sqrt(m2*(1-m2)/wt)
             } else if (RT=="standard"){z1 <- m1 - m2
             } else if (RT=="osa"){
-                if(!is.null(dim(m1))){
-                    ## Calculate residuals using compResidual package
-                    z1=t(compResidual::resDirM(t(m1+1e-11),t(m2+1e-11)))
-                    ##z1=t(resDirM(t(m1+1e-11),t(m2+1e-11)))
-                    rownames(z1) <- rownames(m1)
-                    colnames(z1) <- colnames(m1)[-dim(m1)[2]]
-                } else {
-                    z1=t(compResidual::resDirM((m1+1e-11),(m2+1e-11)))
-                    ## z1=t(resDirM((m1+1e-11),(m2+1e-11)))
-                    rownames(z1) <- as.integer(yrs.include[!is.na(yrs.include)])
-                    colnames(z1) <- names(m1)[-length(m1)]
+
+                ## Need to get the dirichlet multinomial variance scalar to calculate the the OSA residuals
+                dmroot=paste0("log_dm_",groot,"_",substr(gfileroot,1,2))
+                dmvar=x$parms[grep(dmroot,names(x$parms),ignore.case=TRUE)]
+                if (length(dmvar)==0) dmvar=x$parm.cons[8,grep(dmroot,names(x$parm.cons),ignore.case=TRUE)]
+                if (length(dmvar)==0) { warning("Neither parms nor parm.cons constains ",dmroot," so you cannot calculate the OSA residuals. Skipping this for now.")
+                    break
                 }
-                class(z1) <- c("numeric")
+                if(nname%in%names(x$t.series)) {
+                    ns =x$t.series[,names(x$t.series)==nname]
+                    ns=ns[!is.na(ns) & ns>0]
+                } else { warning(paste0("OSA needs to have the sample size to be calculated for ",gfileroot));break}
+
+                if(!is.null(dim(m1))){
+                        if(length(ns)!=dim(m1)[1]) {
+                            warning(paste("The vector of sample sizes does not match the dimensions of the matrix of compositions for",gfileroot,". Skipping this for now.",sep=" "))
+                            break
+                        }
+                        obs=round(sweep(m1,1,ns,"*"))
+                        alpha=sweep(m2,1,ns*exp(dmvar),"*")+0.00001
+                        ## Calculate residuals using compResidual package
+                        z1=t(compResidual::resDirM(t(obs),t(alpha)))
+                } else {
+                    if(length(ns)!=length(m1)) {
+                        warning(paste("The vector of sample sizes does not match the vector length of compositions for",gfileroot,". Skipping this for now.",sep=" "))
+                            break
+                        }
+                        obs=round(m1*ns)
+                        alpha=m2*ns*exp(dmvar)+0.00001
+                        z1=t(compResidual::resDirM((obs),(alpha)))
+                    }
             }
 
             ## Get coordinates of bubbles:
             if(is.matrix(z1)){
-                irn <- as.integer(rownames(z1))                        # year names
-                x1 <- as.integer(rep(irn, ncol(z1)))                   # year names
-                y1 <- sort(rep(as.numeric(colnames(z1)), nrow(z1)))    # age- or length-class names
+                if(class(z1)=="matrix") {
+                    irn <- as.integer(rownames(z1))                        # year names
+                    x1 <- as.integer(rep(irn, ncol(z1)))                   # year names
+                    y1 <- sort(rep(as.numeric(colnames(z1)), nrow(z1)))    # age- or length-class names
+                } else if (class(z1) == "cres"){ #class of OSA residuals
+                    irn <- as.integer(rownames(m1))                        # year names
+                    x1 <- as.integer(rep(irn, ncol(m1)))                   # year names
+                    y1 <- sort(rep(as.numeric(colnames(m1)), nrow(m1)))    # age- or length-class names
+                }
             } else {
                 irn <- as.integer(yrs.include[!is.na(yrs.include)])                        # year names
                 x1 <- as.integer(rep(irn, length(z1)))                   # year names
@@ -317,7 +348,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 m22dp <- m2%*%m2
             }
             angdev = acos(m12dp/sqrt(m11dp*m22dp)) * 180.0 / pi   # Converts to degrees
-            if(is.matrix(m1)==TRUE){
+            if(is.matrix(m1)){
                 fit.metric=rep(0,dim(m1)[1])
                 for (i in 1:length(fit.metric)){
                     fit.metric[i]=cor(m1[i,],m2[i,],method='pearson')
@@ -388,8 +419,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             }
             if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = paste(RT,gfileroot,sep='.'),
                                          graphics.type)
-            ## }     # end (for ....)
-                                        # #--------------boxplots--------------------------------------------------------------
+           #--------------boxplots----------------------------------------------------------
             par(savepar)
             par(mar=c(4,4,2,2))
             par(las=0)

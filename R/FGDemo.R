@@ -70,7 +70,7 @@ FGDemo <- function(display = TRUE, clear = TRUE, graphics.type, open.cmd)
   PerRec.plots(gag, graphics.type = graphics.type, use.color = TRUE,
       user.PR = list("spr.biomass", "E.spr"))
 
-  EqRec.plots(gag, graphics.type = graphics.type, use.color = TRUE,
+  Eq.plots(gag, graphics.type = graphics.type, use.color = TRUE,
       user.Eq = list("spr", "E.eq"))
 
   Selectivity.plots(gag, graphics.type = graphics.type)

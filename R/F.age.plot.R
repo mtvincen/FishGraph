@@ -63,7 +63,7 @@ F.age.plot <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
         points(years,Fage[,a],col=colvec[a],pch=a)
     }
     ## Add in legend
-    legend(legend.pos,legend=paste("Age",ages),col=colvec,lty=1:length(ages),pch=c(16,1:length(ages)),bty='n',inset = 0.03 / par()$pin,lwd=2,bg='transparent')
+    legend(legend.pos,legend=paste("Age",ages),col=colvec,lty=1:length(ages),pch=c(16,2:length(ages)),bty='n',inset = 0.03 / par()$pin,lwd=2,bg='transparent')
     if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = "F.age", graphics.type)
 
     par(savepar)

@@ -59,8 +59,9 @@ Selectivity.plots <- function(x, DataName = deparse(substitute(x)),
                 deparse(substitute(x)))
         }
         else
-        {   my.text <- paste("sel.list = x$", this.name, sep="")
-            eval(parse(text=my.text)) # This assigns the list in turn to "sel.list"
+        {   ## my.text <- paste("sel.list = x$", this.name, sep="")
+            ## eval(parse(text=my.text)) # This assigns the list in turn to "sel.list"
+            sel.list=x[[this.name]]
             selnames <- names(sel.list)
             measure <- substr(this.name, 5, 12)  # "age" or "length"
             Umeasure <- paste(toupper(substr(measure, 1,1)),
