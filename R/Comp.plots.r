@@ -286,8 +286,9 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 
                 ## Need to get the dirichlet multinomial variance scalar to calculate the the OSA residuals
                 dmroot=paste0("log_dm_",groot,"_",substr(gfileroot,1,2))
-                dmvar=x$parms[[grep(dmroot,names(x$parms),ignore.case=TRUE)]]
-                if (length(dmvar)==0) dmvar=x$parm.cons[8,grep(dmroot,names(x$parm.cons),ignore.case=TRUE)]
+                if (length(grep(dmroot,names(x$parms),ignore.case=TRUE))>0){ dmvar=x$parms[[grep(dmroot,names(x$parms),ignore.case=TRUE)]]
+                } else if (length(dmvar)==0){ dmvar=x$parm.cons[8,grep(dmroot,names(x$parm.cons),ignore.case=TRUE)]
+                }
                 if (length(dmvar)==0) { warning("Neither parms nor parm.cons constains ",dmroot," so you cannot calculate the OSA residuals. Skipping this for now.")
                     break
                 }
@@ -297,23 +298,27 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 } else { warning(paste0("OSA needs to have the sample size to be calculated for ",gfileroot));break}
 
                 if(!is.null(dim(m1))){
-                        if(length(ns)!=dim(m1)[1]) {
-                            warning(paste("The vector of sample sizes does not match the dimensions of the matrix of compositions for",gfileroot,". Skipping this for now.",sep=" "))
-                            break
-                        }
-                        obs=round(sweep(m1,1,ns,"*"))
-                        alpha=sweep(m2,1,ns*exp(dmvar),"*")+0.00001
-                        ## Calculate residuals using compResidual package
-                        z1=t(compResidual::resDirM(t(obs),t(alpha)))
+                    if(length(ns)!=dim(m1)[1]) {
+                        warning(paste("The vector of sample sizes does not match the dimensions of the matrix of compositions for",gfileroot,". Skipping this for now.",sep=" "))
+                        break
+                    }
+                    obs=round(sweep(m1,1,ns,"*"))
+                    alpha=sweep(m2,1,ns*exp(dmvar),"*")+0.00001
+                    ## Calculate residuals using compResidual package
+                    z1=t(compResidual::resDirM(t(obs),t(alpha)))
                 } else {
                     if(length(ns)!=length(m1)) {
                         warning(paste("The vector of sample sizes does not match the vector length of compositions for",gfileroot,". Skipping this for now.",sep=" "))
-                            break
-                        }
-                        obs=round(m1*ns)
-                        alpha=m2*ns*exp(dmvar)+0.00001
-                        z1=t(compResidual::resDirM((obs),(alpha)))
+                        break
                     }
+                    obs=round(m1*ns)
+                    alpha=m2*ns*exp(dmvar)+0.00001
+                    z1=t(compResidual::resDirM((obs),(alpha)))
+                }
+                if (any(is.infinite(z1))){
+                    z1[is.infinite(z1)]=NA
+                    warning(paste0("There were infinite values in the OSA for ",gfileroot,". This was replaces with an NA to alow for plotting. This plot should probably not be used."))
+                }
             }
 
             ## Get coordinates of bubbles:
@@ -321,11 +326,11 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 if(class(z1)=="matrix") {
                     irn <- as.integer(rownames(z1))                        # year names
                     x1 <- as.integer(rep(irn, ncol(z1)))                   # year names
-                    y1 <- sort(rep(as.numeric(colnames(z1)), nrow(z1)))    # age- or length-class names
+                    y1 <- rep(as.numeric(colnames(z1)), each=nrow(z1))    # age- or length-class names
                 } else if (class(z1) == "cres"){ #class of OSA residuals
                     irn <- as.integer(rownames(m1))                        # year names
-                    x1 <- as.integer(rep(irn, ncol(m1)))                   # year names
-                    y1 <- sort(rep(as.numeric(colnames(m1)), nrow(m1)))    # age- or length-class names
+                    x1 <- rep(irn, ncol(m1)-1)                              # year names
+                    y1 <- rep(as.numeric(head(binnames,-1)), each=nrow(m1))    # age- or length-class names
                 }
             } else {
                 irn <- as.integer(yrs.include[!is.na(yrs.include)])                        # year names
@@ -385,7 +390,6 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                                             DataName))
                    }
             }   #end if draft
-
 
             par(mar=c(0,4,0,1))
             ## Draw the main (bubble) plot:
