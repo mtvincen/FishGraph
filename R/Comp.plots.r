@@ -40,19 +40,19 @@
 #' }
 #' @export
 ###########################################################################################
-#  R function to make bubble plots of age- or length-composition matrices
-#  from fish stock-assessment models.
-#  Part of FishGraph.
-#  REQUIRES source("fgsupport.r") before running this.
-#  E. H. Williams, December 2002
-#  Revised by M. H. Prager, December, 2005
-#  Revised by A. Stephens, May, 2006
-#  Major revision by M. H. Prager, November 2006
-#  Revised by R. Cheshire, November 2012
-#  Revised by K. Shertzer, September 2015
-#  Revised by R. Cheshire, January 2019 (add boxplots, weighting of pooled plots if 1) neff in t.series
-#                                         or 2. 'n' in t.series, otherwise no weights,
-#                                         pooled comps split by selectivity blocks)
+                                        #  R function to make bubble plots of age- or length-composition matrices
+                                        #  from fish stock-assessment models.
+                                        #  Part of FishGraph.
+                                        #  REQUIRES source("fgsupport.r") before running this.
+                                        #  E. H. Williams, December 2002
+                                        #  Revised by M. H. Prager, December, 2005
+                                        #  Revised by A. Stephens, May, 2006
+                                        #  Major revision by M. H. Prager, November 2006
+                                        #  Revised by R. Cheshire, November 2012
+                                        #  Revised by K. Shertzer, September 2015
+                                        #  Revised by R. Cheshire, January 2019 (add boxplots, weighting of pooled plots if 1) neff in t.series
+                                        #                                         or 2. 'n' in t.series, otherwise no weights,
+                                        #                                         pooled comps split by selectivity blocks)
 #######################################################################################
 Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                        graphics.type = NULL, use.color = TRUE, units = x$info$units.length,
@@ -191,7 +191,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
         } else if (subplots==4){par(mfrow=c(2,2));cexLab=1/.83
         } else if (subplots<=8){par(mfrow=c(ceiling(subplots/2),2));cexLab=1/.66
         } else if (subplots>9){par(mfrow=c(ceiling(subplots/3),3));cexLab=1/.66}
-        #if (subplots==1)cexLab=1
+                                        #if (subplots==1)cexLab=1
         if (subplots==3)cexLab=1/.66
         ##subset to years in each selectivity block (last block interval is defined differntly because last value of yr.block is
         ## end of interval instead of beginning of next interval)
@@ -264,8 +264,8 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 
             ## Extract the used years
             ## if (nname%in%names(ts)) {
-                m1<-m1.all[rownames(m1.all)%in%yrs.include,,drop=FALSE]
-                m2<-m2.all[rownames(m2.all)%in%yrs.include,,drop=FALSE]
+            m1<-m1.all[rownames(m1.all)%in%yrs.include,,drop=FALSE]
+            m2<-m2.all[rownames(m2.all)%in%yrs.include,,drop=FALSE]
             ## } else {
             ##     m1<-m1.all
             ##     m2<-m2.all
@@ -323,14 +323,15 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
 
             ## Get coordinates of bubbles:
             if(is.matrix(z1)){
-                if(class(z1)=="matrix") {
-                    irn <- as.integer(rownames(z1))                        # year names
-                    x1 <- as.integer(rep(irn, ncol(z1)))                   # year names
-                    y1 <- rep(as.numeric(colnames(z1)), each=nrow(z1))    # age- or length-class names
-                } else if (class(z1) == "cres"){ #class of OSA residuals
+                if ("cres"%in%class(z1)){ #class of OSA residuals
                     irn <- as.integer(rownames(m1))                        # year names
                     x1 <- rep(irn, ncol(m1)-1)                              # year names
                     y1 <- rep(as.numeric(head(binnames,-1)), each=nrow(m1))    # age- or length-class names
+
+                } else { ##("matrix"%in%class(z1)) {
+                    irn <- as.integer(rownames(z1))                        # year names
+                    x1 <- as.integer(rep(irn, ncol(z1)))                   # year names
+                    y1 <- rep(as.numeric(colnames(z1)), each=nrow(z1))    # age- or length-class names
                 }
             } else {
                 irn <- as.integer(yrs.include[!is.na(yrs.include)])                        # year names
@@ -383,12 +384,12 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             text(1:5,rep(0.85,6),bub.label)
             if (draft) {
                 if (use.color){
-                   title(main = FGMakeTitle(paste(titleroot, "    Orange: underestimate"),
-                                            DataName))
-               } else {
-                   title(main = FGMakeTitle(paste(titleroot, "    Light: underestimate"),
-                                            DataName))
-                   }
+                    title(main = FGMakeTitle(paste(titleroot, "    Orange: underestimate"),
+                                             DataName))
+                } else {
+                    title(main = FGMakeTitle(paste(titleroot, "    Light: underestimate"),
+                                             DataName))
+                }
             }   #end if draft
 
             par(mar=c(0,4,0,1))
@@ -423,7 +424,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
             }
             if (write.graphs) FGSavePlot(GraphicsDirName, DataName, GraphName = paste(RT,gfileroot,sep='.'),
                                          graphics.type)
-           #--------------boxplots----------------------------------------------------------
+                                        #--------------boxplots----------------------------------------------------------
             par(savepar)
             par(mar=c(4,4,2,2))
             par(las=0)
