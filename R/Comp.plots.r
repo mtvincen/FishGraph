@@ -289,7 +289,7 @@ Comp.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
                 if (length(grep(dmroot,names(x$parms),ignore.case=TRUE))>0){ dmvar=x$parms[[grep(dmroot,names(x$parms),ignore.case=TRUE)]]
                 } else { dmvar=x$parm.cons[8,grep(dmroot,names(x$parm.cons),ignore.case=TRUE)]
                 }
-                if (length(dmvar)==0) { warning("Neither parms nor parm.cons constains ",dmroot," so you cannot calculate the OSA residuals. Skipping this for now.")
+                if (length(dmvar)==0) { warning("Neither parms nor parm.cons contains ",dmroot," so you cannot calculate the OSA residuals. Skipping this for now.")
                     break
                 }
                 if(nname%in%names(x$t.series)) {

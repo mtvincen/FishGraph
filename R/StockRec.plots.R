@@ -259,7 +259,7 @@ if (draw.model && curve.OK) {
     lim.y <- range(logRS, logRS.sim, na.rm = TRUE)
 } else {lim.y <- range(logRS, na.rm = TRUE)}
 
-if (any(logRS <= 0))
+if (any(is.na(logRS)))
 {   Errmsg <- "Warning: attempted to take log of a non-positive R/S"
     warning(Errmsg, immediate. = TRUE)
     return(invisible(-1))
