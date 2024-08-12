@@ -18,11 +18,11 @@
 #' length-composition plots.
 #' @param print.n When \code{TRUE}, \emph{N} is printed in each plot.
 #' @param print.neff When \code{TRUE}, \emph{N_eff} (rounded) is printed in each plot.
-#' @param plot.neff When \code{TRUE}, a timeplot of \emph{N_eff} is made for each data
-#' series
 #' @param plot.missing When \code{TRUE}, plots out all comps. Otherwise comps where
 #' \code{is.na(N)} are not printed.
 #' @param plot.pred when \code{TRUE}, plots the fit to the composition data, when \code{FALSE} only plots the observed compositions
+#' @param plot.neff When \code{TRUE}, a timeplot of \emph{N_eff} is made for each data
+#' series
 #' @param compute.neff When \code{TRUE}, \strong{FishGraph} computes \emph{N_eff}
 #' internally, rather than using values stored by the user.  The computations are
 #' based on the sample sizes and observed and estimated proportions.
@@ -138,7 +138,7 @@ function(x, DataName = deparse(substitute(x)), draft = TRUE,
       {  yearvec = rownames(prop.obsd)
          strtmp = paste("x$t.series$", fileroot, ".n[x$t.series$year %in% yearvec]", sep="")
          Nobs = eval(parse(text = strtmp))
-      }
+      } else {Nobs=rep(NA,nyears)}
       ### Get Neff for this matrix from the x$t.series dataframe IF Neff isn't computed internally.
       ### otherwise, set up a blank vector for use when it IS computed:
       if (print.neff || plot.neff)

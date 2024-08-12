@@ -9,11 +9,11 @@
 #' @param DataName string used in plot titles.  Defaults to argument \code{x}.
 #' @param draft modifies plots for use in a report.  When \code{FALSE} main titles
 #' are omitted.
+#' @param start.drop Number of years at the start of the data to be omitted from
+#' plots, as when a model includes an initialization period.
 #' @param graphics.type a vector of graphics file types to which graphics are saved.
 #' When \code{NULL}, no plots are saved.
 #' @param use.color plots are made in grayscale when \code{FALSE}
-#' @param start.drop Number of years at the start of the data to be omitted from
-#' plots, as when a model includes an initialization period.
 #' @param units.b A text string (e.g. \code{"tons"} for labeling plots of stock biomass.
 #' @param units.ssb A text string for labeling plots of spawning-stock biomass.
 #' @param units.r a text string (e.g. \code{"million fish"}) for labeling plots of recruitment

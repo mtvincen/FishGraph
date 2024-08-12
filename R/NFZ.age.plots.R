@@ -17,6 +17,8 @@
 #' the plot of numbers at age.
 #' @param units.biomass A text string (e.g. \code{"t"}) used in labeling the plot
 #' of biomass at age.
+#' @param units.ssb A text string (e.g. \code{"t"}) used in labeling the plot
+#' of spawning stock biomass at age.
 #' @param max.bub A numerical scalar for the maximum bubble size (e.g. \code{"4.0"})
 #' in bubble plots of numbers at age and biomass at age.
 #' @param user.plots A vector of text strings with the names of additional matrix

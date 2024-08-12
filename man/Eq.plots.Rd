@@ -16,6 +16,7 @@ Eq.plots(
   units.D = x$info$units.discards[1],
   units.Y = x$info$units.yield[1],
   units.R = x$info$units.rec[1],
+  user.xmax = NULL,
   user.Eq = NULL,
   legend.pos = "topright",
   F.references = NULL
@@ -47,6 +48,8 @@ spawning biomass.}
 \item{units.Y}{A character string used in labeling the plot of equilibrium yield.}
 
 \item{units.R}{A character string used in labeling the plot of equilibrium recruitment.}
+
+\item{user.xmax}{A user specified maximum value for the x-axis of the plots (default NULL goes to max of range)}
 
 \item{user.Eq}{A list whose elements are names of additional columns of
 \code{x$eq.series} to be plotted against \emph{F}.}

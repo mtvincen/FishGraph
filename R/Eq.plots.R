@@ -21,6 +21,7 @@
 #' @param units.D A character string used in labeling the plot of equilibrium discards.
 #' @param units.Y A character string used in labeling the plot of equilibrium yield.
 #' @param units.R A character string used in labeling the plot of equilibrium recruitment.
+#' @param user.xmax A user specified maximum value for the x-axis of the plots (default NULL goes to max of range)
 #' @param user.Eq A list whose elements are names of additional columns of
 #' \code{x$eq.series} to be plotted against \emph{F}.
 #' @param legend.pos A text string compatible with the \code{legend} function of \code{R}.
@@ -46,7 +47,7 @@ Eq.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
     graphics.type = NULL, use.color = TRUE, units.L = x$info$units.landings[1],
     units.SSB = x$info$units.ssb[1], units.B = x$info$units.biomass[1],
     units.D = x$info$units.discards[1], units.Y = x$info$units.yield[1],
-    units.R = x$info$units.rec[1],
+    units.R = x$info$units.rec[1], user.xmax=NULL,
     user.Eq = NULL, legend.pos = "topright", F.references = NULL)
 
 {   ### Check for required data:
@@ -73,7 +74,7 @@ Eq.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
        }
        vref <- unlist(x$parms[vrefindex])
     }
-    xmax <- max(eq.df$F.eq, 0.01, vref, na.rm = TRUE)
+    xmax <- ifelse(is.null(user.xmax),max(eq.df$F.eq, 0.01, vref, na.rm = TRUE),user.xmax)
 
     PlotTitle <- ""
     savepar <- FGSetPar(draft)

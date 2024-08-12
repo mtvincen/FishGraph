@@ -46,6 +46,7 @@
 # Major revision by M. H. Prager, November, 2006
 # Fixed error: pairs plot now made only w/ > 1 series, MHP, 26 Aug 2009
 # Revised for R package September 2015 by K. Shertzer
+# Revised to add runs test and residual colors 2022 M. Vincent
 #######################################################################################
 Index.plots <- function(x, DataName = deparse(substitute(x)), draft = TRUE,
    graphics.type = NULL, use.color = TRUE, connect.obsd = FALSE, from.zero = TRUE,
